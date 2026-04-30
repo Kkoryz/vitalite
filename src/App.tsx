@@ -167,7 +167,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
       {/* Logo Area */}
       <a href="#" className="md:w-[380px] w-56 flex items-center justify-center shrink-0 overflow-hidden">
         <img
-          src="/logo-transparent.png?v=20260430-1340"
+          src="logo-transparent.png?v=20260430-1340"
           alt="Vitalite Construction"
           className="w-[205px] md:w-[345px] h-auto max-h-[84px] object-contain"
         />
@@ -441,8 +441,8 @@ const Stats = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
             >
-              <div className="mb-6 max-w-[260px] mx-auto">
-                <StatValueMark value={stat.value} />
+              <div className="text-6xl md:text-7xl font-bold text-kiewit-yellow mb-6 tracking-tighter">
+                {stat.value}
               </div>
               <div className="text-lg md:text-xl text-white font-medium max-w-[220px] mx-auto leading-tight">
                 {stat.label}
@@ -452,75 +452,6 @@ const Stats = () => {
         </div>
       </motion.div>
     </section>
-  );
-};
-
-const StatValueMark = ({ value }: { value: string }) => {
-  const safeId = value.replace(/[^a-z0-9]/gi, '') || 'mark';
-  const fontSize = value.length === 1 ? 92 : value.length === 2 ? 76 : 68;
-  const letterSpacing = value.length === 1 ? 0 : value === 'A-Z' ? 6 : 5;
-
-  return (
-    <svg viewBox="0 0 260 132" className="w-full h-[118px] md:h-[132px] overflow-visible" role="img" aria-label={value}>
-      <defs>
-        <linearGradient id={`stat-gold-${safeId}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#fff7c7" />
-          <stop offset="28%" stopColor="#f6cf55" />
-          <stop offset="58%" stopColor="#b98212" />
-          <stop offset="100%" stopColor="#ffe88d" />
-        </linearGradient>
-        <linearGradient id={`stat-highlight-${safeId}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.72" />
-          <stop offset="42%" stopColor="#ffffff" stopOpacity="0" />
-        </linearGradient>
-        <filter id={`stat-shadow-${safeId}`} x="-25%" y="-30%" width="150%" height="165%">
-          <feDropShadow dx="0" dy="9" stdDeviation="5" floodColor="#001b42" floodOpacity="0.42" />
-        </filter>
-      </defs>
-      <text
-        x="130"
-        y="92"
-        textAnchor="middle"
-        fontFamily="Montserrat, Avenir Next, Arial, Helvetica, sans-serif"
-        fontSize={fontSize}
-        fontWeight="900"
-        letterSpacing={letterSpacing}
-        fill="none"
-        stroke="#6e4a05"
-        strokeWidth="9"
-        strokeLinejoin="round"
-        filter={`url(#stat-shadow-${safeId})`}
-      >
-        {value}
-      </text>
-      <text
-        x="130"
-        y="92"
-        textAnchor="middle"
-        fontFamily="Montserrat, Avenir Next, Arial, Helvetica, sans-serif"
-        fontSize={fontSize}
-        fontWeight="900"
-        letterSpacing={letterSpacing}
-        fill={`url(#stat-gold-${safeId})`}
-        stroke="#fff0a5"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      >
-        {value}
-      </text>
-      <text
-        x="130"
-        y="80"
-        textAnchor="middle"
-        fontFamily="Montserrat, Avenir Next, Arial, Helvetica, sans-serif"
-        fontSize={fontSize}
-        fontWeight="900"
-        letterSpacing={letterSpacing}
-        fill={`url(#stat-highlight-${safeId})`}
-      >
-        {value}
-      </text>
-    </svg>
   );
 };
 
