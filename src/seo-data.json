@@ -1,0 +1,391 @@
+{
+  "siteName": "Vitalite Construction Corp.",
+  "siteUrl": "https://kkoryz.github.io/vitalite",
+  "defaultImage": "/logo-transparent.png",
+  "business": {
+    "name": "Vitalite Construction Corp.",
+    "description": "Vitalite Construction Corp. is a GTA-based design-build, general contracting, and construction management company for custom homes, multiplex housing, additions, permits, engineering coordination, and ICI construction.",
+    "areaServed": ["Greater Toronto Area", "Toronto", "North York", "Markham", "Richmond Hill", "Vaughan", "Mississauga", "Scarborough", "Etobicoke"],
+    "locality": "Greater Toronto Area",
+    "region": "ON",
+    "country": "CA"
+  },
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "GTA Design-Build Contractor | Vitalite Construction",
+      "description": "Vitalite Construction Corp. is a GTA design-build contractor for custom homes, multiplex housing, additions, permits, project management, and ICI construction.",
+      "kind": "home",
+      "primaryKeyword": "GTA design-build contractor"
+    },
+    {
+      "key": "services",
+      "path": "/services",
+      "title": "Design-Build Services in Toronto & GTA | Vitalite",
+      "description": "Explore Vitalite's GTA design-build services: custom homes, multiplex construction, garden suites, additions, permits, engineering, project management, and ICI work.",
+      "kind": "serviceCollection",
+      "primaryKeyword": "design-build services Toronto"
+    },
+    {
+      "key": "why-vitalite",
+      "path": "/why-vitalite",
+      "title": "Why Vitalite | GTA Design-Build Construction Partner",
+      "description": "Learn how Vitalite coordinates design, zoning, permits, engineering, construction management, inspections, and warranty support for GTA building projects.",
+      "kind": "about",
+      "primaryKeyword": "GTA design-build construction partner"
+    },
+    {
+      "key": "our-work",
+      "path": "/our-work",
+      "title": "Our Work | Custom Homes, Multiplex & Additions in GTA",
+      "description": "View Vitalite project categories across custom homes, multiplex housing, garden suites, additions, full interiors, and ICI construction in the Greater Toronto Area.",
+      "kind": "collection",
+      "primaryKeyword": "GTA construction projects"
+    },
+    {
+      "key": "blog",
+      "path": "/blog",
+      "title": "Toronto Renovation & Building Guides | Vitalite Blog",
+      "description": "Read practical GTA building guides on renovation costs, timelines, permits, garden suites, multiplex construction, and design-build project planning.",
+      "kind": "blog",
+      "primaryKeyword": "Toronto renovation guides"
+    },
+    {
+      "key": "contact-us",
+      "path": "/contact-us",
+      "title": "Contact Vitalite | GTA Design-Build Consultation",
+      "description": "Contact Vitalite Construction Corp. to discuss a custom home, multiplex, garden suite, addition, permit, project management, or ICI construction project in the GTA.",
+      "kind": "contact",
+      "primaryKeyword": "GTA design-build consultation"
+    },
+    {
+      "key": "service-architectural-services",
+      "path": "/services/architectural-services-toronto",
+      "title": "Architectural Services Toronto | Permit-Ready Planning",
+      "description": "Architectural planning, concept layouts, zoning review support, and permit-ready drawing coordination for custom homes, additions, multiplex, and garden suite projects.",
+      "kind": "service",
+      "primaryKeyword": "architectural services Toronto"
+    },
+    {
+      "key": "service-interior-design",
+      "path": "/services/interior-design-toronto",
+      "title": "Interior Design Toronto | Design-Build Coordination",
+      "description": "Interior design, space planning, finish direction, and construction-aware coordination for custom homes, condos, apartments, and full interiors in the GTA.",
+      "kind": "service",
+      "primaryKeyword": "interior design Toronto construction"
+    },
+    {
+      "key": "service-rendering",
+      "path": "/services/rendering-3d-visualization-toronto",
+      "title": "3D Rendering Toronto | Design-Build Visualization",
+      "description": "2D and 3D rendering services for Toronto custom homes, additions, interiors, and investment residential projects before construction begins.",
+      "kind": "service",
+      "primaryKeyword": "3D rendering Toronto construction"
+    },
+    {
+      "key": "service-material-selection",
+      "path": "/services/material-selection-procurement-toronto",
+      "title": "Material Selection & Procurement Toronto | Vitalite",
+      "description": "Material selection, supplier coordination, procurement planning, finish decisions, and lead-time control for GTA design-build and renovation projects.",
+      "kind": "service",
+      "primaryKeyword": "material selection procurement Toronto"
+    },
+    {
+      "key": "service-building-board-approvals",
+      "path": "/services/building-board-approvals-toronto",
+      "title": "Building & Board Approvals Toronto | Vitalite",
+      "description": "Approval support for condos, apartments, renovations, and permit-driven projects, including board packages, management coordination, and inspection planning.",
+      "kind": "service",
+      "primaryKeyword": "building board approvals Toronto"
+    },
+    {
+      "key": "service-construction-site-management",
+      "path": "/services/construction-site-management-gta",
+      "title": "Construction & Site Management GTA | Vitalite",
+      "description": "Construction and site management for GTA projects, including trade coordination, schedule control, inspections, quality control, and client communication.",
+      "kind": "service",
+      "primaryKeyword": "construction site management GTA"
+    },
+    {
+      "key": "service-custom-homes",
+      "path": "/services/custom-home-design-build-toronto",
+      "title": "Custom Home Design & Build Toronto | Vitalite",
+      "description": "Design and build luxury custom homes in Toronto and the GTA with concept planning, permit coordination, budget control, construction management, and warranty support.",
+      "kind": "service",
+      "primaryKeyword": "custom home design build Toronto"
+    },
+    {
+      "key": "service-multiplex",
+      "path": "/services/multi-unit-multiplex-construction-toronto",
+      "title": "Multiplex Construction Toronto | Multi-Unit Homes",
+      "description": "Plan and build multi-unit residential and multiplex projects in Toronto and the GTA with zoning review, permit coordination, engineering, and construction management.",
+      "kind": "service",
+      "primaryKeyword": "multiplex construction Toronto"
+    },
+    {
+      "key": "service-garden-suites",
+      "path": "/services/garden-suites-laneway-houses-toronto",
+      "title": "Garden Suites & Laneway Houses Toronto | Vitalite",
+      "description": "Design, permit, and build garden suites, laneway houses, coach houses, and secondary dwelling units for rental income, family space, and property value.",
+      "kind": "service",
+      "primaryKeyword": "garden suites Toronto"
+    },
+    {
+      "key": "service-home-additions",
+      "path": "/services/home-additions-renovations-toronto",
+      "title": "Home Additions & Major Renovations Toronto | Vitalite",
+      "description": "Home additions, structural alterations, extensions, second-storey additions, and major renovations managed from design and permits through construction.",
+      "kind": "service",
+      "primaryKeyword": "home additions Toronto"
+    },
+    {
+      "key": "service-drawings-permits",
+      "path": "/services/drawings-permits-engineering-toronto",
+      "title": "Drawings, Permits & Engineering Toronto | Vitalite",
+      "description": "Architectural drawings, structural coordination, HVAC documentation, zoning review, building code review, and building permit application support in the GTA.",
+      "kind": "service",
+      "primaryKeyword": "building permits drawings Toronto"
+    },
+    {
+      "key": "service-project-management",
+      "path": "/services/project-construction-management-gta",
+      "title": "Project & Construction Management GTA | Vitalite",
+      "description": "Project management and construction management for GTA residential and ICI projects, covering budgets, schedules, trades, inspections, and quality control.",
+      "kind": "service",
+      "primaryKeyword": "construction management GTA"
+    },
+    {
+      "key": "service-ici-construction",
+      "path": "/services/ici-construction-gta",
+      "title": "ICI Construction GTA | Industrial, Commercial & Institutional",
+      "description": "Design-build and construction management for GTA warehouses, offices, retail spaces, light industrial buildings, and institutional facilities.",
+      "kind": "service",
+      "primaryKeyword": "ICI construction GTA"
+    },
+    {
+      "key": "service-apartment-renovations",
+      "path": "/services/apartment-renovations-toronto",
+      "title": "Apartment Renovations Toronto | Vitalite",
+      "description": "Toronto apartment renovations with interior planning, building coordination, material procurement, and construction site management.",
+      "kind": "service",
+      "primaryKeyword": "apartment renovations Toronto"
+    },
+    {
+      "key": "service-townhouse-renovations",
+      "path": "/services/townhouse-renovations-toronto",
+      "title": "Townhouse Renovations Toronto | Vitalite",
+      "description": "Townhouse and semi-detached home renovations in Toronto, including structural review, additions, permit coordination, and construction management.",
+      "kind": "service",
+      "primaryKeyword": "townhouse renovations Toronto"
+    },
+    {
+      "key": "service-condo-renovations",
+      "path": "/services/condo-renovations-toronto",
+      "title": "Condo Renovations Toronto | Board Approval Support",
+      "description": "Condo renovations in Toronto with interior design, material selection, board approval support, site coordination, and trade management.",
+      "kind": "service",
+      "primaryKeyword": "condo renovations Toronto"
+    },
+    {
+      "key": "service-heritage-renovations",
+      "path": "/services/older-heritage-home-renovations-toronto",
+      "title": "Older & Heritage Home Renovations Toronto | Vitalite",
+      "description": "Renovation planning for older GTA homes and character properties with structural review, code coordination, permits, and construction management.",
+      "kind": "service",
+      "primaryKeyword": "older home renovations Toronto"
+    },
+    {
+      "key": "service-loft-renovations",
+      "path": "/services/loft-open-concept-renovations-toronto",
+      "title": "Loft & Open-Concept Renovations Toronto | Vitalite",
+      "description": "Loft and open-concept renovations in Toronto with layout planning, rendering, structural and mechanical coordination, finishes, and site management.",
+      "kind": "service",
+      "primaryKeyword": "loft renovations Toronto"
+    },
+    {
+      "key": "service-gut-renovations",
+      "path": "/services/full-gut-renovations-toronto",
+      "title": "Full-Gut Renovations Toronto | Vitalite",
+      "description": "Full-gut renovations in Toronto with design coordination, permits, engineering, demolition, trade scheduling, inspections, PDI, and warranty support.",
+      "kind": "service",
+      "primaryKeyword": "gut renovations Toronto"
+    },
+    {
+      "key": "why-about-us",
+      "path": "/why-vitalite/about-us",
+      "title": "About Vitalite Construction Corp. | GTA Design-Build",
+      "description": "Vitalite Construction Corp. is a GTA design-build, general contracting, and construction management company serving homeowners, investors, and commercial clients.",
+      "kind": "about",
+      "primaryKeyword": "Vitalite Construction Corp"
+    },
+    {
+      "key": "why-the-vitalite-way",
+      "path": "/why-vitalite/the-vitalite-way",
+      "title": "The Vitalite Way | Design, Permits, Build & Warranty",
+      "description": "Vitalite's process covers consultation, site evaluation, concept design, budget planning, zoning review, permits, construction, PDI, and warranty support.",
+      "kind": "about",
+      "primaryKeyword": "design build process GTA"
+    },
+    {
+      "key": "why-design-build",
+      "path": "/why-vitalite/why-design-build",
+      "title": "Why Design-Build in Toronto? | Vitalite",
+      "description": "Learn why a design-build contractor can reduce handoff gaps between design, permits, engineering, budget planning, and construction execution.",
+      "kind": "about",
+      "primaryKeyword": "why design build Toronto"
+    },
+    {
+      "key": "why-testimonials",
+      "path": "/why-vitalite/testimonials",
+      "title": "Client Testimonials | Vitalite Construction Corp.",
+      "description": "A place for Vitalite client testimonials, project reviews, communication feedback, quality notes, and post-delivery support stories.",
+      "kind": "about",
+      "primaryKeyword": "Vitalite testimonials"
+    },
+    {
+      "key": "why-in-the-news",
+      "path": "/why-vitalite/in-the-news",
+      "title": "In The News | Vitalite Construction Corp.",
+      "description": "Company updates, project features, local construction commentary, and future media mentions for Vitalite Construction Corp. in the GTA.",
+      "kind": "about",
+      "primaryKeyword": "Vitalite Construction news"
+    },
+    {
+      "key": "work-custom-homes",
+      "path": "/our-work/custom-homes",
+      "title": "Custom Home Projects GTA | Vitalite Our Work",
+      "description": "Custom home and rebuild project category for Vitalite, showing luxury residences, permit coordination, construction management, and owner-focused delivery.",
+      "kind": "collection",
+      "primaryKeyword": "custom home projects GTA"
+    },
+    {
+      "key": "work-multiplex",
+      "path": "/our-work/multiplex",
+      "title": "Multiplex & Multi-Unit Projects GTA | Vitalite",
+      "description": "Multiplex and multi-unit residential project category for investment housing, zoning strategy, permit coordination, and rental-focused construction.",
+      "kind": "collection",
+      "primaryKeyword": "multiplex projects GTA"
+    },
+    {
+      "key": "work-garden-suites",
+      "path": "/our-work/garden-suites-laneway-houses",
+      "title": "Garden Suite & Laneway House Projects GTA | Vitalite",
+      "description": "Garden suite, laneway house, coach house, and ADU project category for compact dwelling layouts, rental use, approvals, and construction management.",
+      "kind": "collection",
+      "primaryKeyword": "garden suite projects GTA"
+    },
+    {
+      "key": "work-additions",
+      "path": "/our-work/additions-major-renovations",
+      "title": "Home Addition & Major Renovation Projects GTA | Vitalite",
+      "description": "Home addition, structural renovation, second-storey addition, and whole-house renovation project category for GTA homeowners.",
+      "kind": "collection",
+      "primaryKeyword": "home addition projects GTA"
+    },
+    {
+      "key": "work-ici",
+      "path": "/our-work/ici-construction",
+      "title": "ICI Construction Projects GTA | Vitalite",
+      "description": "Industrial, commercial, and institutional construction project category for warehouses, offices, retail spaces, and practical business facilities.",
+      "kind": "collection",
+      "primaryKeyword": "ICI construction projects GTA"
+    },
+    {
+      "key": "work-condos",
+      "path": "/our-work/condos-apartments",
+      "title": "Condo & Apartment Renovation Projects Toronto | Vitalite",
+      "description": "Condo and apartment renovation project category for full interiors, kitchens, bathrooms, board approvals, procurement, and construction management.",
+      "kind": "collection",
+      "primaryKeyword": "condo renovation projects Toronto"
+    },
+    {
+      "key": "work-lofts",
+      "path": "/our-work/lofts",
+      "title": "Loft Renovation Projects Toronto | Vitalite",
+      "description": "Loft and open-concept renovation project category for flexible urban spaces, exposed features, lighting, finishes, and construction coordination.",
+      "kind": "collection",
+      "primaryKeyword": "loft renovation projects Toronto"
+    },
+    {
+      "key": "work-older-homes",
+      "path": "/our-work/older-toronto-homes",
+      "title": "Older Toronto Home Renovation Projects | Vitalite",
+      "description": "Older and character home renovation project category for existing-condition review, structural upgrades, permits, and modernized interiors.",
+      "kind": "collection",
+      "primaryKeyword": "older Toronto home renovation projects"
+    },
+    {
+      "key": "work-townhouses",
+      "path": "/our-work/townhouses-semi-detached",
+      "title": "Townhouse & Semi-Detached Projects Toronto | Vitalite",
+      "description": "Townhouse and semi-detached renovation project category for narrow lots, shared walls, rear additions, basement walk-ups, and site logistics.",
+      "kind": "collection",
+      "primaryKeyword": "townhouse renovation projects Toronto"
+    },
+    {
+      "key": "work-full-interiors",
+      "path": "/our-work/full-interiors",
+      "title": "Full Interior Renovation Projects GTA | Vitalite",
+      "description": "Full interior renovation project category for kitchens, bathrooms, millwork, lighting, flooring, procurement, and finish-focused construction.",
+      "kind": "collection",
+      "primaryKeyword": "full interior renovation projects GTA"
+    },
+    {
+      "key": "blog-buyers-renovation-guide",
+      "path": "/blog/buyers-renovation-guide-gta",
+      "title": "Buyer’s Renovation Guide GTA | Before You Purchase",
+      "description": "A GTA buyer's renovation guide covering zoning, permits, structure, systems, timelines, contingencies, and when to call a design-build contractor.",
+      "kind": "article",
+      "primaryKeyword": "GTA buyer renovation guide"
+    },
+    {
+      "key": "blog-renovation-costs",
+      "path": "/blog/toronto-renovation-cost-per-square-foot",
+      "title": "Toronto Renovation Cost Per Square Foot | Vitalite Guide",
+      "description": "A Toronto renovation cost guide explaining how scope, structure, finishes, permits, site access, and project type shape budget planning.",
+      "kind": "article",
+      "primaryKeyword": "Toronto renovation cost per square foot"
+    },
+    {
+      "key": "blog-design-build-vs-architect",
+      "path": "/blog/design-build-vs-architect-toronto",
+      "title": "Design-Build vs Architect in Toronto | Vitalite Guide",
+      "description": "Compare design-build and architect-led project delivery for Toronto custom homes, additions, gut renovations, multiplex projects, and investment properties.",
+      "kind": "article",
+      "primaryKeyword": "design build vs architect Toronto"
+    },
+    {
+      "key": "blog-renovation-timeline",
+      "path": "/blog/how-long-does-a-gta-renovation-take",
+      "title": "How Long Does a GTA Renovation Take? | Vitalite",
+      "description": "A practical GTA renovation timeline covering consultation, site evaluation, design, engineering, permits, procurement, construction, PDI, and warranty.",
+      "kind": "article",
+      "primaryKeyword": "GTA renovation timeline"
+    },
+    {
+      "key": "blog-renovation-laws",
+      "path": "/blog/toronto-renovation-permits-laws-guide",
+      "title": "Toronto Renovation Permits & Laws Guide | Vitalite",
+      "description": "A plain-English guide to Toronto renovation permits, zoning review, building code, structural drawings, HVAC documentation, and board approvals.",
+      "kind": "article",
+      "primaryKeyword": "Toronto renovation permits"
+    },
+    {
+      "key": "blog-garden-suite-ideas",
+      "path": "/blog/garden-suite-ideas-toronto-2026",
+      "title": "Garden Suite Ideas Toronto 2026 | Vitalite Guide",
+      "description": "Garden suite and laneway house ideas for Toronto owners planning rental income, family space, compact layouts, approvals, access, and finishes.",
+      "kind": "article",
+      "primaryKeyword": "garden suite ideas Toronto"
+    },
+    {
+      "key": "blog-fixer-upper-vs-new",
+      "path": "/blog/fixer-upper-renovation-vs-buying-new-gta",
+      "title": "Renovating a Fixer-Upper vs Buying New in GTA | Vitalite",
+      "description": "Compare fixer-upper renovation and buying new in the GTA by land value, zoning potential, renovation scope, carrying costs, timeline, and risk.",
+      "kind": "article",
+      "primaryKeyword": "renovating fixer upper GTA"
+    }
+  ]
+}

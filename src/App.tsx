@@ -15,6 +15,13 @@ import {
   X,
   Youtube,
 } from 'lucide-react';
+import {
+  applySeo,
+  getPageKeyFromLocation,
+  getPageKeyFromUrl,
+  getRouteHref,
+  getRouteHrefFromLegacyHash,
+} from './seo';
 
 type MainPageKey = 'services' | 'why-vitalite' | 'our-work' | 'blog' | 'contact-us';
 type DetailPageKey =
@@ -84,6 +91,9 @@ const navItems: Array<{ key: MainPageKey; label: string }> = [
 
 const pageKeys = navItems.map((item) => item.key);
 
+const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
+const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
+
 const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
   services: [
     {
@@ -151,10 +161,11 @@ const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
   ],
 };
 
-const resolvePage = (hash: string): PageKey => {
-  const candidate = hash.replace('#', '') as PageKey;
+const resolvePage = (): PageKey => {
+  const candidate = getPageKeyFromLocation(window.location) as PageKey;
   if (pageKeys.includes(candidate as MainPageKey)) return candidate;
   if (Object.prototype.hasOwnProperty.call(detailPages, candidate)) return candidate;
+  if (candidate === 'home') return candidate;
   return 'home';
 };
 
@@ -173,7 +184,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
       className="fixed top-0 left-0 right-0 z-50 flex items-stretch h-[78px] lg:h-[96px] bg-gradient-to-b from-black/85 via-black/45 to-transparent"
     >
       {/* Logo Area */}
-      <a href="#" className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
+      <a href={routeHref('home')} className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
         <img
           src="logo-transparent.png?v=20260430-1340"
           alt="Vitalite Construction"
@@ -209,7 +220,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                   </button>
                 ) : (
                   <a
-                    href={`#${item.key}`}
+                    href={routeHref(item.key)}
                     onClick={() => setOpenMenu(null)}
                     className={`flex items-center hover:text-kiewit-yellow transition-colors ${
                       isActive ? 'text-kiewit-yellow' : ''
@@ -223,7 +234,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                     isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-4'
                   }`}>
                     <div className="px-8 pt-7">
-                      <a href={`#${item.key}`} onClick={() => setOpenMenu(null)} className="inline-flex items-center text-kiewit-yellow text-[13px] font-bold tracking-[0.12em] uppercase hover:text-white transition-colors">
+                      <a href={routeHref(item.key)} onClick={() => setOpenMenu(null)} className="inline-flex items-center text-kiewit-yellow text-[13px] font-bold tracking-[0.12em] uppercase hover:text-white transition-colors">
                         {item.label} Overview <ChevronRight className="w-4 h-4 ml-2" />
                       </a>
                     </div>
@@ -237,7 +248,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                             {column.links.map((link) => (
                               <a
                                 key={link.href}
-                                href={link.href}
+                                href={routeHrefFromLegacyHash(link.href)}
                                 onClick={() => setOpenMenu(null)}
                                 className="block rounded-md px-3 py-2 text-[14px] leading-snug tracking-normal normal-case font-semibold text-white hover:bg-white/10 hover:text-kiewit-yellow transition-colors"
                               >
@@ -287,7 +298,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
               return (
                 <div key={item.key} className="border-b border-white/10 pb-5 last:border-b-0 last:pb-0">
                   <a
-                    href={`#${item.key}`}
+                    href={routeHref(item.key)}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center justify-between text-[14px] font-bold tracking-[0.12em] uppercase ${
                       isActive ? 'text-kiewit-yellow' : 'text-white'
@@ -307,7 +318,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                             {column.links.map((link) => (
                               <a
                                 key={link.href}
-                                href={link.href}
+                                href={routeHrefFromLegacyHash(link.href)}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block rounded-md px-2 py-2 text-[15px] font-medium text-white/82 hover:bg-white/10 hover:text-kiewit-yellow transition-colors"
                               >
@@ -400,7 +411,7 @@ const Hero = () => {
             <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
               {heroSlides[currentSlide].desc}
             </p>
-            <a href="#services" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
+            <a href={routeHref('services')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
               {heroSlides[currentSlide].link}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -469,7 +480,7 @@ const IntegratedSolutions = () => {
           <p className="text-lg text-gray-300 leading-relaxed max-w-xl mb-12">
             Vitalite Construction Corp. is a GTA-based design-build, construction management and general contracting company specializing in custom homes, multi-unit residential projects, major additions, garden suites, laneway houses, ICI construction, permits, drawings and engineering coordination.
           </p>
-          <a href="#" className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
+          <a href={routeHref('services')} className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
             Explore solutions <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -629,7 +640,7 @@ const Expertise = () => {
             <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 md:mb-10">
               {activeExpertise.desc}
             </p>
-            <a href="#" className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
+            <a href={routeHref('services')} className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
               {activeExpertise.link} <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -765,7 +776,7 @@ const ProjectProcess = () => {
         <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mb-12">
           Our process moves projects from early feasibility through design, zoning, building permits, pre-construction, construction, pre-delivery inspection and aftercare. The result is a managed path from idea to occupancy.
         </p>
-        <a href="#why-the-vitalite-way" className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 mb-12 md:mb-16 transition-colors">
+        <a href={routeHref('why-the-vitalite-way')} className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 mb-12 md:mb-16 transition-colors">
           How Vitalite works <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
         </a>
 
@@ -1603,7 +1614,7 @@ const SubPageHero = ({ page }: { page: MainPageKey }) => {
           <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
             {hero.desc}
           </p>
-          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
+          <a href={routeHref('contact-us')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
             Start a consultation
             <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
@@ -1616,7 +1627,7 @@ const SubPageHero = ({ page }: { page: MainPageKey }) => {
 const CardRail = ({ cards }: { cards: ImageCard[] }) => (
   <div className="flex gap-6 overflow-x-auto pb-8 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
     {cards.map((card) => (
-      <a key={card.title} href={card.href ?? '#contact-us'} className="min-w-[82vw] sm:min-w-[300px] md:min-w-[360px] h-[430px] sm:h-[500px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0 block">
+      <a key={card.title} href={routeHrefFromLegacyHash(card.href ?? '#contact-us')} className="min-w-[82vw] sm:min-w-[300px] md:min-w-[360px] h-[430px] sm:h-[500px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0 block">
         <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
@@ -1635,7 +1646,7 @@ const CardRail = ({ cards }: { cards: ImageCard[] }) => (
 const CardGrid = ({ cards }: { cards: ImageCard[] }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {cards.map((card) => (
-      <a key={card.title} href={card.href ?? '#contact-us'} className="h-[330px] sm:h-[390px] rounded-2xl overflow-hidden relative group cursor-pointer block">
+      <a key={card.title} href={routeHrefFromLegacyHash(card.href ?? '#contact-us')} className="h-[330px] sm:h-[390px] rounded-2xl overflow-hidden relative group cursor-pointer block">
         <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-5 sm:p-7 w-full">
@@ -1667,7 +1678,7 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent pointer-events-none"></div>
         <div className="relative h-full flex items-center px-5 sm:px-8 md:px-24 pt-20">
           <div className="max-w-4xl text-white">
-            <a href={`#${page.parent}`} className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-kiewit-yellow transition-colors">
+            <a href={routeHref(page.parent)} className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-kiewit-yellow transition-colors">
               {page.category}
             </a>
             <h1 className="text-[2.35rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
@@ -1676,7 +1687,7 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
             <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
               {page.subtitle}
             </p>
-            <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
+            <a href={routeHref('contact-us')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
               Discuss this project type
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -1691,7 +1702,7 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
               {page.intro}
             </p>
-            <a href={`#${page.parent}`} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
+            <a href={routeHref(page.parent)} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
               Back to {navItems.find((item) => item.key === page.parent)?.label}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -1733,7 +1744,7 @@ const ServicesPage = () => (
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {serviceInclusions.map((item) => (
-            <a key={item.href} href={item.href} className="border border-white/10 bg-white/5 rounded-lg p-5 text-white font-medium hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors">
+            <a key={item.href} href={routeHrefFromLegacyHash(item.href)} className="border border-white/10 bg-white/5 rounded-lg p-5 text-white font-medium hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors">
               {item.label}
             </a>
           ))}
@@ -1796,7 +1807,7 @@ const OurWorkPage = () => (
               Project categories are organized the way Toronto clients search: custom homes, condos, multiplex housing, garden suites, additions, full interiors and managed construction.
             </p>
           </div>
-          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
+          <a href={routeHref('contact-us')} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
             View all before + afters <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -1818,7 +1829,7 @@ const BlogPage = () => (
               A Toronto content plan focused on costs, timelines, approvals and owner decisions in the GTA.
             </p>
           </div>
-          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 transition-colors">
+          <a href={routeHref('blog')} className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 transition-colors">
             View Blog In Full <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -1883,7 +1894,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-wrap justify-center md:justify-end gap-x-10 gap-y-4 text-white text-[15px]">
             {navItems.map((item) => (
-              <a key={item.key} href={`#${item.key}`} className="hover:text-kiewit-yellow transition-colors">
+              <a key={item.key} href={routeHref(item.key)} className="hover:text-kiewit-yellow transition-colors">
                 {item.label}
               </a>
             ))}
@@ -1951,17 +1962,50 @@ const renderPage = (activePage: PageKey) => {
 };
 
 export default function App() {
-  const [activePage, setActivePage] = useState<PageKey>(() => resolvePage(window.location.hash));
+  const [activePage, setActivePage] = useState<PageKey>(() => resolvePage());
 
   useEffect(() => {
-    const syncPage = () => setActivePage(resolvePage(window.location.hash));
+    const syncPage = () => setActivePage(resolvePage());
     window.addEventListener('hashchange', syncPage);
+    window.addEventListener('popstate', syncPage);
     syncPage();
-    return () => window.removeEventListener('hashchange', syncPage);
+    return () => {
+      window.removeEventListener('hashchange', syncPage);
+      window.removeEventListener('popstate', syncPage);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleInternalRouteClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest<HTMLAnchorElement>('a[href]');
+      if (!anchor || anchor.target || anchor.getAttribute('href') === '#') return;
+
+      const url = new URL(anchor.href);
+      if (url.origin !== window.location.origin) return;
+
+      const pageKey = getPageKeyFromUrl(url) as PageKey | null;
+      if (!pageKey) return;
+
+      event.preventDefault();
+      window.history.pushState(null, '', `${url.pathname}${url.search}${url.hash}`);
+      setActivePage(pageKey);
+    };
+
+    document.addEventListener('click', handleInternalRouteClick);
+    return () => document.removeEventListener('click', handleInternalRouteClick);
   }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activePage]);
+
+  useEffect(() => {
+    applySeo(activePage);
   }, [activePage]);
 
   return (
