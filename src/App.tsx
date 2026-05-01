@@ -6,11 +6,13 @@ import {
   Facebook,
   Instagram,
   Linkedin,
+  Menu,
   Pause,
   Play,
   Plus,
   Search,
   Twitter,
+  X,
   Youtube,
 } from 'lucide-react';
 
@@ -158,18 +160,24 @@ const resolvePage = (hash: string): PageKey => {
 
 const Navbar = ({ activePage }: { activePage: PageKey }) => {
   const [openMenu, setOpenMenu] = useState<MainPageKey | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setOpenMenu(null);
+    setMobileMenuOpen(false);
+  }, [activePage]);
 
   return (
     <nav
       onMouseLeave={() => setOpenMenu(null)}
-      className="fixed top-0 left-0 right-0 z-50 flex items-stretch h-[96px] bg-gradient-to-b from-black/80 via-black/40 to-transparent"
+      className="fixed top-0 left-0 right-0 z-50 flex items-stretch h-[78px] lg:h-[96px] bg-gradient-to-b from-black/85 via-black/45 to-transparent"
     >
       {/* Logo Area */}
-      <a href="#" className="md:w-[380px] w-56 flex items-center justify-center shrink-0 overflow-hidden">
+      <a href="#" className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
         <img
           src="logo-transparent.png?v=20260430-1340"
           alt="Vitalite Construction"
-          className="w-[205px] md:w-[345px] h-auto max-h-[84px] object-contain"
+          className="w-[185px] md:w-[345px] h-auto max-h-[68px] lg:max-h-[84px] object-contain"
         />
       </a>
 
@@ -256,6 +264,67 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
           </button>
         </div>
       </div>
+
+      <div className="flex-1 lg:hidden flex items-center justify-end pr-5">
+        <button
+          type="button"
+          aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="w-11 h-11 border border-white/30 rounded-full flex items-center justify-center text-white hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
+        >
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed left-0 right-0 top-[78px] max-h-[calc(100vh-78px)] overflow-y-auto bg-black/96 border-t border-white/10 shadow-2xl">
+          <div className="px-5 py-6 space-y-6">
+            {navItems.map((item) => {
+              const dropdown = dropdownMenus[item.key];
+              const isActive = activePage === item.key || detailPages[activePage as DetailPageKey]?.parent === item.key;
+
+              return (
+                <div key={item.key} className="border-b border-white/10 pb-5 last:border-b-0 last:pb-0">
+                  <a
+                    href={`#${item.key}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between text-[14px] font-bold tracking-[0.12em] uppercase ${
+                      isActive ? 'text-kiewit-yellow' : 'text-white'
+                    }`}
+                  >
+                    {item.label}
+                    <ChevronRight className="w-4 h-4 text-kiewit-yellow" />
+                  </a>
+                  {dropdown && (
+                    <div className="mt-4 grid gap-5">
+                      {dropdown.map((column) => (
+                        <div key={column.heading}>
+                          <div className="text-[11px] font-bold tracking-[0.16em] uppercase text-white/45 mb-2">
+                            {column.heading}
+                          </div>
+                          <div className="grid gap-1">
+                            {column.links.map((link) => (
+                              <a
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block rounded-md px-2 py-2 text-[15px] font-medium text-white/82 hover:bg-white/10 hover:text-kiewit-yellow transition-colors"
+                              >
+                                {link.label}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
@@ -297,7 +366,7 @@ const Hero = () => {
   }, [isPaused]);
 
   return (
-    <div className="relative h-screen min-h-[600px] w-full overflow-hidden bg-black">
+    <div className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
@@ -314,7 +383,7 @@ const Hero = () => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent pointer-events-none"></div>
 
-      <div className="relative h-full flex items-center px-8 md:px-24">
+      <div className="relative h-full flex items-center px-5 sm:px-8 md:px-24 pt-16 lg:pt-0">
         <div className="max-w-4xl text-white">
           <motion.div
             key={`content-${currentSlide}`}
@@ -325,13 +394,13 @@ const Hero = () => {
             <div className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase">
               {heroSlides[currentSlide].category}
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-tight text-white drop-shadow-md">
+            <h1 className="text-[2.55rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
               {heroSlides[currentSlide].title}
             </h1>
-            <p className="text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
+            <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
               {heroSlides[currentSlide].desc}
             </p>
-            <a href="#" className="group inline-flex items-center text-xl font-medium hover:text-gray-300 transition-colors">
+            <a href="#services" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
               {heroSlides[currentSlide].link}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -342,13 +411,13 @@ const Hero = () => {
       {/* Navigation Arrows for Hero */}
       <button
         onClick={() => setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))}
-        className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
+        className="hidden sm:flex absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/30 items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button
         onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)}
-        className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
+        className="hidden sm:flex absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/30 items-center justify-center text-white hover:bg-white/10 transition-colors z-10"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
@@ -365,7 +434,7 @@ const Hero = () => {
       </div>
       <button
         onClick={() => setIsPaused(!isPaused)}
-        className="absolute bottom-10 right-10 w-10 h-10 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
+        className="absolute bottom-8 right-5 sm:bottom-10 sm:right-10 w-10 h-10 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"
       >
         {isPaused ? <Play className="w-4 h-4 text-white" fill="white" /> : <Pause className="w-4 h-4 text-white" fill="white" />}
       </button>
@@ -376,7 +445,7 @@ const Hero = () => {
 const SectionHeading = ({ title, className = '' }: { title: string; className?: string }) => (
   <div className={`mb-10 ${className}`}>
     <div className="w-16 h-1 bg-kiewit-yellow mb-6"></div>
-    <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white">
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight text-white">
       {title}
     </h2>
   </div>
@@ -389,7 +458,7 @@ const fadeInVariants = {
 
 const IntegratedSolutions = () => {
   return (
-    <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div
         initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }}
         variants={fadeInVariants}
@@ -423,16 +492,16 @@ const Stats = () => {
   ];
 
   return (
-    <section className="bg-kiewit-blue py-32 px-8">
+    <section className="bg-kiewit-blue py-20 md:py-32 px-5 sm:px-8">
       <motion.div
         initial="hidden" whileInView="visible" viewport={{ once: true }}
         variants={fadeInVariants}
         className="max-w-7xl mx-auto"
       >
-        <h2 className="text-4xl md:text-5xl font-medium text-center text-white mb-20 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-center text-white mb-14 md:mb-20 tracking-tight">
           Integrated Delivery. Clear Accountability.
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 text-center">
           {stats.map((stat, i) => (
             <motion.div
               key={i}
@@ -441,7 +510,7 @@ const Stats = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
             >
-              <div className="text-6xl md:text-7xl font-bold text-kiewit-yellow mb-6 tracking-tighter">
+              <div className="text-5xl sm:text-6xl md:text-7xl font-bold text-kiewit-yellow mb-4 md:mb-6 tracking-tighter">
                 {stat.value}
               </div>
               <div className="text-lg md:text-xl text-white font-medium max-w-[220px] mx-auto leading-tight">
@@ -512,7 +581,7 @@ const Expertise = () => {
   const activeExpertise = expertiseItems.find((item) => item.tab === activeTab) ?? expertiseItems[0];
 
   return (
-    <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div
         initial="hidden" whileInView="visible" viewport={{ once: true }}
         variants={fadeInVariants}
@@ -523,12 +592,12 @@ const Expertise = () => {
           Vitalite is not only a builder and not only a design office. We coordinate design, zoning review, engineering, permit applications, construction, inspections and closeout under one managed delivery process.
         </p>
 
-        <div className="flex flex-wrap items-center gap-4 mb-16">
+        <div className="flex flex-nowrap md:flex-wrap items-center gap-3 md:gap-4 mb-12 md:mb-16 overflow-x-auto pb-2 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {expertiseItems.map((item) => (
             <button
               key={item.tab}
               onClick={() => setActiveTab(item.tab)}
-              className={`px-6 py-2.5 rounded-full text-[15px] font-medium transition-colors border ${
+              className={`px-4 md:px-6 py-2.5 rounded-full text-[14px] md:text-[15px] font-medium transition-colors border whitespace-nowrap shrink-0 ${
                 activeTab === item.tab
                   ? 'bg-kiewit-yellow border-kiewit-yellow text-black'
                   : 'bg-transparent border-gray-600 text-white hover:border-white'
@@ -537,7 +606,7 @@ const Expertise = () => {
               {item.tab}
             </button>
           ))}
-          <button className="p-2 ml-4 hover:bg-white/10 rounded-full transition-colors">
+          <button className="hidden md:block p-2 ml-4 hover:bg-white/10 rounded-full transition-colors">
             <ChevronRight className="w-6 h-6 text-white" />
           </button>
         </div>
@@ -550,14 +619,14 @@ const Expertise = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-xl overflow-hidden h-[500px]"
+              className="rounded-xl overflow-hidden h-[320px] sm:h-[420px] lg:h-[500px]"
             >
               <img src={activeExpertise.image} alt={activeExpertise.title} className="w-full h-full object-cover" />
             </motion.div>
           </AnimatePresence>
           <div>
-            <h3 className="text-3xl font-medium mb-6">{activeExpertise.title}</h3>
-            <p className="text-lg text-gray-300 leading-relaxed mb-10">
+            <h3 className="text-2xl sm:text-3xl font-medium mb-5 md:mb-6">{activeExpertise.title}</h3>
+            <p className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 md:mb-10">
               {activeExpertise.desc}
             </p>
             <a href="#" className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
@@ -610,7 +679,7 @@ const Markets = () => {
   ];
 
   return (
-    <section className="bg-white text-black py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div
         initial="hidden" whileInView="visible" viewport={{ once: true }}
         variants={fadeInVariants}
@@ -619,14 +688,14 @@ const Markets = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-3xl">
             <div className="w-16 h-1 bg-kiewit-yellow mb-6"></div>
-            <h2 className="text-4xl md:text-5xl font-medium tracking-tight mb-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-6 md:mb-8">
               Our Services
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed font-light">
               Vitalite serves GTA homeowners, investors, developers and commercial clients with design-build general contracting and construction management across custom homes, multiplex housing, additions, secondary dwelling units, permit-ready drawings and ICI projects.
             </p>
           </div>
-          <div className="flex space-x-4 shrink-0">
+          <div className="hidden sm:flex space-x-4 shrink-0">
             <button className="w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors">
               <ChevronLeft className="w-6 h-6 text-black" />
             </button>
@@ -638,11 +707,11 @@ const Markets = () => {
 
         <div className="flex gap-6 overflow-x-auto pb-8 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {markets.map((market, i) => (
-            <div key={i} className="min-w-[300px] md:min-w-[340px] h-[480px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0">
+            <div key={i} className="min-w-[82vw] sm:min-w-[300px] md:min-w-[340px] h-[420px] sm:h-[480px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0">
               <img src={market.img} alt={market.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-8 w-full">
-                <h3 className="text-2xl font-bold text-white mb-3">{market.name}</h3>
+              <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{market.name}</h3>
                 <p className="text-sm text-gray-200 leading-relaxed mb-5">{market.summary}</p>
                 <div className="flex items-center text-[15px] font-medium text-white group-hover:text-gray-300 transition-colors">
                   Read more <ChevronRight className="w-5 h-5 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
@@ -681,7 +750,7 @@ const ProjectProcess = () => {
   ];
 
   return (
-    <section className="relative py-24 md:py-32 px-8 overflow-hidden bg-[#111]">
+    <section className="relative py-20 md:py-32 px-5 sm:px-8 overflow-hidden bg-[#111]">
       <div className="absolute inset-0 z-0">
         <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop" alt="Construction site" className="w-full h-full object-cover opacity-20" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-[#111]/80 to-transparent"></div>
@@ -696,16 +765,16 @@ const ProjectProcess = () => {
         <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mb-12">
           Our process moves projects from early feasibility through design, zoning, building permits, pre-construction, construction, pre-delivery inspection and aftercare. The result is a managed path from idea to occupancy.
         </p>
-        <a href="#" className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 mb-16 transition-colors">
+        <a href="#why-the-vitalite-way" className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 mb-12 md:mb-16 transition-colors">
           How Vitalite works <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
         </a>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((card, i) => (
-            <div key={i} className="h-[360px] rounded-2xl overflow-hidden relative group cursor-pointer">
+            <div key={i} className="h-[320px] sm:h-[360px] rounded-2xl overflow-hidden relative group cursor-pointer">
               <img src={card.img} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-6 w-full flex justify-between items-end gap-4">
+              <div className="absolute bottom-0 left-0 p-5 sm:p-6 w-full flex justify-between items-end gap-4">
                 <div className="max-w-[82%]">
                   <h3 className="text-[22px] font-bold text-white leading-tight mb-3">{card.title}</h3>
                   <p className="text-sm text-gray-200 leading-relaxed">{card.detail}</p>
@@ -1499,7 +1568,7 @@ const processSteps = [
 const SubPageHeading = ({ title, dark = false }: { title: string; dark?: boolean }) => (
   <div className="mb-10">
     <div className="w-16 h-1 bg-kiewit-yellow mb-6"></div>
-    <h2 className={`text-4xl md:text-5xl font-medium tracking-tight ${dark ? 'text-black' : 'text-white'}`}>
+    <h2 className={`text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight ${dark ? 'text-black' : 'text-white'}`}>
       {title}
     </h2>
   </div>
@@ -1509,7 +1578,7 @@ const SubPageHero = ({ page }: { page: MainPageKey }) => {
   const hero = subPageHeroes[page];
 
   return (
-    <div className="relative h-[78vh] min-h-[620px] w-full overflow-hidden bg-black">
+    <div className="relative h-[74svh] min-h-[560px] md:min-h-[620px] w-full overflow-hidden bg-black">
       <motion.div
         key={page}
         initial={{ opacity: 0, scale: 1.04 }}
@@ -1523,18 +1592,18 @@ const SubPageHero = ({ page }: { page: MainPageKey }) => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/65 to-transparent pointer-events-none"></div>
 
-      <div className="relative h-full flex items-center px-8 md:px-24 pt-20">
+      <div className="relative h-full flex items-center px-5 sm:px-8 md:px-24 pt-20">
         <div className="max-w-4xl text-white">
           <div className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase">
             {hero.category}
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-tight text-white drop-shadow-md">
+          <h1 className="text-[2.45rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
             {hero.title}
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
+          <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
             {hero.desc}
           </p>
-          <a href="#contact-us" className="group inline-flex items-center text-xl font-medium hover:text-gray-300 transition-colors">
+          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
             Start a consultation
             <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
@@ -1547,12 +1616,12 @@ const SubPageHero = ({ page }: { page: MainPageKey }) => {
 const CardRail = ({ cards }: { cards: ImageCard[] }) => (
   <div className="flex gap-6 overflow-x-auto pb-8 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
     {cards.map((card) => (
-      <a key={card.title} href={card.href ?? '#contact-us'} className="min-w-[300px] md:min-w-[360px] h-[500px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0 block">
+      <a key={card.title} href={card.href ?? '#contact-us'} className="min-w-[82vw] sm:min-w-[300px] md:min-w-[360px] h-[430px] sm:h-[500px] rounded-2xl overflow-hidden relative group cursor-pointer snap-start shrink-0 block">
         <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-8 w-full">
+        <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full">
           {card.eyebrow && <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-kiewit-yellow mb-3">{card.eyebrow}</div>}
-          <h3 className="text-2xl font-bold text-white mb-3">{card.title}</h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{card.title}</h3>
           <p className="text-sm text-gray-200 leading-relaxed mb-5">{card.summary}</p>
           <div className="flex items-center text-[15px] font-medium text-white group-hover:text-gray-300 transition-colors">
             Read more <ChevronRight className="w-5 h-5 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
@@ -1566,11 +1635,11 @@ const CardRail = ({ cards }: { cards: ImageCard[] }) => (
 const CardGrid = ({ cards }: { cards: ImageCard[] }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {cards.map((card) => (
-      <a key={card.title} href={card.href ?? '#contact-us'} className="h-[390px] rounded-2xl overflow-hidden relative group cursor-pointer block">
+      <a key={card.title} href={card.href ?? '#contact-us'} className="h-[330px] sm:h-[390px] rounded-2xl overflow-hidden relative group cursor-pointer block">
         <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-7 w-full">
-          <h3 className="text-[24px] font-bold text-white leading-tight mb-3">{card.title}</h3>
+        <div className="absolute bottom-0 left-0 p-5 sm:p-7 w-full">
+          <h3 className="text-xl sm:text-[24px] font-bold text-white leading-tight mb-3">{card.title}</h3>
           <p className="text-sm text-gray-200 leading-relaxed">{card.summary}</p>
         </div>
         <Plus className="absolute right-6 bottom-6 w-6 h-6 text-white" />
@@ -1584,7 +1653,7 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
 
   return (
     <>
-      <div className="relative h-[74vh] min-h-[600px] w-full overflow-hidden bg-black">
+      <div className="relative h-[72svh] min-h-[540px] md:min-h-[600px] w-full overflow-hidden bg-black">
         <motion.div
           key={pageKey}
           initial={{ opacity: 0, scale: 1.04 }}
@@ -1596,18 +1665,18 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
           <div className="absolute inset-0 bg-black/50"></div>
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent pointer-events-none"></div>
-        <div className="relative h-full flex items-center px-8 md:px-24 pt-20">
+        <div className="relative h-full flex items-center px-5 sm:px-8 md:px-24 pt-20">
           <div className="max-w-4xl text-white">
             <a href={`#${page.parent}`} className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-kiewit-yellow transition-colors">
               {page.category}
             </a>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-tight text-white drop-shadow-md">
+            <h1 className="text-[2.35rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
               {page.title}
             </h1>
-            <p className="text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
+            <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
               {page.subtitle}
             </p>
-            <a href="#contact-us" className="group inline-flex items-center text-xl font-medium hover:text-gray-300 transition-colors">
+            <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
               Discuss this project type
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -1615,14 +1684,14 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
         </div>
       </div>
 
-      <section className="bg-white text-black py-24 md:py-32 px-8 md:px-24">
+      <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-16">
           <div>
             <SubPageHeading title={page.title} dark />
-            <p className="text-lg text-gray-700 leading-relaxed mb-10">
+            <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
               {page.intro}
             </p>
-            <a href={`#${page.parent}`} className="group inline-flex items-center text-xl font-medium text-black hover:text-gray-600 transition-colors">
+            <a href={`#${page.parent}`} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
               Back to {navItems.find((item) => item.key === page.parent)?.label}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
@@ -1637,12 +1706,12 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
         </motion.div>
       </section>
 
-      <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+      <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {page.sections.map((section) => (
-            <article key={section.heading} className="border border-white/10 bg-white/5 rounded-2xl p-8">
-              <h2 className="text-3xl font-medium text-white mb-5">{section.heading}</h2>
-              <p className="text-lg text-gray-300 leading-relaxed">{section.text}</p>
+            <article key={section.heading} className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8">
+              <h2 className="text-2xl sm:text-3xl font-medium text-white mb-5">{section.heading}</h2>
+              <p className="text-base sm:text-lg text-gray-300 leading-relaxed">{section.text}</p>
             </article>
           ))}
         </motion.div>
@@ -1654,11 +1723,11 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
 const ServicesPage = () => (
   <>
     <SubPageHero page="services" />
-    <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         <div>
           <SubPageHeading title="Full-Service Design-Build Renovations Include:" />
-          <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
+          <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-xl">
             Vitalite packages the front-end planning, approval work and site execution that Toronto-area owners usually have to coordinate across separate teams.
           </p>
         </div>
@@ -1671,10 +1740,10 @@ const ServicesPage = () => (
         </div>
       </motion.div>
     </section>
-    <section className="bg-white text-black py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
         <SubPageHeading title="Toronto-Area Service Lines" dark />
-        <p className="text-lg text-gray-700 leading-relaxed font-light max-w-3xl mb-16">
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-3xl mb-12 md:mb-16">
           A Toronto service structure adapted to Vitalite's actual business scope across custom homes, multiplex housing, additions, permits, project management and ICI work.
         </p>
         <CardRail cards={servicePageCards} />
@@ -1686,24 +1755,24 @@ const ServicesPage = () => (
 const WhyVitalitePage = () => (
   <>
     <SubPageHero page="why-vitalite" />
-    <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
         <SubPageHeading title="Why Vitalite" />
-        <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mb-14">
+        <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-4xl mb-12 md:mb-14">
           Vitalite is positioned as a one-stop design-build and construction management partner, not just a construction crew and not just a drawing office. The value is coordinated accountability from planning to closeout.
         </p>
         <CardGrid cards={whyPageCards} />
       </motion.div>
     </section>
-    <section className="bg-kiewit-blue py-24 md:py-32 px-8">
+    <section className="bg-kiewit-blue py-20 md:py-32 px-5 sm:px-8">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-medium text-center text-white mb-16 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-center text-white mb-12 md:mb-16 tracking-tight">
           The Vitalite Way
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {processSteps.map((step, index) => (
             <div key={step} className="text-center">
-              <div className="text-5xl md:text-6xl font-bold text-transparent mb-5 tracking-tighter" style={{ WebkitTextStroke: '2px var(--color-kiewit-yellow)' }}>
+              <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-transparent mb-4 md:mb-5 tracking-tighter" style={{ WebkitTextStroke: '2px var(--color-kiewit-yellow)' }}>
                 {String(index + 1).padStart(2, '0')}
               </div>
               <div className="text-lg md:text-xl text-white font-medium leading-tight">{step}</div>
@@ -1718,16 +1787,16 @@ const WhyVitalitePage = () => (
 const OurWorkPage = () => (
   <>
     <SubPageHero page="our-work" />
-    <section className="bg-white text-black py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-3xl">
             <SubPageHeading title="Our Work" dark />
-            <p className="text-lg text-gray-700 leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light">
               Project categories are organized the way Toronto clients search: custom homes, condos, multiplex housing, garden suites, additions, full interiors and managed construction.
             </p>
           </div>
-          <a href="#contact-us" className="group inline-flex items-center text-xl font-medium text-black hover:text-gray-600 transition-colors">
+          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
             View all before + afters <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -1740,16 +1809,16 @@ const OurWorkPage = () => (
 const BlogPage = () => (
   <>
     <SubPageHero page="blog" />
-    <section className="bg-kiewit-dark py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="max-w-3xl">
             <SubPageHeading title="Our Most Popular Content" />
-            <p className="text-lg text-gray-300 leading-relaxed font-light">
+            <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light">
               A Toronto content plan focused on costs, timelines, approvals and owner decisions in the GTA.
             </p>
           </div>
-          <a href="#contact-us" className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
+          <a href="#contact-us" className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 transition-colors">
             View Blog In Full <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -1762,23 +1831,23 @@ const BlogPage = () => (
 const ContactPage = () => (
   <>
     <SubPageHero page="contact-us" />
-    <section className="bg-white text-black py-24 md:py-32 px-8 md:px-24">
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         <div>
           <SubPageHeading title="Contact Us" dark />
-          <p className="text-lg text-gray-700 leading-relaxed mb-10">
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
             Use this page to qualify new leads by project type, location, current stage and approval needs. It is ready for real phone, email and form integration when those details are available.
           </p>
           <div className="space-y-5">
             {['Custom home or rebuild', 'Multiplex, garden suite or laneway house', 'Addition, alteration or full renovation', 'Drawings, permits and engineering coordination', 'Commercial, industrial or institutional project'].map((item) => (
-              <div key={item} className="flex items-center gap-4 text-lg font-medium">
-                <span className="w-3 h-3 bg-kiewit-yellow rounded-full"></span>
+              <div key={item} className="flex items-start gap-4 text-base sm:text-lg font-medium">
+                <span className="w-3 h-3 bg-kiewit-yellow rounded-full shrink-0 mt-1.5"></span>
                 {item}
               </div>
             ))}
           </div>
         </div>
-        <form className="bg-kiewit-dark text-white rounded-2xl p-8 md:p-10 space-y-5">
+        <form className="bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5">
           <div>
             <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Name</label>
             <input className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Your name" />
@@ -1807,7 +1876,7 @@ const ContactPage = () => (
 const Footer = () => {
   return (
     <footer className="w-full">
-      <div className="bg-black py-20 px-8">
+      <div className="bg-black py-16 md:py-20 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="border-2 border-white px-4 py-2 text-white font-bold text-xl tracking-widest whitespace-nowrap">
             GTA DESIGN-BUILD
@@ -1821,7 +1890,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="bg-kiewit-yellow py-10 px-8">
+      <div className="bg-kiewit-yellow py-10 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-start gap-12">
           <div className="flex space-x-4">
             {[{ Icon: Facebook, id: 'fb' }, { Icon: Twitter, id: 'x' }, { Icon: Instagram, id: 'ig' }, { Icon: Youtube, id: 'yt' }, { Icon: Linkedin, id: 'li' }].map(({ Icon, id }) => (
