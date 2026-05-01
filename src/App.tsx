@@ -212,6 +212,7 @@ const frenchText: Record<string, string> = {
 
 const reverseFrenchText = Object.fromEntries(Object.entries(frenchText).map(([english, french]) => [french, english]));
 const copy = (text: string, language: Language) => (language === 'fr' ? frenchText[text] ?? text : text);
+const publicAsset = (fileName: string) => `${import.meta.env.BASE_URL}${fileName.replace(/^\/+/, '')}`;
 
 const translateVisibleText = (language: Language) => {
   if (typeof document === 'undefined') return;
@@ -530,6 +531,7 @@ const heroSlides = [
     title: 'GTA Design-Build Contractor',
     desc: 'Vitalite Construction Corp. delivers one-stop design-build, permitting, construction management and warranty support for homeowners, investors and commercial clients.',
     link: 'Explore Vitalite services',
+    video: publicAsset('vitalite-hero-design-build.mp4'),
     image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop',
   },
   {
@@ -551,6 +553,7 @@ const heroSlides = [
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const currentHeroSlide = heroSlides[currentSlide];
 
   useEffect(() => {
     if (isPaused) return;
@@ -571,7 +574,21 @@ const Hero = () => {
           transition={{ duration: 1.2, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
-          <img src={heroSlides[currentSlide].image} alt="Vitalite project" className="w-full h-full object-cover" />
+          {currentHeroSlide.video ? (
+            <video
+              src={currentHeroSlide.video}
+              poster={currentHeroSlide.image}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Vitalite design-build project video"
+            />
+          ) : (
+            <img src={currentHeroSlide.image} alt="Vitalite project" className="w-full h-full object-cover" />
+          )}
           <div className="absolute inset-0 bg-black/40"></div>
         </motion.div>
       </AnimatePresence>
@@ -587,16 +604,16 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <div className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase">
-              {heroSlides[currentSlide].category}
+              {currentHeroSlide.category}
             </div>
             <h1 className="text-[2.55rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
-              {heroSlides[currentSlide].title}
+              {currentHeroSlide.title}
             </h1>
             <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">
-              {heroSlides[currentSlide].desc}
+              {currentHeroSlide.desc}
             </p>
             <a href={routeHref('services')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
-              {heroSlides[currentSlide].link}
+              {currentHeroSlide.link}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
           </motion.div>
