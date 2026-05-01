@@ -21,6 +21,9 @@ import {
   getPageKeyFromUrl,
   getRouteHref,
   getRouteHrefFromLegacyHash,
+  pages as seoPages,
+  buildPageFaq,
+  type SeoPage,
 } from './seo';
 
 type MainPageKey = 'services' | 'why-vitalite' | 'our-work' | 'blog' | 'contact-us';
@@ -66,14 +69,26 @@ type DetailPageKey =
   | 'blog-renovation-laws'
   | 'blog-garden-suite-ideas'
   | 'blog-fixer-upper-vs-new';
-type PageKey = 'home' | MainPageKey | DetailPageKey;
+type PageKey = string;
 
 type ImageCard = {
   title: string;
   summary: string;
   image: string;
   eyebrow?: string;
-  href?: `#${DetailPageKey}`;
+  href?: string;
+};
+
+type DetailPageContent = {
+  parent: MainPageKey;
+  category: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  intro: string;
+  bullets: string[];
+  sections: Array<{ heading: string; text: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
 };
 
 type DropdownColumn = {
@@ -164,7 +179,7 @@ const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
 const resolvePage = (): PageKey => {
   const candidate = getPageKeyFromLocation(window.location) as PageKey;
   if (pageKeys.includes(candidate as MainPageKey)) return candidate;
-  if (Object.prototype.hasOwnProperty.call(detailPages, candidate)) return candidate;
+  if (Object.prototype.hasOwnProperty.call(allDetailPages, candidate)) return candidate;
   if (candidate === 'home') return candidate;
   return 'home';
 };
@@ -197,7 +212,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
         <div className="flex items-center space-x-8 text-[13px] font-semibold tracking-[0.1em] uppercase text-white/90">
           {navItems.map((item) => {
             const dropdown = dropdownMenus[item.key];
-            const isActive = activePage === item.key || detailPages[activePage as DetailPageKey]?.parent === item.key;
+            const isActive = activePage === item.key || allDetailPages[activePage]?.parent === item.key;
             const isOpen = openMenu === item.key;
 
             return (
@@ -293,7 +308,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
           <div className="px-5 py-6 space-y-6">
             {navItems.map((item) => {
               const dropdown = dropdownMenus[item.key];
-              const isActive = activePage === item.key || detailPages[activePage as DetailPageKey]?.parent === item.key;
+              const isActive = activePage === item.key || allDetailPages[activePage]?.parent === item.key;
 
               return (
                 <div key={item.key} className="border-b border-white/10 pb-5 last:border-b-0 last:pb-0">
@@ -978,16 +993,7 @@ const blogPageCards: ImageCard[] = [
   },
 ];
 
-const detailPages: Record<DetailPageKey, {
-  parent: MainPageKey;
-  category: string;
-  title: string;
-  subtitle: string;
-  image: string;
-  intro: string;
-  bullets: string[];
-  sections: Array<{ heading: string; text: string }>;
-}> = {
+const detailPages: Record<DetailPageKey, DetailPageContent> = {
   'service-architectural-services': {
     parent: 'services',
     category: 'SERVICES',
@@ -1532,6 +1538,95 @@ const detailPages: Record<DetailPageKey, {
   },
 };
 
+const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntries(
+  seoPages
+    .filter((page) => page.key.startsWith('location-') || page.key.startsWith('guide-'))
+    .map((page) => [page.key, createGeneratedLandingPage(page)]),
+);
+
+const allDetailPages: Record<string, DetailPageContent> = {
+  ...detailPages,
+  ...generatedLandingPages,
+};
+
+const locationSeoCards: ImageCard[] = seoPages
+  .filter((page) => page.key.startsWith('location-'))
+  .map((page) => ({
+    title: page.title.split('|')[0].trim(),
+    eyebrow: 'GTA service area',
+    summary: page.description,
+    image: imageForSeoPage(page),
+    href: routeHref(page.key),
+  }));
+
+const longTailSeoCards: ImageCard[] = seoPages
+  .filter((page) => page.key.startsWith('guide-'))
+  .map((page) => ({
+    title: page.title.split('|')[0].trim(),
+    eyebrow: 'Planning guide',
+    summary: page.description,
+    image: imageForSeoPage(page),
+    href: routeHref(page.key),
+  }));
+
+function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
+  const isLocation = page.key.startsWith('location-');
+  const parent: MainPageKey = isLocation ? 'services' : 'blog';
+
+  return {
+    parent,
+    category: isLocation ? 'GTA SERVICE AREA' : 'TORONTO GUIDE',
+    title: page.title.split('|')[0].trim(),
+    subtitle: page.description,
+    image: imageForSeoPage(page),
+    intro: isLocation
+      ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.`
+      : `This guide is built for owners planning ${page.primaryKeyword}. It explains the design-build considerations that usually affect feasibility, approvals, budget, timeline and construction delivery.`,
+    bullets: isLocation
+      ? ['Local feasibility and zoning review', 'Drawings, permits and engineering coordination', 'Budget, trades and site management', 'Inspection, PDI and warranty-oriented closeout']
+      : ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
+    sections: isLocation
+      ? [
+          {
+            heading: 'Local Project Fit',
+            text: `${page.primaryKeyword} work is best planned as an integrated process because design choices, zoning, drawings, budget and site logistics affect one another before construction begins.`,
+          },
+          {
+            heading: 'How Vitalite Helps',
+            text: 'Vitalite keeps consultation, design coordination, permit preparation, construction management, trade scheduling, quality control and client communication under one accountable team.',
+          },
+        ]
+      : [
+          {
+            heading: 'What Shapes The Answer',
+            text: 'The right plan depends on property conditions, zoning, structural scope, drawings, engineering, finish level, procurement, inspection timing and the project delivery model.',
+          },
+          {
+            heading: 'Design-Build Planning',
+            text: 'Vitalite connects early design, permit strategy, budgeting and construction management so owners can make decisions with fewer handoff gaps between consultants and trades.',
+          },
+        ],
+    faqs: buildPageFaq(page),
+  };
+}
+
+function imageForSeoPage(page: SeoPage) {
+  const keyword = `${page.key} ${page.primaryKeyword}`.toLowerCase();
+  if (keyword.includes('garden') || keyword.includes('laneway') || keyword.includes('adu')) {
+    return 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=2070&auto=format&fit=crop';
+  }
+  if (keyword.includes('multiplex') || keyword.includes('multi-unit') || keyword.includes('suite')) {
+    return 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2073&auto=format&fit=crop';
+  }
+  if (keyword.includes('addition') || keyword.includes('walkout') || keyword.includes('storey')) {
+    return 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop';
+  }
+  if (keyword.includes('permit') || keyword.includes('drawings') || keyword.includes('manager')) {
+    return 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop';
+  }
+  return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop';
+}
+
 const subPageHeroes: Record<MainPageKey, { category: string; title: string; desc: string; image: string }> = {
   services: {
     category: 'SERVICES',
@@ -1659,8 +1754,8 @@ const CardGrid = ({ cards }: { cards: ImageCard[] }) => (
   </div>
 );
 
-const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
-  const page = detailPages[pageKey];
+const DetailPage = ({ pageKey }: { pageKey: string }) => {
+  const page = allDetailPages[pageKey];
 
   return (
     <>
@@ -1727,6 +1822,22 @@ const DetailPage = ({ pageKey }: { pageKey: DetailPageKey }) => {
           ))}
         </motion.div>
       </section>
+
+      {page.faqs?.length ? (
+        <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
+            <SubPageHeading title="Frequently Asked Questions" dark />
+            <div className="divide-y divide-gray-200 border-y border-gray-200">
+              {page.faqs.map((faq) => (
+                <article key={faq.question} className="py-7">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-black mb-3">{faq.question}</h2>
+                  <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{faq.answer}</p>
+                </article>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      ) : null}
     </>
   );
 };
@@ -1758,6 +1869,15 @@ const ServicesPage = () => (
           A Toronto service structure adapted to Vitalite's actual business scope across custom homes, multiplex housing, additions, permits, project management and ICI work.
         </p>
         <CardRail cards={servicePageCards} />
+      </motion.div>
+    </section>
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
+        <SubPageHeading title="GTA Service Area Pages" />
+        <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          City and district pages are organized around the way owners search for local design-build help across custom homes, garden suites, multiplex projects and additions.
+        </p>
+        <CardGrid cards={locationSeoCards} />
       </motion.div>
     </section>
   </>
@@ -1834,6 +1954,15 @@ const BlogPage = () => (
           </a>
         </div>
         <CardGrid cards={blogPageCards} />
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
+        <SubPageHeading title="Toronto Long-Tail Planning Guides" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          These pages target the specific permit, cost, timing and project-planning questions GTA homeowners and investors search before contacting a contractor.
+        </p>
+        <CardGrid cards={longTailSeoCards} />
       </motion.div>
     </section>
   </>
@@ -1940,8 +2069,8 @@ const HomePage = () => (
 );
 
 const renderPage = (activePage: PageKey) => {
-  if (Object.prototype.hasOwnProperty.call(detailPages, activePage)) {
-    return <DetailPage pageKey={activePage as DetailPageKey} />;
+  if (Object.prototype.hasOwnProperty.call(allDetailPages, activePage)) {
+    return <DetailPage pageKey={activePage} />;
   }
 
   switch (activePage) {

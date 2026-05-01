@@ -387,5 +387,121 @@
       "kind": "article",
       "primaryKeyword": "renovating fixer upper GTA"
     }
+  ],
+  "locations": [
+    { "slug": "toronto", "name": "Toronto" },
+    { "slug": "north-york", "name": "North York" },
+    { "slug": "markham", "name": "Markham" },
+    { "slug": "richmond-hill", "name": "Richmond Hill" },
+    { "slug": "vaughan", "name": "Vaughan" },
+    { "slug": "mississauga", "name": "Mississauga" },
+    { "slug": "scarborough", "name": "Scarborough" },
+    { "slug": "etobicoke", "name": "Etobicoke" }
+  ],
+  "locationServices": [
+    {
+      "keyPrefix": "location-custom-homes",
+      "pathPrefix": "custom-home-builder",
+      "serviceName": "Custom Home Builder",
+      "titlePattern": "Custom Home Builder {location} | Vitalite",
+      "descriptionPattern": "Design-build custom home planning and construction management in {location}, including concept design, drawings, permits, budgets, site management, and warranty support.",
+      "primaryKeywordPattern": "custom home builder {location}"
+    },
+    {
+      "keyPrefix": "location-garden-suites",
+      "pathPrefix": "garden-suite-builder",
+      "serviceName": "Garden Suite Builder",
+      "titlePattern": "Garden Suite Builder {location} | Laneway & ADU",
+      "descriptionPattern": "Garden suite, laneway house, coach house, and ADU design-build support in {location}, covering feasibility, drawings, permits, engineering coordination, and construction management.",
+      "primaryKeywordPattern": "garden suite builder {location}"
+    },
+    {
+      "keyPrefix": "location-multiplex",
+      "pathPrefix": "multiplex-contractor",
+      "serviceName": "Multiplex Contractor",
+      "titlePattern": "Multiplex Contractor {location} | Multi-Unit Homes",
+      "descriptionPattern": "Multiplex and multi-unit residential construction planning in {location}, with zoning review, permit coordination, engineering, budgeting, and managed site delivery.",
+      "primaryKeywordPattern": "multiplex contractor {location}"
+    },
+    {
+      "keyPrefix": "location-home-additions",
+      "pathPrefix": "home-additions-contractor",
+      "serviceName": "Home Additions Contractor",
+      "titlePattern": "Home Additions Contractor {location} | Vitalite",
+      "descriptionPattern": "Home addition and major renovation support in {location}, including structural alterations, permit drawings, engineering coordination, construction management, and closeout.",
+      "primaryKeywordPattern": "home additions contractor {location}"
+    }
+  ],
+  "longTailPages": [
+    {
+      "key": "guide-garden-suite-cost-toronto",
+      "path": "/blog/garden-suite-cost-toronto",
+      "title": "Garden Suite Cost Toronto | Planning Guide",
+      "description": "A Toronto garden suite cost planning guide covering feasibility, drawings, permits, servicing, access, finishes, construction management, and contingency planning.",
+      "primaryKeyword": "garden suite cost Toronto"
+    },
+    {
+      "key": "guide-laneway-house-permit-toronto",
+      "path": "/blog/laneway-house-permit-toronto",
+      "title": "Laneway House Permit Toronto | Vitalite Guide",
+      "description": "A practical laneway house permit guide for Toronto owners covering zoning checks, drawings, engineering coordination, municipal review, and construction preparation.",
+      "primaryKeyword": "laneway house permit Toronto"
+    },
+    {
+      "key": "guide-multiplex-conversion-cost-toronto",
+      "path": "/blog/multiplex-conversion-cost-toronto",
+      "title": "Multiplex Conversion Cost Toronto | Vitalite Guide",
+      "description": "Understand Toronto multiplex conversion cost drivers, including zoning, unit planning, structure, mechanical systems, permits, finishes, and construction management.",
+      "primaryKeyword": "multiplex conversion cost Toronto"
+    },
+    {
+      "key": "guide-home-addition-permit-toronto",
+      "path": "/blog/home-addition-permit-toronto",
+      "title": "Home Addition Permit Toronto | Vitalite Guide",
+      "description": "A Toronto home addition permit guide covering zoning review, architectural drawings, structural coordination, building permit applications, inspections, and construction planning.",
+      "primaryKeyword": "home addition permit Toronto"
+    },
+    {
+      "key": "guide-second-storey-addition-toronto",
+      "path": "/blog/second-storey-addition-toronto",
+      "title": "Second Storey Addition Toronto | Cost & Permit Guide",
+      "description": "Plan a second storey addition in Toronto with guidance on feasibility, structure, design, permits, temporary living needs, budget planning, and site management.",
+      "primaryKeyword": "second storey addition Toronto"
+    },
+    {
+      "key": "guide-basement-walkout-permit-toronto",
+      "path": "/blog/basement-walkout-permit-toronto",
+      "title": "Basement Walkout Permit Toronto | Vitalite Guide",
+      "description": "A basement walkout permit guide for Toronto homeowners covering grading, structure, drainage, drawings, approvals, inspections, and construction sequencing.",
+      "primaryKeyword": "basement walkout permit Toronto"
+    },
+    {
+      "key": "guide-legal-basement-suite-toronto",
+      "path": "/blog/legal-basement-suite-conversion-toronto",
+      "title": "Legal Basement Suite Conversion Toronto | Vitalite",
+      "description": "Plan a legal basement suite conversion in Toronto with design-build guidance on code review, drawings, permits, fire separation, egress, mechanical systems, and inspections.",
+      "primaryKeyword": "legal basement suite conversion Toronto"
+    },
+    {
+      "key": "guide-custom-home-build-cost-gta",
+      "path": "/blog/custom-home-build-cost-gta",
+      "title": "Custom Home Build Cost GTA | Vitalite Guide",
+      "description": "A GTA custom home build cost guide covering land conditions, design scope, drawings, permits, structure, finishes, construction management, and warranty planning.",
+      "primaryKeyword": "custom home build cost GTA"
+    },
+    {
+      "key": "guide-design-build-construction-manager-toronto",
+      "path": "/blog/design-build-construction-manager-toronto",
+      "title": "Design-Build Construction Manager Toronto | Vitalite",
+      "description": "Learn when to use a Toronto design-build construction manager for complex custom homes, additions, multiplex projects, permits, budgets, trades, and inspections.",
+      "primaryKeyword": "design-build construction manager Toronto"
+    },
+    {
+      "key": "guide-toronto-permit-drawings",
+      "path": "/blog/toronto-permit-drawings-guide",
+      "title": "Toronto Permit Drawings Guide | Vitalite",
+      "description": "A Toronto permit drawings guide covering architectural drawings, structural coordination, HVAC and mechanical documentation, zoning review, and building permit applications.",
+      "primaryKeyword": "Toronto permit drawings"
+    }
   ]
 }

@@ -6,10 +6,11 @@ const distDir = path.join(rootDir, 'dist');
 const seoData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'seo-data.json'), 'utf8'));
 const baseHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
 const today = '2026-05-01';
+const pages = [...seoData.pages, ...buildGeneratedPages()];
 
-const pageByPath = new Map(seoData.pages.map((page) => [normalizeRoutePath(page.path), page]));
+const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page]));
 
-for (const page of seoData.pages) {
+for (const page of pages) {
   const html = injectSeo(baseHtml, page);
   const routePath = normalizeRoutePath(page.path);
   if (routePath === '/') {
@@ -138,6 +139,22 @@ function buildJsonLd(page, canonical, image) {
     });
   }
 
+  const faq = buildPageFaq(page);
+  if (faq.length) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': `${canonical}#faq`,
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    });
+  }
+
   return {
     '@context': 'https://schema.org',
     '@graph': graph,
@@ -167,10 +184,74 @@ function buildBreadcrumbs(page) {
 }
 
 function buildSitemap() {
-  const urls = seoData.pages
+  const urls = pages
     .map((page) => `  <url>\n    <loc>${canonicalFor(page)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${page.kind === 'article' ? 'monthly' : 'weekly'}</changefreq>\n    <priority>${page.key === 'home' ? '1.0' : page.kind === 'service' ? '0.9' : '0.7'}</priority>\n  </url>`)
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+}
+
+function buildGeneratedPages() {
+  const locationPages = (seoData.locationServices ?? []).flatMap((service) =>
+    (seoData.locations ?? []).map((location) => ({
+      key: `${service.keyPrefix}-${location.slug}`,
+      path: `/locations/${service.pathPrefix}-${location.slug}`,
+      title: fillLocationPattern(service.titlePattern, location.name),
+      description: fillLocationPattern(service.descriptionPattern, location.name),
+      kind: 'service',
+      primaryKeyword: fillLocationPattern(service.primaryKeywordPattern, location.name),
+    })),
+  );
+
+  const longTailPages = (seoData.longTailPages ?? []).map((page) => ({
+    ...page,
+    kind: 'article',
+  }));
+
+  return [...locationPages, ...longTailPages];
+}
+
+function buildPageFaq(page) {
+  if (page.key.startsWith('location-')) {
+    const location = getLocationFromPage(page);
+    return [
+      {
+        question: `Does Vitalite provide ${page.primaryKeyword} services?`,
+        answer: `Yes. Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawing coordination, permit preparation, budgeting, construction management, inspections, and warranty-oriented closeout.`,
+      },
+      {
+        question: `What should owners prepare before starting a project in ${location}?`,
+        answer: `Owners should prepare the property address, project goals, current drawings or surveys if available, budget direction, preferred timeline, and any known zoning, access, structural, or approval concerns.`,
+      },
+      {
+        question: 'Can Vitalite coordinate drawings, permits, engineering, and construction together?',
+        answer: 'Yes. Vitalite is positioned as a one-stop design-build and construction management partner that coordinates design, permit documentation, engineering inputs, trade scheduling, inspections, and site delivery.',
+      },
+    ];
+  }
+
+  if (page.key.startsWith('guide-')) {
+    return [
+      {
+        question: `What does this ${page.primaryKeyword} guide cover?`,
+        answer: `This guide explains the planning factors behind ${page.primaryKeyword}, including early feasibility, drawings, approvals, budget drivers, construction sequencing, inspections, and risk control.`,
+      },
+      {
+        question: 'When should a homeowner involve a design-build contractor?',
+        answer: 'A design-build contractor should be involved before drawings and pricing are fixed, especially when the project may involve zoning review, structural work, permit applications, budget tradeoffs, or staged construction.',
+      },
+      {
+        question: 'Does Vitalite provide a fixed cost from the first conversation?',
+        answer: 'A reliable cost depends on scope, existing conditions, drawings, finishes, approvals, and site logistics. Vitalite starts with consultation and budget planning before detailed construction pricing.',
+      },
+    ];
+  }
+
+  return [];
+}
+
+function getLocationFromPage(page) {
+  const location = (seoData.locations ?? []).find((item) => page.key.endsWith(`-${item.slug}`));
+  return location?.name ?? 'the GTA';
 }
 
 function canonicalFor(page) {
@@ -188,4 +269,8 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;');
+}
+
+function fillLocationPattern(pattern, location) {
+  return pattern.replaceAll('{location}', location);
 }

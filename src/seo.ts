@@ -14,7 +14,46 @@ export type SeoPage = {
 const baseUrl = import.meta.env.BASE_URL ?? '/';
 const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
 
-export const pages = seoData.pages as SeoPage[];
+type SeoLocation = { slug: string; name: string };
+type LocationService = {
+  keyPrefix: string;
+  pathPrefix: string;
+  serviceName: string;
+  titlePattern: string;
+  descriptionPattern: string;
+  primaryKeywordPattern: string;
+};
+type LongTailPage = {
+  key: string;
+  path: string;
+  title: string;
+  description: string;
+  primaryKeyword: string;
+};
+
+const rawSeoData = seoData as typeof seoData & {
+  locations?: SeoLocation[];
+  locationServices?: LocationService[];
+  longTailPages?: LongTailPage[];
+};
+
+const generatedLocationPages: SeoPage[] = (rawSeoData.locationServices ?? []).flatMap((service) =>
+  (rawSeoData.locations ?? []).map((location) => ({
+    key: `${service.keyPrefix}-${location.slug}`,
+    path: `/locations/${service.pathPrefix}-${location.slug}`,
+    title: fillLocationPattern(service.titlePattern, location.name),
+    description: fillLocationPattern(service.descriptionPattern, location.name),
+    kind: 'service' as const,
+    primaryKeyword: fillLocationPattern(service.primaryKeywordPattern, location.name),
+  })),
+);
+
+const generatedLongTailPages: SeoPage[] = (rawSeoData.longTailPages ?? []).map((page) => ({
+  ...page,
+  kind: 'article' as const,
+}));
+
+export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages, ...generatedLongTailPages];
 export const pageByKey = new Map(pages.map((page) => [page.key, page]));
 export const pathByKey = new Map(pages.map((page) => [page.key, page.path]));
 const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page.key]));
@@ -159,10 +198,70 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     });
   }
 
+  const faq = buildPageFaq(page);
+  if (faq.length) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': `${canonical}#faq`,
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    });
+  }
+
   return {
     '@context': 'https://schema.org',
     '@graph': graph,
   };
+};
+
+export const buildPageFaq = (page: SeoPage) => {
+  if (page.key.startsWith('location-')) {
+    const location = getLocationFromPage(page);
+    return [
+      {
+        question: `Does Vitalite provide ${page.primaryKeyword} services?`,
+        answer: `Yes. Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawing coordination, permit preparation, budgeting, construction management, inspections, and warranty-oriented closeout.`,
+      },
+      {
+        question: `What should owners prepare before starting a project in ${location}?`,
+        answer: `Owners should prepare the property address, project goals, current drawings or surveys if available, budget direction, preferred timeline, and any known zoning, access, structural, or approval concerns.`,
+      },
+      {
+        question: 'Can Vitalite coordinate drawings, permits, engineering, and construction together?',
+        answer: 'Yes. Vitalite is positioned as a one-stop design-build and construction management partner that coordinates design, permit documentation, engineering inputs, trade scheduling, inspections, and site delivery.',
+      },
+    ];
+  }
+
+  if (page.key.startsWith('guide-')) {
+    return [
+      {
+        question: `What does this ${page.primaryKeyword} guide cover?`,
+        answer: `This guide explains the planning factors behind ${page.primaryKeyword}, including early feasibility, drawings, approvals, budget drivers, construction sequencing, inspections, and risk control.`,
+      },
+      {
+        question: 'When should a homeowner involve a design-build contractor?',
+        answer: 'A design-build contractor should be involved before drawings and pricing are fixed, especially when the project may involve zoning review, structural work, permit applications, budget tradeoffs, or staged construction.',
+      },
+      {
+        question: 'Does Vitalite provide a fixed cost from the first conversation?',
+        answer: 'A reliable cost depends on scope, existing conditions, drawings, finishes, approvals, and site logistics. Vitalite starts with consultation and budget planning before detailed construction pricing.',
+      },
+    ];
+  }
+
+  return [];
+};
+
+const getLocationFromPage = (page: SeoPage) => {
+  const match = (rawSeoData.locations ?? []).find((location) => page.key.endsWith(`-${location.slug}`));
+  return match?.name ?? 'the GTA';
 };
 
 const buildBreadcrumbs = (page: SeoPage) => {
@@ -197,6 +296,8 @@ const normalizeRoutePath = (path: string) => {
   if (!path || path === '/') return '/';
   return `/${path.replace(/^\/+|\/+$/g, '')}`;
 };
+
+const fillLocationPattern = (pattern: string, location: string) => pattern.replaceAll('{location}', location);
 
 const setCanonical = (href: string) => {
   let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
