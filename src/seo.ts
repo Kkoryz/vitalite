@@ -37,6 +37,10 @@ const rawSeoData = seoData as typeof seoData & {
   longTailPages?: LongTailPage[];
 };
 
+function fillLocationPattern(pattern: string, location: string) {
+  return pattern.replaceAll('{location}', location);
+}
+
 const generatedLocationPages: SeoPage[] = (rawSeoData.locationServices ?? []).flatMap((service) =>
   (rawSeoData.locations ?? []).map((location) => ({
     key: `${service.keyPrefix}-${location.slug}`,
@@ -322,8 +326,6 @@ const normalizeRoutePath = (path: string) => {
   if (!path || path === '/') return '/';
   return `/${path.replace(/^\/+|\/+$/g, '')}`;
 };
-
-const fillLocationPattern = (pattern: string, location: string) => pattern.replaceAll('{location}', location);
 
 const setCanonical = (href: string) => {
   let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
