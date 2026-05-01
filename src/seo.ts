@@ -118,6 +118,7 @@ export const applySeo = (key: string) => {
 export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => {
   const organizationId = `${seoData.siteUrl}/#organization`;
   const localBusinessId = `${seoData.siteUrl}/#localbusiness`;
+  const webPageType = page.kind === 'contact' ? ['WebPage', 'ContactPage'] : 'WebPage';
   const graph: Array<Record<string, unknown>> = [
     {
       '@type': 'WebSite',
@@ -150,7 +151,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       },
     },
     {
-      '@type': 'WebPage',
+      '@type': webPageType,
       '@id': `${canonical}#webpage`,
       url: canonical,
       name: page.title,
@@ -221,6 +222,31 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
 };
 
 export const buildPageFaq = (page: SeoPage) => {
+  if (page.key === 'contact-us') {
+    return [
+      {
+        question: 'What project details should I include when contacting Vitalite?',
+        answer:
+          'Include the property city or address, project type, current stage, drawings or permit status, target budget direction, timeline, and any known zoning, structural, access, or inspection concerns.',
+      },
+      {
+        question: 'Can Vitalite help before drawings or permits are ready?',
+        answer:
+          'Yes. Vitalite can start with consultation, feasibility review, conceptual planning, drawing coordination, zoning and building code review, permit preparation, and budget planning before construction.',
+      },
+      {
+        question: 'What project types does Vitalite review for new inquiries?',
+        answer:
+          'Vitalite reviews GTA custom homes, rebuilds, multi-unit and multiplex projects, garden suites, laneway houses, home additions, major renovations, permits, construction management, and ICI projects.',
+      },
+      {
+        question: 'Which GTA areas can contact Vitalite for a project review?',
+        answer:
+          'Vitalite works with owners and investors across Toronto and the GTA, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and nearby municipalities.',
+      },
+    ];
+  }
+
   if (page.key.startsWith('location-')) {
     const location = getLocationFromPage(page);
     return [

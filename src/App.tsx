@@ -1569,6 +1569,24 @@ const longTailSeoCards: ImageCard[] = seoPages
     href: routeHref(page.key),
   }));
 
+const contactSeoPage = seoPages.find((page) => page.key === 'contact-us');
+const contactFaqs = contactSeoPage ? buildPageFaq(contactSeoPage) : [];
+const contactIntakeItems = [
+  'Property address or GTA municipality',
+  'Project type and current planning stage',
+  'Existing drawings, survey or permit status',
+  'Target budget direction and timeline',
+  'Known zoning, structural, access or inspection concerns',
+];
+const contactPriorityLinks = [
+  { label: 'Custom home consultation', key: 'service-custom-homes' },
+  { label: 'Multiplex project review', key: 'service-multiplex' },
+  { label: 'Garden suite or laneway house', key: 'service-garden-suites' },
+  { label: 'Additions and alterations', key: 'service-home-additions' },
+  { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
+  { label: 'Project and construction management', key: 'service-project-management' },
+] satisfies Array<{ label: string; key: DetailPageKey }>;
+
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isLocation = page.key.startsWith('location-');
   const parent: MainPageKey = isLocation ? 'services' : 'blog';
@@ -1976,8 +1994,18 @@ const ContactPage = () => (
         <div>
           <SubPageHeading title="Contact Us" dark />
           <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
-            Use this page to qualify new leads by project type, location, current stage and approval needs. It is ready for real phone, email and form integration when those details are available.
+            Share the property location, project type and current stage. Vitalite reviews design-build, permit, construction management and ICI inquiries across Toronto and the GTA, then helps clarify scope, approval path, budget direction and delivery model.
           </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <div className="border border-gray-200 rounded-2xl p-5">
+              <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-2">Service area</div>
+              <div className="text-xl font-bold">Toronto and GTA</div>
+            </div>
+            <div className="border border-gray-200 rounded-2xl p-5">
+              <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-2">Project fit</div>
+              <div className="text-xl font-bold">Design, permits and build</div>
+            </div>
+          </div>
           <div className="space-y-5">
             {['Custom home or rebuild', 'Multiplex, garden suite or laneway house', 'Addition, alteration or full renovation', 'Drawings, permits and engineering coordination', 'Commercial, industrial or institutional project'].map((item) => (
               <div key={item} className="flex items-start gap-4 text-base sm:text-lg font-medium">
@@ -2008,6 +2036,48 @@ const ContactPage = () => (
             Start Consultation
           </button>
         </form>
+      </motion.div>
+    </section>
+    <section className="bg-gray-100 text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div>
+          <SubPageHeading title="What To Include" dark />
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-8">
+            Clear intake details help Vitalite identify whether the next step should be feasibility review, drawings, permit coordination, budgeting or construction planning.
+          </p>
+          <div className="space-y-4">
+            {contactIntakeItems.map((item) => (
+              <div key={item} className="flex items-start gap-4 bg-white rounded-2xl p-5 shadow-sm">
+                <span className="w-3 h-3 bg-kiewit-yellow rounded-full shrink-0 mt-1.5"></span>
+                <span className="text-base sm:text-lg font-medium">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <SubPageHeading title="Project Paths" dark />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {contactPriorityLinks.map((item) => (
+              <a key={item.key} href={routeHref(item.key)} className="group bg-white rounded-2xl p-5 min-h-[132px] flex flex-col justify-between shadow-sm hover:bg-kiewit-dark hover:text-white transition-colors">
+                <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 group-hover:text-kiewit-yellow">Start here</span>
+                <span className="text-lg font-bold leading-snug">{item.label}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
+        <SubPageHeading title="Contact FAQ" dark />
+        <div className="divide-y divide-gray-200 border-y border-gray-200">
+          {contactFaqs.map((item) => (
+            <div key={item.question} className="py-7">
+              <h3 className="text-xl sm:text-2xl font-bold mb-3">{item.question}</h3>
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{item.answer}</p>
+            </div>
+          ))}
+        </div>
       </motion.div>
     </section>
   </>
