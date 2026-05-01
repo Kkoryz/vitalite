@@ -91,6 +91,8 @@ type DetailPageContent = {
   faqs?: Array<{ question: string; answer: string }>;
 };
 
+type Language = 'en' | 'fr';
+
 type DropdownColumn = {
   heading: string;
   links: Array<{ label: string; href: `#${MainPageKey | DetailPageKey}`; description?: string }>;
@@ -108,6 +110,137 @@ const pageKeys = navItems.map((item) => item.key);
 
 const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
 const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
+
+const frenchText: Record<string, string> = {
+  Services: 'Services',
+  Home: 'Accueil',
+  Service: 'Service',
+  Guide: 'Guide',
+  'Why Vitalite': 'Pourquoi Vitalite',
+  'Our Work': 'Projets',
+  Blog: 'Blogue',
+  'Contact Us': 'Contactez-nous',
+  Search: 'Rechercher',
+  'Search Vitalite': 'Rechercher sur Vitalite',
+  'Search services, locations, permits, additions, multiplex projects and planning guides.': 'Recherchez services, secteurs, permis, agrandissements, multiplex et guides de planification.',
+  'Type a service, city, permit question or project type.': 'Tapez un service, une ville, une question de permis ou un type de projet.',
+  'Quick searches': 'Recherches rapides',
+  Results: 'Resultats',
+  'No results found.': 'Aucun resultat trouve.',
+  'Try custom homes, garden suites, permits, multiplex, Markham or Toronto.': 'Essayez maisons sur mesure, garden suites, permis, multiplex, Markham ou Toronto.',
+  'Start typing to search services, project pages and guides.': 'Commencez a taper pour rechercher services, projets et guides.',
+  'View page': 'Voir la page',
+  'Close search': 'Fermer la recherche',
+  'Custom homes': 'Maisons sur mesure',
+  'Garden suites': 'Garden suites',
+  Multiplex: 'Multiplex',
+  Permits: 'Permis',
+  Markham: 'Markham',
+  Additions: 'Agrandissements',
+  Overview: 'Apercu',
+  'Design-Build Renovations Include': 'Services conception-construction inclus',
+  'Project Types': 'Types de projets',
+  'Why Work With Vitalite': 'Pourquoi travailler avec Vitalite',
+  'Project Categories': 'Categories de projets',
+  'Popular Guides': 'Guides populaires',
+  'Architectural Services': 'Services architecturaux',
+  'Interior Design': 'Design interieur',
+  Rendering: 'Rendus 3D',
+  'Material Selection / Procurement': 'Selection et approvisionnement des materiaux',
+  'Building + Board Approvals': 'Approbations municipales et de copropriete',
+  'Construction & Site Management': 'Gestion de chantier',
+  'Custom Home Design & Build': 'Maisons sur mesure conception-construction',
+  'Multi-Unit & Multiplex Construction': 'Construction multi-logements et multiplex',
+  'Garden Suites & Laneway Houses': 'Garden suites et maisons de ruelle',
+  'Home Additions & Major Renovations': 'Agrandissements et renovations majeures',
+  'Drawings, Permits & Engineering': 'Plans, permis et ingenierie',
+  'Project & Construction Management': 'Gestion de projet et construction',
+  'Industrial, Commercial & Institutional': 'Industriel, commercial et institutionnel',
+  'About Us': 'A propos',
+  'The Vitalite Way': 'La methode Vitalite',
+  'Why Design-Build?': 'Pourquoi conception-construction?',
+  Testimonials: 'Temoignages',
+  'In The News': 'Dans les medias',
+  'Custom Homes': 'Maisons sur mesure',
+  'Multi-Unit & Multiplex': 'Multi-logements et multiplex',
+  'Additions & Major Renovations': 'Agrandissements et renovations majeures',
+  'ICI Projects': 'Projets ICI',
+  'Full Interiors': 'Interieurs complets',
+  "Buyer’s Renovation Guide": 'Guide acheteur pour renovation',
+  'Toronto Renovations: Cost Per SQ FT': 'Renovations a Toronto : cout par pi2',
+  'Design-Build Vs Architect': 'Conception-construction vs architecte',
+  'How Long Is A GTA Renovation?': 'Combien de temps dure une renovation dans le GTA?',
+  'Toronto Renovation Laws': 'Regles de renovation a Toronto',
+  'Garden Suite Ideas 2026': 'Idees de garden suite 2026',
+  'Renovating A Fixer-Upper vs Buying New': 'Renover une propriete a reparer ou acheter neuf',
+  'GTA Design-Build Contractor': 'Entrepreneur conception-construction dans le GTA',
+  'Luxury Custom Homes, Built Around Your Vision': 'Maisons de luxe sur mesure, concues autour de votre vision',
+  'Multiplex Housing, Garden Suites & Additions': 'Multiplex, garden suites et agrandissements',
+  'Explore Vitalite services': 'Explorer les services Vitalite',
+  'Custom home design & build': 'Conception-construction de maison sur mesure',
+  'Plan a project consultation': 'Planifier une consultation',
+  'GTA DESIGN-BUILD': 'CONCEPTION-CONSTRUCTION GTA',
+  'Full-Service Design-Build Renovations Include:': 'Services complets conception-construction inclus :',
+  'Toronto-Area Service Lines': 'Services dans la region de Toronto',
+  'GTA Service Area Pages': 'Pages de services par secteur GTA',
+  'Toronto Long-Tail Planning Guides': 'Guides de planification Toronto',
+  'Our Most Popular Content': 'Nos contenus les plus populaires',
+  'View Blog In Full': 'Voir tout le blogue',
+  'View all before + afters': 'Voir tous les avant/apres',
+  'Start With a Clear Project Conversation': 'Commencez par une conversation claire sur le projet',
+  'What To Include': 'Informations a inclure',
+  'Project Paths': 'Parcours de projet',
+  'Start here': 'Commencer ici',
+  'Custom home consultation': 'Consultation maison sur mesure',
+  'Multiplex project review': 'Evaluation de projet multiplex',
+  'Garden suite or laneway house': 'Garden suite ou maison de ruelle',
+  'Additions and alterations': 'Agrandissements et modifications',
+  'Drawings, permits and engineering': 'Plans, permis et ingenierie',
+  'Project and construction management': 'Gestion de projet et construction',
+  'Contact FAQ': 'FAQ contact',
+  'Start Consultation': 'Demarrer la consultation',
+  Name: 'Nom',
+  Email: 'Courriel',
+  'Project Type': 'Type de projet',
+  'Project Details': 'Details du projet',
+  'Privacy Statement': 'Declaration de confidentialite',
+  'Terms and Conditions': 'Conditions generales',
+  Accessibility: 'Accessibilite',
+  'Cookies Settings': 'Parametres des cookies',
+  '(c) 2026 Vitalite Construction Corp. All rights reserved.': '(c) 2026 Vitalite Construction Corp. Tous droits reserves.',
+};
+
+const reverseFrenchText = Object.fromEntries(Object.entries(frenchText).map(([english, french]) => [french, english]));
+const copy = (text: string, language: Language) => (language === 'fr' ? frenchText[text] ?? text : text);
+
+const translateVisibleText = (language: Language) => {
+  if (typeof document === 'undefined') return;
+  const dictionary = language === 'fr' ? frenchText : reverseFrenchText;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'INPUT'].includes(parent.tagName)) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      const trimmed = node.textContent?.trim();
+      return trimmed && dictionary[trimmed] ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+    },
+  });
+
+  const nodes: Text[] = [];
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode as Text);
+  }
+
+  nodes.forEach((node) => {
+    const text = node.textContent ?? '';
+    const trimmed = text.trim();
+    const translated = dictionary[trimmed];
+    if (translated) {
+      node.textContent = text.replace(trimmed, translated);
+    }
+  });
+};
 
 const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
   services: [
@@ -184,7 +317,17 @@ const resolvePage = (): PageKey => {
   return 'home';
 };
 
-const Navbar = ({ activePage }: { activePage: PageKey }) => {
+const Navbar = ({
+  activePage,
+  language,
+  onLanguageChange,
+  onSearchOpen,
+}: {
+  activePage: PageKey;
+  language: Language;
+  onLanguageChange: (language: Language) => void;
+  onSearchOpen: () => void;
+}) => {
   const [openMenu, setOpenMenu] = useState<MainPageKey | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -230,7 +373,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                       isActive ? 'text-kiewit-yellow' : ''
                     }`}
                   >
-                    {item.label}
+                    {copy(item.label, language)}
                     <ChevronRight className={`w-4 h-4 ml-1 rotate-90 transition-colors ${isOpen ? 'text-kiewit-yellow' : 'text-white/50'}`} />
                   </button>
                 ) : (
@@ -241,7 +384,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                       isActive ? 'text-kiewit-yellow' : ''
                     }`}
                   >
-                    {item.label}
+                    {copy(item.label, language)}
                   </a>
                 )}
                 {dropdown && (
@@ -250,14 +393,14 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                   }`}>
                     <div className="px-8 pt-7">
                       <a href={routeHref(item.key)} onClick={() => setOpenMenu(null)} className="inline-flex items-center text-kiewit-yellow text-[13px] font-bold tracking-[0.12em] uppercase hover:text-white transition-colors">
-                        {item.label} Overview <ChevronRight className="w-4 h-4 ml-2" />
+                        {copy(item.label, language)} {copy('Overview', language)} <ChevronRight className="w-4 h-4 ml-2" />
                       </a>
                     </div>
                     <div className={`grid gap-8 p-8 ${dropdown.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                       {dropdown.map((column) => (
                         <div key={column.heading}>
                           <div className="text-kiewit-yellow text-[11px] font-bold tracking-[0.18em] uppercase mb-5">
-                            {column.heading}
+                            {copy(column.heading, language)}
                           </div>
                           <div className="space-y-1">
                             {column.links.map((link) => (
@@ -267,7 +410,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                                 onClick={() => setOpenMenu(null)}
                                 className="block rounded-md px-3 py-2 text-[14px] leading-snug tracking-normal normal-case font-semibold text-white hover:bg-white/10 hover:text-kiewit-yellow transition-colors"
                               >
-                                {link.label}
+                                {copy(link.label, language)}
                               </a>
                             ))}
                           </div>
@@ -282,16 +425,42 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
         </div>
 
         <div className="flex items-center space-x-6 text-white/90">
-          <div className="flex items-center text-[13px] font-semibold tracking-[0.1em] border-r border-white/30 pr-6 uppercase cursor-pointer hover:text-kiewit-yellow transition-colors group">
-            EN <ChevronRight className="w-4 h-4 ml-1 rotate-90 text-kiewit-yellow group-hover:text-kiewit-yellow transition-colors" />
+          <div className="flex items-center gap-2 text-[13px] font-semibold tracking-[0.1em] border-r border-white/30 pr-6 uppercase">
+            {(['en', 'fr'] as const).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => onLanguageChange(item)}
+                className={`hover:text-kiewit-yellow transition-colors ${language === item ? 'text-kiewit-yellow' : 'text-white/70'}`}
+                aria-pressed={language === item}
+              >
+                {item.toUpperCase()}
+              </button>
+            ))}
           </div>
-          <button className="hover:text-kiewit-yellow transition-colors">
+          <button type="button" aria-label={copy('Search', language)} onClick={onSearchOpen} className="hover:text-kiewit-yellow transition-colors">
             <Search className="w-5 h-5 text-kiewit-yellow" />
           </button>
         </div>
       </div>
 
-      <div className="flex-1 lg:hidden flex items-center justify-end pr-5">
+      <div className="flex-1 lg:hidden flex items-center justify-end pr-5 gap-3">
+        <button
+          type="button"
+          onClick={onSearchOpen}
+          aria-label={copy('Search', language)}
+          className="w-11 h-11 border border-white/30 rounded-full flex items-center justify-center text-kiewit-yellow hover:border-kiewit-yellow transition-colors"
+        >
+          <Search className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onLanguageChange(language === 'en' ? 'fr' : 'en')}
+          className="w-11 h-11 border border-white/30 rounded-full flex items-center justify-center text-[12px] font-bold text-white hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
+          aria-label={language === 'en' ? 'Switch to French' : 'Switch to English'}
+        >
+          {language.toUpperCase()}
+        </button>
         <button
           type="button"
           aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -319,7 +488,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                       isActive ? 'text-kiewit-yellow' : 'text-white'
                     }`}
                   >
-                    {item.label}
+                    {copy(item.label, language)}
                     <ChevronRight className="w-4 h-4 text-kiewit-yellow" />
                   </a>
                   {dropdown && (
@@ -327,7 +496,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                       {dropdown.map((column) => (
                         <div key={column.heading}>
                           <div className="text-[11px] font-bold tracking-[0.16em] uppercase text-white/45 mb-2">
-                            {column.heading}
+                            {copy(column.heading, language)}
                           </div>
                           <div className="grid gap-1">
                             {column.links.map((link) => (
@@ -337,7 +506,7 @@ const Navbar = ({ activePage }: { activePage: PageKey }) => {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block rounded-md px-2 py-2 text-[15px] font-medium text-white/82 hover:bg-white/10 hover:text-kiewit-yellow transition-colors"
                               >
-                                {link.label}
+                                {copy(link.label, language)}
                               </a>
                             ))}
                           </div>
@@ -1587,6 +1756,162 @@ const contactPriorityLinks = [
   { label: 'Project and construction management', key: 'service-project-management' },
 ] satisfies Array<{ label: string; key: DetailPageKey }>;
 
+const searchKindLabels: Record<string, string> = {
+  home: 'Home',
+  serviceCollection: 'Services',
+  service: 'Service',
+  about: 'Why Vitalite',
+  collection: 'Our Work',
+  blog: 'Blog',
+  article: 'Guide',
+  contact: 'Contact Us',
+};
+
+const searchItems = seoPages.map((page) => ({
+  key: page.key,
+  href: routeHref(page.key),
+  title: page.title.split('|')[0].trim(),
+  description: page.description,
+  kind: searchKindLabels[page.kind] ?? page.kind,
+  haystack: `${page.title} ${page.description} ${page.primaryKeyword} ${page.key}`.toLowerCase(),
+}));
+
+const SearchOverlay = ({
+  open,
+  onClose,
+  language,
+}: {
+  open: boolean;
+  onClose: () => void;
+  language: Language;
+}) => {
+  const [query, setQuery] = useState('');
+  const quickSearches = ['Custom homes', 'Garden suites', 'Multiplex', 'Permits', 'Markham', 'Additions'];
+  const normalizedQuery = query.trim().toLowerCase();
+  const results = normalizedQuery
+    ? searchItems
+        .filter((item) => item.haystack.includes(normalizedQuery))
+        .slice(0, 12)
+    : searchItems
+        .filter((item) => ['services', 'service-custom-homes', 'service-garden-suites', 'service-multiplex', 'contact-us'].includes(item.key))
+        .slice(0, 8);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[80] bg-black/92 backdrop-blur-md text-white px-5 sm:px-8 py-6 sm:py-10 overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-label={copy('Search Vitalite', language)}
+        >
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-start justify-between gap-6 mb-8">
+              <div>
+                <div className="text-kiewit-yellow text-[12px] font-bold tracking-[0.2em] uppercase mb-3">
+                  {copy('Search', language)}
+                </div>
+                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">{copy('Search Vitalite', language)}</h2>
+                <p className="text-gray-300 mt-4 max-w-2xl leading-relaxed">
+                  {copy('Search services, locations, permits, additions, multiplex projects and planning guides.', language)}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={copy('Close search', language)}
+                className="w-12 h-12 rounded-full border border-white/25 flex items-center justify-center hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="relative mb-6">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-kiewit-yellow" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={copy('Type a service, city, permit question or project type.', language)}
+                className="w-full bg-white text-black rounded-none border-4 border-kiewit-yellow pl-14 pr-5 py-5 text-lg sm:text-2xl font-semibold outline-none"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 mb-10">
+              <span className="text-[12px] font-bold tracking-[0.16em] uppercase text-white/55">{copy('Quick searches', language)}</span>
+              {quickSearches.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setQuery(item)}
+                  className="border border-white/20 px-4 py-2 text-sm font-semibold hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
+                >
+                  {copy(item, language)}
+                </button>
+              ))}
+            </div>
+
+            <div className="mb-5 text-[12px] font-bold tracking-[0.18em] uppercase text-kiewit-yellow">
+              {copy('Results', language)} ({results.length})
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {results.map((item) => (
+                <a
+                  key={item.key}
+                  href={item.href}
+                  onClick={onClose}
+                  className="group border border-white/12 bg-white/5 p-5 sm:p-6 hover:bg-white hover:text-black transition-colors"
+                >
+                  <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-kiewit-yellow mb-3">
+                    {copy(item.kind, language)}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold leading-tight mb-3">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-gray-300 group-hover:text-gray-700 leading-relaxed mb-4">
+                    {item.description}
+                  </p>
+                  <span className="inline-flex items-center text-sm font-bold uppercase tracking-[0.12em]">
+                    {copy('View page', language)} <ChevronRight className="w-4 h-4 ml-2 text-kiewit-yellow" />
+                  </span>
+                </a>
+              ))}
+            </div>
+            {!results.length && (
+              <div className="border border-white/15 bg-white/5 p-8 text-center">
+                <div className="text-2xl font-bold mb-3">{copy('No results found.', language)}</div>
+                <p className="text-gray-300">{copy('Try custom homes, garden suites, permits, multiplex, Markham or Toronto.', language)}</p>
+              </div>
+            )}
+            {!normalizedQuery && (
+              <p className="text-gray-400 text-sm mt-8">{copy('Start typing to search services, project pages and guides.', language)}</p>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isLocation = page.key.startsWith('location-');
   const parent: MainPageKey = isLocation ? 'services' : 'blog';
@@ -2083,18 +2408,18 @@ const ContactPage = () => (
   </>
 );
 
-const Footer = () => {
+const Footer = ({ language }: { language: Language }) => {
   return (
     <footer className="w-full">
       <div className="bg-black py-16 md:py-20 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="border-2 border-white px-4 py-2 text-white font-bold text-xl tracking-widest whitespace-nowrap">
-            GTA DESIGN-BUILD
+            {copy('GTA DESIGN-BUILD', language)}
           </div>
           <div className="flex flex-wrap justify-center md:justify-end gap-x-10 gap-y-4 text-white text-[15px]">
             {navItems.map((item) => (
               <a key={item.key} href={routeHref(item.key)} className="hover:text-kiewit-yellow transition-colors">
-                {item.label}
+                {copy(item.label, language)}
               </a>
             ))}
           </div>
@@ -2110,15 +2435,15 @@ const Footer = () => {
             ))}
           </div>
           <div className="text-black text-sm">
-            <p className="font-bold mb-2">(c) 2026 Vitalite Construction Corp. All rights reserved.</p>
+            <p className="font-bold mb-2">{copy('(c) 2026 Vitalite Construction Corp. All rights reserved.', language)}</p>
             <div className="flex flex-wrap gap-4 text-black underline underline-offset-2">
-              <a href="#">Privacy Statement</a>
+              <a href="#">{copy('Privacy Statement', language)}</a>
               <span className="no-underline">|</span>
-              <a href="#">Terms and Conditions</a>
+              <a href="#">{copy('Terms and Conditions', language)}</a>
               <span className="no-underline">|</span>
-              <a href="#">Accessibility</a>
+              <a href="#">{copy('Accessibility', language)}</a>
               <span className="no-underline">|</span>
-              <a href="#">Cookies Settings</a>
+              <a href="#">{copy('Cookies Settings', language)}</a>
             </div>
           </div>
         </div>
@@ -2162,6 +2487,11 @@ const renderPage = (activePage: PageKey) => {
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageKey>(() => resolvePage());
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === 'undefined') return 'en';
+    return window.localStorage.getItem('vitalite-language') === 'fr' ? 'fr' : 'en';
+  });
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const syncPage = () => setActivePage(resolvePage());
@@ -2207,11 +2537,18 @@ export default function App() {
     applySeo(activePage);
   }, [activePage]);
 
+  useEffect(() => {
+    document.documentElement.lang = language === 'fr' ? 'fr-CA' : 'en';
+    window.localStorage.setItem('vitalite-language', language);
+    window.setTimeout(() => translateVisibleText(language), 0);
+  }, [activePage, language, searchOpen]);
+
   return (
     <div className="font-sans antialiased text-white bg-kiewit-dark">
-      <Navbar activePage={activePage} />
+      <Navbar activePage={activePage} language={language} onLanguageChange={setLanguage} onSearchOpen={() => setSearchOpen(true)} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} />
       {renderPage(activePage)}
-      <Footer />
+      <Footer language={language} />
     </div>
   );
 }
