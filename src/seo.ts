@@ -41,6 +41,11 @@ function fillLocationPattern(pattern: string, location: string) {
   return pattern.replaceAll('{location}', location);
 }
 
+function normalizeRoutePath(path: string) {
+  if (!path || path === '/') return '/';
+  return `/${path.replace(/^\/+|\/+$/g, '')}`;
+}
+
 const generatedLocationPages: SeoPage[] = (rawSeoData.locationServices ?? []).flatMap((service) =>
   (rawSeoData.locations ?? []).map((location) => ({
     key: `${service.keyPrefix}-${location.slug}`,
@@ -320,11 +325,6 @@ const buildBreadcrumbs = (page: SeoPage) => {
   }
 
   return items;
-};
-
-const normalizeRoutePath = (path: string) => {
-  if (!path || path === '/') return '/';
-  return `/${path.replace(/^\/+|\/+$/g, '')}`;
 };
 
 const setCanonical = (href: string) => {
