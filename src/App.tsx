@@ -89,6 +89,8 @@ type DetailPageContent = {
   intro: string;
   bullets: string[];
   sections: Array<{ heading: string; text: string }>;
+  answer?: string;
+  steps?: string[];
   faqs?: Array<{ question: string; answer: string }>;
   relatedLinks?: Array<{ label: string; key: string }>;
 };
@@ -1757,6 +1759,8 @@ const staticDetailPages: Record<string, DetailPageContent> = {
     image: 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop',
     intro:
       'Vitalite works best when owners involve the team before drawings, approvals and construction pricing are locked. These answers explain how the design-build process fits GTA custom homes, multiplexes, additions, garden suites and ICI projects.',
+    answer:
+      'Vitalite helps GTA owners move from early feasibility to permit-ready drawings, budget planning, construction management and closeout without separating design, approvals and site execution into disconnected handoffs.',
     bullets: ['Consultation and feasibility review', 'Permit drawings and engineering coordination', 'Budget and schedule planning', 'Construction management and closeout'],
     sections: [
       {
@@ -1784,6 +1788,8 @@ const staticDetailPages: Record<string, DetailPageContent> = {
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
     intro:
       'Vitalite Construction Corp. is a GTA design-build, general contracting and construction management company for owners who need consultation, drawings, permits, engineering coordination, budgets, construction and handover managed together.',
+    answer:
+      'Vitalite Construction Corp. is a GTA design-build contractor and construction management partner for custom homes, multiplex housing, garden suites, laneway houses, additions, permits, engineering coordination and ICI construction.',
     bullets: ['Custom homes and luxury renovations', 'Multiplex, garden suite and laneway house planning', 'Drawings, permits and engineering coordination', 'Project management, construction management and ICI work'],
     sections: [
       {
@@ -2080,12 +2086,149 @@ function getGeneratedRelatedLinks(page: SeoPage) {
   ];
 }
 
+function getGuideProfile(page: SeoPage) {
+  const keyword = page.primaryKeyword.toLowerCase();
+  const title = page.title.toLowerCase();
+  const topic = `${keyword} ${title}`;
+
+  if (topic.includes('cost') || topic.includes('per square foot') || topic.includes('budget')) {
+    return {
+      answer: `${page.primaryKeyword} depends on scope, structure, site access, drawings, approvals, finish level, procurement and construction management. Reliable budgeting starts with feasibility review, then moves into permit-ready drawings, trade input, contingency planning and a construction sequence that matches the property conditions.`,
+      bullets: ['Scope and existing conditions', 'Drawings, permits and engineering', 'Structural, mechanical and servicing work', 'Finish level, procurement and contingency'],
+      sections: [
+        {
+          heading: 'Main Cost Drivers',
+          text: 'The biggest budget variables are structural changes, excavation or grading, mechanical upgrades, building envelope work, finish specifications, custom millwork, site access, material lead times and inspection requirements.',
+        },
+        {
+          heading: 'Budgeting Sequence',
+          text: 'Early numbers should be treated as planning ranges until drawings, engineering, finish direction and permit requirements are clear enough for trade input and construction scheduling.',
+        },
+        {
+          heading: 'Risk Control',
+          text: 'Vitalite reduces budget risk by connecting design decisions, approval requirements, procurement planning, trade coordination and site management before construction starts.',
+        },
+      ],
+      steps: ['Define scope and property constraints', 'Review zoning, surveys and existing conditions', 'Coordinate drawings and engineering inputs', 'Build a budget with allowances and contingencies', 'Sequence procurement, permits, trades and inspections'],
+    };
+  }
+
+  if (topic.includes('permit') || topic.includes('drawings') || topic.includes('laws') || topic.includes('approval')) {
+    return {
+      answer: `${page.primaryKeyword} starts with zoning and building code review, then moves into architectural drawings, structural or mechanical coordination, permit submission, municipal comments, revisions and inspection planning. Owners should confirm approval requirements before committing to final scope or construction pricing.`,
+      bullets: ['Zoning and building code review', 'Architectural drawing coordination', 'Structural, HVAC or mechanical inputs', 'Permit submission and inspection planning'],
+      sections: [
+        {
+          heading: 'Permit Readiness',
+          text: 'A permit-ready package usually needs clear scope, existing-condition information, architectural drawings, structural details where required, HVAC or mechanical documentation, and alignment with zoning and building code requirements.',
+        },
+        {
+          heading: 'Common Review Issues',
+          text: 'Projects can slow down when setbacks, height, lot coverage, parking, fire separation, egress, drainage, tree protection, structural openings or mechanical changes are not resolved early.',
+        },
+        {
+          heading: 'Construction Handoff',
+          text: 'Permit approval is not the end of planning. The drawings, conditions, inspection requirements and procurement schedule need to be translated into a buildable site plan.',
+        },
+      ],
+      steps: ['Confirm project scope and property address', 'Review zoning, code and existing drawings', 'Coordinate architectural and engineering documents', 'Submit permit package and respond to comments', 'Prepare trades, inspections and site logistics'],
+    };
+  }
+
+  if (topic.includes('timeline') || topic.includes('how long')) {
+    return {
+      answer: `${page.primaryKeyword} is shaped by design decisions, permit review, engineering coordination, material lead times, trade availability, inspection timing and the amount of structural or mechanical work. A realistic schedule separates pre-construction planning from the active construction phase.`,
+      bullets: ['Consultation and feasibility', 'Design, drawings and engineering', 'Permit review and procurement', 'Construction, inspections and closeout'],
+      sections: [
+        {
+          heading: 'Timeline Drivers',
+          text: 'The largest schedule variables are drawing readiness, municipal comments, structural design, custom materials, demolition findings, trade sequencing, inspection availability and client decision timing.',
+        },
+        {
+          heading: 'Pre-Construction Time',
+          text: 'Many delays happen before site work starts. Feasibility, drawings, permits, procurement and trade scheduling should be managed together rather than treated as separate handoffs.',
+        },
+        {
+          heading: 'Construction Control',
+          text: 'Vitalite manages site coordination, communication, inspections, change decisions and quality checks so the active construction phase has fewer preventable pauses.',
+        },
+      ],
+      steps: ['Set project goals and target move-in window', 'Complete feasibility and concept planning', 'Prepare drawings, engineering and permits', 'Order long-lead materials and schedule trades', 'Manage construction, inspections, PDI and closeout'],
+    };
+  }
+
+  if (topic.includes('design-build') || topic.includes('architect')) {
+    return {
+      answer: `${page.primaryKeyword} compares how project responsibility is organized. Design-build connects planning, permits, budgeting and construction management under one delivery model, while architect-led work can require more owner coordination between designers, engineers, contractors and trades.`,
+      bullets: ['Single-team accountability', 'Earlier budget feedback', 'Permit and drawing coordination', 'Construction-aware design decisions'],
+      sections: [
+        {
+          heading: 'Design-Build Fit',
+          text: 'Design-build is strongest when the owner wants design, permits, budgeting, procurement, trades, inspections and delivery managed through one accountable process.',
+        },
+        {
+          heading: 'Architect-Led Fit',
+          text: 'Architect-led delivery can fit projects where design documentation is the primary need, but owners still need a clear plan for pricing, contractor selection, site management and change control.',
+        },
+        {
+          heading: 'Decision Point',
+          text: 'The right model depends on project complexity, owner time, approval risk, budget discipline, construction coordination and how much responsibility the owner wants to carry.',
+        },
+      ],
+      steps: ['Clarify whether you need design only or design plus construction', 'Review zoning and permit complexity', 'Decide how budget feedback will enter design decisions', 'Assign responsibility for trades and site management', 'Choose the delivery model before drawings go too far'],
+    };
+  }
+
+  if (topic.includes('neighbourhood') || topic.includes('rosedale') || topic.includes('forest hill') || topic.includes('lawrence park') || topic.includes('leaside') || topic.includes('willowdale') || topic.includes('unionville') || topic.includes('port credit') || topic.includes('lorne park')) {
+    return {
+      answer: `${page.primaryKeyword} should start with address-specific feasibility because mature GTA neighbourhoods can involve zoning limits, tree protection, older structures, access constraints, design continuity, permit drawings and careful construction logistics.`,
+      bullets: ['Local property and streetscape context', 'Zoning, setbacks, trees and grading', 'Design fit and structural scope', 'Construction access and inspection planning'],
+      sections: [
+        {
+          heading: 'Neighbourhood Fit',
+          text: 'Established communities often reward careful planning: the project needs to improve space and value while respecting lot conditions, neighbouring properties, access limits and the existing home character.',
+        },
+        {
+          heading: 'Approval Factors',
+          text: 'Early review should confirm zoning, setbacks, height, lot coverage, tree protection, grading, heritage or conservation context where relevant, structural scope and permit documentation.',
+        },
+        {
+          heading: 'Construction Logistics',
+          text: 'Dense streets, mature landscaping, limited access, material staging and inspection timing can affect cost and schedule as much as the design itself.',
+        },
+      ],
+      steps: ['Start with address and survey review', 'Check zoning, trees, grading and local constraints', 'Develop concept plans with budget direction', 'Coordinate permit drawings and engineering', 'Plan construction access, trades and inspections'],
+    };
+  }
+
+  return {
+    answer: `${page.primaryKeyword} should be planned as a connected design-build process. The key is to confirm feasibility, drawings, approvals, budget, construction sequence and inspection requirements before committing to a final scope or contractor price.`,
+    bullets: ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
+    sections: [
+      {
+        heading: 'What Shapes The Answer',
+        text: 'The right plan depends on property conditions, zoning, structural scope, drawings, engineering, finish level, procurement, inspection timing and the project delivery model.',
+      },
+      {
+        heading: 'Design-Build Planning',
+        text: 'Vitalite connects early design, permit strategy, budgeting and construction management so owners can make decisions with fewer handoff gaps between consultants and trades.',
+      },
+      {
+        heading: 'Owner Decision Points',
+        text: 'Before committing, owners should understand approval risk, cost drivers, material lead times, temporary living needs, inspection steps and who is accountable for coordinating trades.',
+      },
+    ],
+    steps: ['Define project goals and constraints', 'Review zoning, drawings and approvals', 'Set budget direction and scope priorities', 'Coordinate trades, procurement and schedule', 'Manage construction, inspections and closeout'],
+  };
+}
+
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isServiceArea = page.key.startsWith('location-') || page.key.startsWith('community-');
   const isCommunity = page.key.startsWith('community-');
   const parent: MainPageKey = isServiceArea ? 'services' : 'blog';
   const local = getLocalContextForSeoPage(page);
   const serviceName = getGeneratedServiceName(page);
+  const guideProfile = isServiceArea ? undefined : getGuideProfile(page);
 
   return {
     parent,
@@ -2103,7 +2246,7 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
           'Drawings, permits and engineering coordination',
           'Budget, trades, inspections and closeout',
         ]
-      : ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
+      : guideProfile?.bullets ?? ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
     sections: isServiceArea
       ? local?.context
         ? [
@@ -2134,16 +2277,18 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
             text: 'Vitalite keeps consultation, design coordination, permit preparation, construction management, trade scheduling, quality control and client communication under one accountable team.',
           },
         ]
-      : [
-          {
-            heading: 'What Shapes The Answer',
-            text: 'The right plan depends on property conditions, zoning, structural scope, drawings, engineering, finish level, procurement, inspection timing and the project delivery model.',
-          },
-          {
-            heading: 'Design-Build Planning',
-            text: 'Vitalite connects early design, permit strategy, budgeting and construction management so owners can make decisions with fewer handoff gaps between consultants and trades.',
-          },
-        ],
+      : guideProfile?.sections ?? [
+        {
+          heading: 'What Shapes The Answer',
+          text: 'The right plan depends on property conditions, zoning, structural scope, drawings, engineering, finish level, procurement, inspection timing and the project delivery model.',
+        },
+        {
+          heading: 'Design-Build Planning',
+          text: 'Vitalite connects early design, permit strategy, budgeting and construction management so owners can make decisions with fewer handoff gaps between consultants and trades.',
+        },
+      ],
+    answer: guideProfile?.answer,
+    steps: guideProfile?.steps,
     faqs: buildPageFaq(page),
     relatedLinks: getGeneratedRelatedLinks(page),
   };
@@ -2405,6 +2550,12 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
               {page.intro}
             </p>
+            {page.answer ? (
+              <div className="border-l-4 border-kiewit-yellow bg-gray-50 p-5 sm:p-6 mb-10">
+                <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-3">Short Answer</div>
+                <p className="text-base sm:text-lg text-gray-800 leading-relaxed">{page.answer}</p>
+              </div>
+            ) : null}
             <a href={routeHref(page.parent)} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
               Back to {navItems.find((item) => item.key === page.parent)?.label}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
@@ -2430,6 +2581,22 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
           ))}
         </motion.div>
       </section>
+
+      {page.steps?.length ? (
+        <section className="bg-white text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+            <SubPageHeading title="Planning Sequence" dark />
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              {page.steps.map((step, index) => (
+                <article key={step} className="border border-gray-200 rounded-lg p-5 bg-gray-50">
+                  <div className="text-3xl font-bold text-kiewit-yellow mb-4">{String(index + 1).padStart(2, '0')}</div>
+                  <h2 className="text-base font-semibold leading-snug">{step}</h2>
+                </article>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      ) : null}
 
       {page.relatedLinks?.length ? (
         <section className="bg-white text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">

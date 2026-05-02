@@ -258,6 +258,23 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     });
   }
 
+  const howToSteps = buildHowToSteps(page);
+  if (howToSteps.length) {
+    graph.push({
+      '@type': 'HowTo',
+      '@id': `${canonical}#howto`,
+      name: page.title,
+      description: page.description,
+      mainEntityOfPage: { '@id': `${canonical}#webpage` },
+      step: howToSteps.map((step, index) => ({
+        '@type': 'HowToStep',
+        position: index + 1,
+        name: step,
+        text: step,
+      })),
+    });
+  }
+
   const faq = buildPageFaq(page);
   if (faq.length) {
     graph.push({
@@ -430,6 +447,33 @@ const getLocalContextFromPage = (page: SeoPage) => {
   if (locationMatch) return rawSeoData.locationContexts?.[locationMatch.slug];
   const communityMatch = (rawSeoData.communityLocations ?? []).find((community) => page.key.endsWith(`-${community.slug}`));
   return communityMatch ? rawSeoData.communityContexts?.[communityMatch.slug] : undefined;
+};
+
+const buildHowToSteps = (page: SeoPage) => {
+  if (!page.key.startsWith('guide-')) return [];
+  const topic = `${page.primaryKeyword} ${page.title}`.toLowerCase();
+
+  if (topic.includes('cost') || topic.includes('per square foot') || topic.includes('budget')) {
+    return ['Define scope and property constraints', 'Review zoning, surveys and existing conditions', 'Coordinate drawings and engineering inputs', 'Build a budget with allowances and contingencies', 'Sequence procurement, permits, trades and inspections'];
+  }
+
+  if (topic.includes('permit') || topic.includes('drawings') || topic.includes('laws') || topic.includes('approval')) {
+    return ['Confirm project scope and property address', 'Review zoning, code and existing drawings', 'Coordinate architectural and engineering documents', 'Submit permit package and respond to comments', 'Prepare trades, inspections and site logistics'];
+  }
+
+  if (topic.includes('timeline') || topic.includes('how long')) {
+    return ['Set project goals and target move-in window', 'Complete feasibility and concept planning', 'Prepare drawings, engineering and permits', 'Order long-lead materials and schedule trades', 'Manage construction, inspections, PDI and closeout'];
+  }
+
+  if (topic.includes('design-build') || topic.includes('architect')) {
+    return ['Clarify whether you need design only or design plus construction', 'Review zoning and permit complexity', 'Decide how budget feedback will enter design decisions', 'Assign responsibility for trades and site management', 'Choose the delivery model before drawings go too far'];
+  }
+
+  if (topic.includes('neighbourhood') || topic.includes('rosedale') || topic.includes('forest hill') || topic.includes('lawrence park') || topic.includes('leaside') || topic.includes('willowdale') || topic.includes('unionville') || topic.includes('port credit') || topic.includes('lorne park')) {
+    return ['Start with address and survey review', 'Check zoning, trees, grading and local constraints', 'Develop concept plans with budget direction', 'Coordinate permit drawings and engineering', 'Plan construction access, trades and inspections'];
+  }
+
+  return ['Define project goals and constraints', 'Review zoning, drawings and approvals', 'Set budget direction and scope priorities', 'Coordinate trades, procurement and schedule', 'Manage construction, inspections and closeout'];
 };
 
 const buildBreadcrumbs = (page: SeoPage) => {
