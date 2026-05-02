@@ -60,6 +60,38 @@
       "primaryKeyword": "GTA design-build consultation"
     },
     {
+      "key": "locations-hub",
+      "path": "/locations",
+      "title": "GTA Design-Build Service Areas | Vitalite",
+      "description": "Browse Vitalite design-build service area pages for Toronto, North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, and Etobicoke.",
+      "kind": "serviceCollection",
+      "primaryKeyword": "GTA design-build service areas"
+    },
+    {
+      "key": "communities-hub",
+      "path": "/communities",
+      "title": "Toronto & GTA Neighbourhood Construction Pages | Vitalite",
+      "description": "Explore Vitalite neighbourhood pages for custom homes, luxury renovations, garden suites, multiplex projects, and permit drawings across Toronto and GTA communities.",
+      "kind": "serviceCollection",
+      "primaryKeyword": "Toronto neighbourhood construction pages"
+    },
+    {
+      "key": "faq",
+      "path": "/faq",
+      "title": "GTA Design-Build FAQ | Vitalite Construction",
+      "description": "Answers to common GTA design-build questions about consultation, drawings, permits, construction management, custom homes, garden suites, multiplexes, and additions.",
+      "kind": "article",
+      "primaryKeyword": "GTA design-build FAQ"
+    },
+    {
+      "key": "ai-gta-design-build-guide",
+      "path": "/ai/gta-design-build-construction-guide",
+      "title": "GTA Design-Build Construction Guide | Vitalite",
+      "description": "An AI-readable guide to Vitalite's GTA design-build, permit, construction management, custom home, multiplex, addition, garden suite, and ICI construction services.",
+      "kind": "article",
+      "primaryKeyword": "GTA design-build construction guide"
+    },
+    {
       "key": "service-architectural-services",
       "path": "/services/architectural-services-toronto",
       "title": "Architectural Services Toronto | Permit-Ready Planning",
@@ -430,6 +462,200 @@
     { "slug": "lorne-park", "name": "Lorne Park", "municipality": "Mississauga" },
     { "slug": "mineola", "name": "Mineola", "municipality": "Mississauga" }
   ],
+  "locationContexts": {
+    "toronto": {
+      "planningContext": "Toronto projects often involve tight urban lots, zoning checks, Committee of Adjustment risk, tree protection, neighbour conditions, and careful site access planning.",
+      "projectFit": "Best-fit projects include custom home rebuilds, additions, garden suites, multiplex conversions, legal suites, and major renovations in established residential areas.",
+      "approvalFocus": "Early review should confirm zoning permissions, gross floor area, setbacks, height, parking, servicing, tree impacts, and building permit drawing requirements."
+    },
+    "north-york": {
+      "planningContext": "North York projects commonly balance larger lots, older homes, infill rebuilds, additions, and investor interest in multi-unit or secondary-suite layouts.",
+      "projectFit": "Best-fit projects include Willowdale rebuilds, Bayview Village additions, York Mills custom homes, multiplex planning, and permit-ready renovation work.",
+      "approvalFocus": "Early review should check lot coverage, height, side-yard setbacks, parking, stormwater, tree protection, and structural scope before pricing construction."
+    },
+    "markham": {
+      "planningContext": "Markham projects often require design sensitivity around mature communities, subdivision controls, newer estate lots, heritage-adjacent areas, and municipal review timing.",
+      "projectFit": "Best-fit projects include Unionville and Angus Glen custom homes, luxury renovations, additions, basement suites, and managed construction for investment properties.",
+      "approvalFocus": "Early review should confirm zoning, conservation or heritage constraints where relevant, lot grading, servicing, permit drawings, and inspection sequencing."
+    },
+    "richmond-hill": {
+      "planningContext": "Richmond Hill owners often plan custom homes, additions, and major renovations on suburban lots where grading, servicing, structure, and finish expectations shape the budget.",
+      "projectFit": "Best-fit projects include custom homes, rebuilds, major interior renovations, second-storey additions, walkouts, and construction management for higher-value homes.",
+      "approvalFocus": "Early review should check zoning, lot grading, stormwater, setbacks, structural changes, HVAC coordination, and permit drawing completeness."
+    },
+    "vaughan": {
+      "planningContext": "Vaughan projects range from estate-style custom homes to additions, basement suites, and light commercial work, often with access, grading, and inspection planning needs.",
+      "projectFit": "Best-fit projects include Kleinburg and Woodbridge custom homes, luxury renovations, additions, secondary suites, and ICI improvement projects.",
+      "approvalFocus": "Early review should confirm municipal zoning, grading, servicing, structural scope, material lead times, and inspection coordination."
+    },
+    "mississauga": {
+      "planningContext": "Mississauga projects often combine mature-lot renovations, lake-adjacent custom homes, additions, infill rebuilds, and investment-focused secondary living space.",
+      "projectFit": "Best-fit projects include Lorne Park and Mineola custom homes, Port Credit renovations, additions, garden suites where feasible, and major interior upgrades.",
+      "approvalFocus": "Early review should address zoning, lot grading, conservation or tree constraints where applicable, servicing, structural scope, and permit documentation."
+    },
+    "scarborough": {
+      "planningContext": "Scarborough projects frequently involve bungalows, older homes, additions, basement suites, multiplex planning, and value-focused rebuilds across varied lot conditions.",
+      "projectFit": "Best-fit projects include legal basement suites, additions, multiplex feasibility, full renovations, custom rebuilds, and permit drawing coordination.",
+      "approvalFocus": "Early review should confirm zoning, parking, separate entrance feasibility, drainage, structural requirements, and permit-ready drawings."
+    },
+    "etobicoke": {
+      "planningContext": "Etobicoke projects often include established west-end neighbourhoods, mature trees, custom homes, additions, lakeside renovations, and income-suite planning.",
+      "projectFit": "Best-fit projects include The Kingsway custom homes, Mimico renovations, additions, garden-suite feasibility, basement suites, and major interior work.",
+      "approvalFocus": "Early review should check zoning, setbacks, tree protection, lot grading, structural scope, servicing, and municipal permit requirements."
+    }
+  },
+  "communityContexts": {
+    "rosedale": {
+      "planningContext": "Rosedale projects often involve mature lots, premium finishes, older structures, tree protection, heritage sensitivity, and careful construction logistics on established streets.",
+      "projectFit": "Custom homes, luxury renovations, major additions, structural upgrades, and permit drawings are the strongest fit for owners planning long-term property value.",
+      "approvalFocus": "Early review should address zoning, ravine or heritage-adjacent constraints where applicable, tree impacts, structural scope, access, and inspection planning."
+    },
+    "forest-hill": {
+      "planningContext": "Forest Hill work often involves high-value homes, character preservation, additions, interiors, and detailed finish coordination where design continuity matters.",
+      "projectFit": "Luxury renovations, custom home rebuilds, major additions, permit drawings, and construction management are high-intent service matches.",
+      "approvalFocus": "Early review should check setbacks, height, lot coverage, tree protection, structural openings, mechanical coordination, and finish procurement timelines."
+    },
+    "lawrence-park": {
+      "planningContext": "Lawrence Park projects commonly involve larger homes, additions, second-storey planning, mature trees, and scope that needs tight budget and trade coordination.",
+      "projectFit": "Custom homes, home additions, luxury renovations, permit drawings, and construction management fit owners upgrading for long-term family use.",
+      "approvalFocus": "Early review should confirm zoning, tree protection, gross floor area, structural strategy, access, staging, and permit drawing requirements."
+    },
+    "leaside": {
+      "planningContext": "Leaside owners often plan additions, layout upgrades, basement work, and rebuilds on family-oriented lots where space, parking, and construction staging matter.",
+      "projectFit": "Additions, major renovations, garden suite feasibility, custom homes, and permit drawings are strong service matches.",
+      "approvalFocus": "Early review should check zoning permissions, setbacks, parking, tree constraints, structural work, and construction access."
+    },
+    "the-annex": {
+      "planningContext": "The Annex has older homes, tight lots, laneway opportunities, character details, and renovation work that often needs careful structural and permit coordination.",
+      "projectFit": "Luxury renovations, additions, laneway or garden suite planning, permit drawings, and construction management fit the local property mix.",
+      "approvalFocus": "Early review should address heritage sensitivity where relevant, zoning, structural openings, access limits, servicing, and board or municipal approvals."
+    },
+    "high-park": {
+      "planningContext": "High Park projects often include older detached and semi-detached homes, additions, energy upgrades, basement suites, and design-sensitive renovations.",
+      "projectFit": "Additions, major renovations, custom rebuilds, garden suite feasibility, and permit drawing coordination fit common owner goals.",
+      "approvalFocus": "Early review should check zoning, tree protection, structural scope, drainage, access, and permit drawing completeness."
+    },
+    "bloor-west-village": {
+      "planningContext": "Bloor West Village work often involves compact lots, older homes, family additions, basement upgrades, and careful staging around dense residential streets.",
+      "projectFit": "Home additions, major renovations, permit drawings, garden suite feasibility, and construction management are strong service matches.",
+      "approvalFocus": "Early review should confirm setbacks, height, parking, separate entrances, drainage, structural requirements, and construction access."
+    },
+    "roncesvalles": {
+      "planningContext": "Roncesvalles projects often include older homes, narrow sites, laneway potential, interiors, and additions that need precise approvals and trade sequencing.",
+      "projectFit": "Laneway or garden suite planning, additions, luxury renovations, permit drawings, and site management are high-intent matches.",
+      "approvalFocus": "Early review should check zoning, laneway access, servicing, structural changes, fire separation where relevant, and inspection timing."
+    },
+    "riverdale": {
+      "planningContext": "Riverdale renovations often involve older semi-detached or detached homes, compact footprints, additions, basements, and upgrades for growing families.",
+      "projectFit": "Additions, major renovations, basement suites, garden suite feasibility, and permit drawings fit common local project goals.",
+      "approvalFocus": "Early review should address zoning, structural scope, drainage, access, parking, tree impacts, and municipal permit documentation."
+    },
+    "leslieville": {
+      "planningContext": "Leslieville projects often include older homes, rear additions, laneway or garden suite interest, interiors, and construction in dense east-end conditions.",
+      "projectFit": "Additions, garden suites, luxury renovations, permit drawings, and managed construction are strong service matches.",
+      "approvalFocus": "Early review should check laneway or rear-yard access, zoning, structural work, drainage, servicing, and material delivery constraints."
+    },
+    "the-beaches": {
+      "planningContext": "The Beaches projects often combine character homes, additions, lake-area site conditions, interiors, and renovation work that needs design continuity.",
+      "projectFit": "Luxury renovations, additions, custom rebuilds, permit drawings, and construction management fit owners upgrading established homes.",
+      "approvalFocus": "Early review should consider zoning, grading, trees, structural scope, weather exposure, access, and permit drawing requirements."
+    },
+    "east-york": {
+      "planningContext": "East York has many bungalow and post-war homes where owners consider additions, basement suites, rebuilds, and investment-focused multi-unit planning.",
+      "projectFit": "Home additions, multiplex feasibility, legal basement suites, garden suites, and permit drawings are strong service matches.",
+      "approvalFocus": "Early review should confirm zoning, parking, separate entrance feasibility, drainage, structural work, and code requirements."
+    },
+    "willowdale": {
+      "planningContext": "Willowdale projects frequently involve custom rebuilds, multiplex planning, additions, and high land-value lots where zoning and unit planning matter early.",
+      "projectFit": "Custom homes, multiplex conversions, additions, garden suite feasibility, and construction management are strong service matches.",
+      "approvalFocus": "Early review should check zoning, floor area, setbacks, parking, servicing, tree protection, and permit drawing scope."
+    },
+    "bayview-village": {
+      "planningContext": "Bayview Village owners often plan custom homes, additions, and luxury renovations on mature suburban lots with strong expectations for design and finishes.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and managed construction are high-value service matches.",
+      "approvalFocus": "Early review should confirm zoning, grading, setbacks, structural strategy, tree impacts, HVAC coordination, and inspection planning."
+    },
+    "york-mills": {
+      "planningContext": "York Mills projects often involve large homes, premium finishes, structural alterations, and careful budget control across high-value residential work.",
+      "projectFit": "Luxury custom homes, major renovations, additions, permit drawings, and construction management are strong fits.",
+      "approvalFocus": "Early review should address zoning, grading, tree protection, structural openings, mechanical systems, procurement, and inspection timing."
+    },
+    "hoggs-hollow": {
+      "planningContext": "Hogg's Hollow projects can involve mature lots, ravine-adjacent conditions, high-end interiors, additions, and access constraints that need early planning.",
+      "projectFit": "Custom homes, luxury renovations, major additions, permit drawings, and construction management are strong service matches.",
+      "approvalFocus": "Early review should check zoning, ravine or grading constraints where relevant, tree protection, drainage, structure, and site logistics."
+    },
+    "lytton-park": {
+      "planningContext": "Lytton Park projects often focus on additions, custom rebuilds, and luxury renovations for established homes on high-demand residential streets.",
+      "projectFit": "Custom homes, additions, luxury renovations, permit drawings, and construction management fit common owner goals.",
+      "approvalFocus": "Early review should confirm setbacks, height, lot coverage, trees, structural scope, access, and municipal permit needs."
+    },
+    "davisville-village": {
+      "planningContext": "Davisville Village has compact urban lots, older homes, additions, basement work, and family-driven renovations where staging and approvals matter.",
+      "projectFit": "Additions, major renovations, basement suites, garden suite feasibility, and permit drawings are strong service matches.",
+      "approvalFocus": "Early review should check zoning, parking, structural scope, drainage, access, and inspection sequencing."
+    },
+    "summerhill": {
+      "planningContext": "Summerhill projects often involve character homes, detailed interiors, additions, and premium renovations where design continuity and construction management are important.",
+      "projectFit": "Luxury renovations, additions, permit drawings, custom home upgrades, and site management are strong fits.",
+      "approvalFocus": "Early review should consider heritage sensitivity where relevant, zoning, structure, access, material procurement, and permit documentation."
+    },
+    "moore-park": {
+      "planningContext": "Moore Park projects often involve mature lots, larger homes, additions, luxury renovations, and site logistics around established residential streets.",
+      "projectFit": "Custom homes, major additions, luxury renovations, permit drawings, and construction management are strong service matches.",
+      "approvalFocus": "Early review should check zoning, grading, tree protection, structural strategy, access, and inspection planning."
+    },
+    "the-kingsway": {
+      "planningContext": "The Kingsway projects commonly involve custom homes, additions, heritage-style character, mature trees, and high finish expectations.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and managed construction fit common Etobicoke owner goals.",
+      "approvalFocus": "Early review should address zoning, trees, lot grading, structural scope, design continuity, and municipal permit requirements."
+    },
+    "mimico": {
+      "planningContext": "Mimico projects can include older homes, lake-area renovations, additions, rental-suite planning, and compact-lot improvements.",
+      "projectFit": "Additions, major renovations, basement suites, custom rebuilds, garden suite feasibility, and permit drawings are strong matches.",
+      "approvalFocus": "Early review should confirm zoning, grading, drainage, parking, structural work, servicing, and permit drawing requirements."
+    },
+    "unionville": {
+      "planningContext": "Unionville projects often require sensitivity to character areas, mature homes, custom builds, additions, and detailed municipal review.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and construction management are high-intent service matches.",
+      "approvalFocus": "Early review should check zoning, heritage-adjacent constraints where relevant, grading, setbacks, structure, and permit sequencing."
+    },
+    "angus-glen": {
+      "planningContext": "Angus Glen projects often include larger homes, estate-style upgrades, luxury interiors, additions, and construction expectations tied to premium finishes.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and construction management are strong service matches.",
+      "approvalFocus": "Early review should confirm zoning, grading, structural scope, procurement timing, HVAC coordination, and inspection planning."
+    },
+    "thornhill": {
+      "planningContext": "Thornhill projects span Markham and Vaughan conditions, with custom homes, additions, basement suites, and renovations that need municipal alignment early.",
+      "projectFit": "Custom homes, additions, luxury renovations, basement suites, permit drawings, and construction management are strong fits.",
+      "approvalFocus": "Early review should confirm the correct municipality, zoning, grading, setbacks, structural scope, and permit submission path."
+    },
+    "kleinburg": {
+      "planningContext": "Kleinburg projects often involve larger homes, estate-style custom work, premium finishes, and site logistics that affect cost and schedule.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and managed construction are strong service matches.",
+      "approvalFocus": "Early review should check zoning, grading, servicing, structural strategy, conservation or heritage context where relevant, and inspection sequencing."
+    },
+    "woodbridge": {
+      "planningContext": "Woodbridge projects often include custom homes, additions, basement suites, interior upgrades, and suburban site conditions where grading and access matter.",
+      "projectFit": "Custom homes, additions, luxury renovations, permit drawings, and construction management are strong fits.",
+      "approvalFocus": "Early review should confirm zoning, lot grading, servicing, structural scope, parking, and permit drawing requirements."
+    },
+    "port-credit": {
+      "planningContext": "Port Credit projects often combine lake-area homes, additions, renovations, custom rebuilds, and design-sensitive upgrades on mature lots.",
+      "projectFit": "Luxury renovations, custom homes, additions, permit drawings, and construction management are strong service matches.",
+      "approvalFocus": "Early review should address zoning, grading, conservation or tree constraints where relevant, structure, access, and permit documentation."
+    },
+    "lorne-park": {
+      "planningContext": "Lorne Park projects often involve high-value homes, larger lots, custom builds, additions, luxury renovations, and detailed finish coordination.",
+      "projectFit": "Custom homes, luxury renovations, major additions, permit drawings, and managed construction are high-intent matches.",
+      "approvalFocus": "Early review should check zoning, grading, trees, structural scope, procurement timing, HVAC coordination, and inspection planning."
+    },
+    "mineola": {
+      "planningContext": "Mineola projects often include custom rebuilds, mature lots, premium renovations, additions, and tree or grading considerations that affect feasibility.",
+      "projectFit": "Custom homes, luxury renovations, additions, permit drawings, and construction management fit common owner goals.",
+      "approvalFocus": "Early review should address zoning, trees, lot grading, structure, access, servicing, and permit drawing completeness."
+    }
+  },
   "locationServices": [
     {
       "keyPrefix": "location-custom-homes",

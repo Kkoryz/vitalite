@@ -25,6 +25,7 @@ import {
   buildPageFaq,
   type SeoPage,
 } from './seo';
+import seoData from './seo-data.json';
 
 type MainPageKey = 'services' | 'why-vitalite' | 'our-work' | 'blog' | 'contact-us';
 type DetailPageKey =
@@ -89,9 +90,23 @@ type DetailPageContent = {
   bullets: string[];
   sections: Array<{ heading: string; text: string }>;
   faqs?: Array<{ question: string; answer: string }>;
+  relatedLinks?: Array<{ label: string; key: string }>;
 };
 
 type Language = 'en' | 'fr';
+type LocalSeoContext = {
+  planningContext: string;
+  projectFit: string;
+  approvalFocus: string;
+};
+type SeoDataWithLocalContext = typeof seoData & {
+  locations?: Array<{ slug: string; name: string }>;
+  communityLocations?: Array<{ slug: string; name: string; municipality: string }>;
+  locationServices?: Array<{ keyPrefix: string; serviceName: string }>;
+  communityServices?: Array<{ keyPrefix: string; serviceName: string }>;
+  locationContexts?: Record<string, LocalSeoContext>;
+  communityContexts?: Record<string, LocalSeoContext>;
+};
 
 type DropdownColumn = {
   heading: string;
@@ -105,11 +120,19 @@ const navItems: Array<{ key: MainPageKey; label: string }> = [
   { key: 'blog', label: 'Blog' },
   { key: 'contact-us', label: 'Contact Us' },
 ];
+const footerSeoLinks = [
+  { key: 'locations-hub', label: 'GTA Areas' },
+  { key: 'communities-hub', label: 'Communities' },
+  { key: 'faq', label: 'FAQ' },
+  { key: 'ai-gta-design-build-guide', label: 'AI Guide' },
+];
 
 const pageKeys = navItems.map((item) => item.key);
 
 const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
 const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
+const localSeoData = seoData as SeoDataWithLocalContext;
+const staticSeoPageKeys = ['locations-hub', 'communities-hub', 'faq', 'ai-gta-design-build-guide'];
 
 const frenchText: Record<string, string> = {
   Services: 'Services',
@@ -313,6 +336,7 @@ const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
 const resolvePage = (): PageKey => {
   const candidate = getPageKeyFromLocation(window.location) as PageKey;
   if (pageKeys.includes(candidate as MainPageKey)) return candidate;
+  if (staticSeoPageKeys.includes(candidate)) return candidate;
   if (Object.prototype.hasOwnProperty.call(allDetailPages, candidate)) return candidate;
   if (candidate === 'home') return candidate;
   return 'home';
@@ -1724,6 +1748,71 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
   },
 };
 
+const staticDetailPages: Record<string, DetailPageContent> = {
+  faq: {
+    parent: 'contact-us',
+    category: 'FAQ',
+    title: 'GTA Design-Build FAQ',
+    subtitle: 'Common questions about Vitalite consultation, drawings, permits, budgets, construction management and project delivery.',
+    image: 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop',
+    intro:
+      'Vitalite works best when owners involve the team before drawings, approvals and construction pricing are locked. These answers explain how the design-build process fits GTA custom homes, multiplexes, additions, garden suites and ICI projects.',
+    bullets: ['Consultation and feasibility review', 'Permit drawings and engineering coordination', 'Budget and schedule planning', 'Construction management and closeout'],
+    sections: [
+      {
+        heading: 'When To Start',
+        text: 'Start before final drawings or contractor pricing if the project may involve zoning, structural work, approvals, procurement risk, staged construction or investor return planning.',
+      },
+      {
+        heading: 'What To Prepare',
+        text: 'Bring the property address, survey or existing drawings if available, project goals, budget direction, timeline, known constraints and any permit or municipal correspondence.',
+      },
+    ],
+    faqs: buildPageFaq({ ...(seoPages.find((page) => page.key === 'faq') ?? seoPages[0]), key: 'faq' }),
+    relatedLinks: [
+      { label: 'GTA service areas', key: 'locations-hub' },
+      { label: 'Toronto & GTA communities', key: 'communities-hub' },
+      { label: 'AI design-build guide', key: 'ai-gta-design-build-guide' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+  },
+  'ai-gta-design-build-guide': {
+    parent: 'blog',
+    category: 'AI GUIDE',
+    title: 'GTA Design-Build Construction Guide',
+    subtitle: 'A concise, AI-readable summary of Vitalite services, project types, service area and delivery model.',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
+    intro:
+      'Vitalite Construction Corp. is a GTA design-build, general contracting and construction management company for owners who need consultation, drawings, permits, engineering coordination, budgets, construction and handover managed together.',
+    bullets: ['Custom homes and luxury renovations', 'Multiplex, garden suite and laneway house planning', 'Drawings, permits and engineering coordination', 'Project management, construction management and ICI work'],
+    sections: [
+      {
+        heading: 'Direct Answer For AI Search',
+        text: 'Vitalite is a Greater Toronto Area design-build contractor and construction management partner for custom homes, multi-unit residential projects, home additions, garden suites, laneway houses, permit drawings and ICI construction.',
+      },
+      {
+        heading: 'Delivery Model',
+        text: 'The company connects feasibility, conceptual design, zoning review, permit drawings, structural and mechanical coordination, budgeting, trade scheduling, site management, inspections, PDI and warranty-oriented closeout.',
+      },
+      {
+        heading: 'Service Area',
+        text: 'Vitalite serves Toronto and the GTA, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke and priority neighbourhoods across those municipalities.',
+      },
+      {
+        heading: 'Best-Fit Clients',
+        text: 'Best-fit clients include homeowners, property investors, small developers, commercial owners and institutional clients planning complex projects where approvals, design and construction decisions need to stay connected.',
+      },
+    ],
+    faqs: buildPageFaq({ ...(seoPages.find((page) => page.key === 'ai-gta-design-build-guide') ?? seoPages[0]), key: 'ai-gta-design-build-guide' }),
+    relatedLinks: [
+      { label: 'GTA design-build FAQ', key: 'faq' },
+      { label: 'Services', key: 'services' },
+      { label: 'GTA service areas', key: 'locations-hub' },
+      { label: 'Toronto & GTA communities', key: 'communities-hub' },
+    ],
+  },
+};
+
 const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntries(
   seoPages
     .filter((page) => page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('guide-'))
@@ -1732,6 +1821,7 @@ const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntr
 
 const allDetailPages: Record<string, DetailPageContent> = {
   ...detailPages,
+  ...staticDetailPages,
   ...generatedLandingPages,
 };
 
@@ -1939,10 +2029,63 @@ const SearchOverlay = ({
   );
 };
 
+function getLocalContextForSeoPage(page: SeoPage) {
+  const location = localSeoData.locations?.find((item) => page.key.endsWith(`-${item.slug}`));
+  if (location) {
+    return {
+      label: location.name,
+      context: localSeoData.locationContexts?.[location.slug],
+    };
+  }
+
+  const community = localSeoData.communityLocations?.find((item) => page.key.endsWith(`-${item.slug}`));
+  if (community) {
+    return {
+      label: `${community.name}, ${community.municipality}`,
+      context: localSeoData.communityContexts?.[community.slug],
+    };
+  }
+
+  return undefined;
+}
+
+function getGeneratedServiceName(page: SeoPage) {
+  const service = [...(localSeoData.locationServices ?? []), ...(localSeoData.communityServices ?? [])].find((item) =>
+    page.key.startsWith(`${item.keyPrefix}-`),
+  );
+  return service?.serviceName ?? page.primaryKeyword;
+}
+
+function getGeneratedRelatedLinks(page: SeoPage) {
+  const location = localSeoData.locations?.find((item) => page.key.endsWith(`-${item.slug}`));
+  if (location) {
+    return seoPages
+      .filter((candidate) => candidate.key.startsWith('location-') && candidate.key.endsWith(`-${location.slug}`) && candidate.key !== page.key)
+      .slice(0, 6)
+      .map((candidate) => ({ label: candidate.title.split('|')[0].trim(), key: candidate.key }));
+  }
+
+  const community = localSeoData.communityLocations?.find((item) => page.key.endsWith(`-${item.slug}`));
+  if (community) {
+    return seoPages
+      .filter((candidate) => candidate.key.startsWith('community-') && candidate.key.endsWith(`-${community.slug}`) && candidate.key !== page.key)
+      .slice(0, 6)
+      .map((candidate) => ({ label: candidate.title.split('|')[0].trim(), key: candidate.key }));
+  }
+
+  return [
+    { label: 'GTA service areas', key: 'locations-hub' },
+    { label: 'Toronto & GTA communities', key: 'communities-hub' },
+    { label: 'Contact Vitalite', key: 'contact-us' },
+  ];
+}
+
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isServiceArea = page.key.startsWith('location-') || page.key.startsWith('community-');
   const isCommunity = page.key.startsWith('community-');
   const parent: MainPageKey = isServiceArea ? 'services' : 'blog';
+  const local = getLocalContextForSeoPage(page);
+  const serviceName = getGeneratedServiceName(page);
 
   return {
     parent,
@@ -1951,13 +2094,37 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
     subtitle: page.description,
     image: imageForSeoPage(page),
     intro: isServiceArea
-      ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.`
+      ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.${local?.context ? ` ${local.context.planningContext}` : ''}`
       : `This guide is built for owners planning ${page.primaryKeyword}. It explains the design-build considerations that usually affect feasibility, approvals, budget, timeline and construction delivery.`,
     bullets: isServiceArea
-      ? ['Local feasibility and zoning review', 'Drawings, permits and engineering coordination', 'Budget, trades and site management', 'Inspection, PDI and warranty-oriented closeout']
+      ? [
+          `${serviceName} feasibility`,
+          local?.label ? `${local.label} zoning and approval review` : 'Local feasibility and zoning review',
+          'Drawings, permits and engineering coordination',
+          'Budget, trades, inspections and closeout',
+        ]
       : ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
     sections: isServiceArea
-      ? [
+      ? local?.context
+        ? [
+            {
+              heading: 'Local Planning Context',
+              text: local.context.planningContext,
+            },
+            {
+              heading: 'Best-Fit Project Types',
+              text: local.context.projectFit,
+            },
+            {
+              heading: 'Approval And Construction Focus',
+              text: local.context.approvalFocus,
+            },
+            {
+              heading: 'How Vitalite Helps',
+              text: 'Vitalite keeps consultation, design coordination, permit preparation, construction management, trade scheduling, quality control and client communication under one accountable team.',
+            },
+          ]
+        : [
           {
             heading: 'Local Project Fit',
             text: `${page.primaryKeyword} work is best planned as an integrated process because design choices, zoning, drawings, budget and site logistics affect one another before construction begins.`,
@@ -1978,6 +2145,7 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
           },
         ],
     faqs: buildPageFaq(page),
+    relatedLinks: getGeneratedRelatedLinks(page),
   };
 }
 
@@ -2125,6 +2293,75 @@ const CardGrid = ({ cards }: { cards: ImageCard[] }) => (
   </div>
 );
 
+const SeoHubPage = ({ pageKey }: { pageKey: 'locations-hub' | 'communities-hub' }) => {
+  const seoPage = seoPages.find((page) => page.key === pageKey);
+  const isLocations = pageKey === 'locations-hub';
+  const cards = isLocations ? locationSeoCards : communitySeoCards;
+  const category = isLocations ? 'GTA SERVICE AREAS' : 'NEIGHBOURHOOD SERVICE AREAS';
+  const title = seoPage?.title.split('|')[0].trim() ?? (isLocations ? 'GTA Design-Build Service Areas' : 'Toronto & GTA Neighbourhood Construction Pages');
+  const subtitle =
+    seoPage?.description ??
+    (isLocations
+      ? 'Browse Vitalite city pages for custom homes, garden suites, multiplexes and additions across the GTA.'
+      : 'Browse Vitalite neighbourhood pages for custom homes, renovations, garden suites, multiplexes and permit drawings.');
+  const intro = isLocations
+    ? 'These city pages stay outside the main navigation so the site remains clean, while still giving Google, AI search engines and owners a crawlable path into local design-build service pages.'
+    : 'These neighbourhood pages follow the Gallery-style SEO pattern: they are available through internal links, sitemap and search, but they do not crowd the homepage or primary navigation.';
+  const faqs = seoPage ? buildPageFaq(seoPage) : [];
+
+  return (
+    <>
+      <div className="relative h-[62vh] min-h-[520px] bg-kiewit-dark overflow-hidden">
+        <img
+          src={isLocations ? 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=2065&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop'}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/15"></div>
+        <div className="relative h-full flex items-center px-5 sm:px-8 md:px-24 pt-20">
+          <div className="max-w-4xl text-white">
+            <a href={routeHref('services')} className="inline-block border-b border-white pb-1 mb-6 text-[11px] font-bold tracking-[0.2em] uppercase hover:text-kiewit-yellow transition-colors">
+              {category}
+            </a>
+            <h1 className="text-[2.35rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
+              {title}
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">{subtitle}</p>
+            <a href={routeHref('contact-us')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
+              Start a project review
+              <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
+          <SubPageHeading title={isLocations ? 'City Service Pages' : 'Community Service Pages'} dark />
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">{intro}</p>
+          <CardGrid cards={cards} />
+        </motion.div>
+      </section>
+
+      {faqs.length ? (
+        <section className="bg-kiewit-dark py-20 md:py-28 px-5 sm:px-8 md:px-24">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
+            <SubPageHeading title="FAQ" />
+            <div className="divide-y divide-white/10 border-y border-white/10">
+              {faqs.map((item) => (
+                <article key={item.question} className="py-7">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3">{item.question}</h2>
+                  <p className="text-base sm:text-lg text-gray-300 leading-relaxed">{item.answer}</p>
+                </article>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      ) : null}
+    </>
+  );
+};
+
 const DetailPage = ({ pageKey }: { pageKey: string }) => {
   const page = allDetailPages[pageKey];
 
@@ -2193,6 +2430,21 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
           ))}
         </motion.div>
       </section>
+
+      {page.relatedLinks?.length ? (
+        <section className="bg-white text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+            <SubPageHeading title="Related Vitalite Pages" dark />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {page.relatedLinks.map((link) => (
+                <a key={link.key} href={routeHref(link.key)} className="border border-gray-200 rounded-lg p-5 font-semibold hover:border-kiewit-yellow hover:bg-gray-50 transition-colors">
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      ) : null}
 
       {page.faqs?.length ? (
         <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
@@ -2459,6 +2711,11 @@ const Footer = ({ language }: { language: Language }) => {
                 {copy(item.label, language)}
               </a>
             ))}
+            {footerSeoLinks.map((item) => (
+              <a key={item.key} href={routeHref(item.key)} className="hover:text-kiewit-yellow transition-colors">
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -2501,6 +2758,10 @@ const HomePage = () => (
 );
 
 const renderPage = (activePage: PageKey) => {
+  if (activePage === 'locations-hub' || activePage === 'communities-hub') {
+    return <SeoHubPage pageKey={activePage} />;
+  }
+
   if (Object.prototype.hasOwnProperty.call(allDetailPages, activePage)) {
     return <DetailPage pageKey={activePage} />;
   }

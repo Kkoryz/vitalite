@@ -16,6 +16,11 @@ const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
 
 type SeoLocation = { slug: string; name: string };
 type SeoCommunity = { slug: string; name: string; municipality: string };
+type LocalSeoContext = {
+  planningContext: string;
+  projectFit: string;
+  approvalFocus: string;
+};
 type LocationService = {
   keyPrefix: string;
   pathPrefix: string;
@@ -38,6 +43,8 @@ const rawSeoData = seoData as typeof seoData & {
   locationServices?: LocationService[];
   communityLocations?: SeoCommunity[];
   communityServices?: CommunityService[];
+  locationContexts?: Record<string, LocalSeoContext>;
+  communityContexts?: Record<string, LocalSeoContext>;
   longTailPages?: LongTailPage[];
 };
 
@@ -91,7 +98,7 @@ const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), pa
 
 export const getRouteHref = (key: string): string => {
   const path = pathByKey.get(key) ?? '/';
-  return `${basePath}${path}`;
+  return `${basePath}${canonicalPathFor(path)}`;
 };
 
 export const getRouteHrefFromLegacyHash = (href?: string): string => {
@@ -102,7 +109,7 @@ export const getRouteHrefFromLegacyHash = (href?: string): string => {
 
 export const getCanonicalUrl = (key: string): string => {
   const page = pageByKey.get(key) ?? pageByKey.get('home')!;
-  return `${seoData.siteUrl}${page.path === '/' ? '/' : page.path}`;
+  return `${seoData.siteUrl}${canonicalPathFor(page.path)}`;
 };
 
 export const getPageKeyFromUrl = (url: URL): string | null => {
@@ -157,6 +164,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       name: seoData.siteName,
       publisher: { '@id': organizationId },
+      inLanguage: ['en-CA', 'fr-CA'],
     },
     {
       '@type': 'Organization',
@@ -165,6 +173,17 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       logo: image,
       description: seoData.business.description,
+      knowsAbout: [
+        'GTA design-build construction',
+        'custom home construction',
+        'multiplex housing',
+        'garden suites',
+        'laneway houses',
+        'home additions',
+        'building permits',
+        'construction management',
+        'ICI construction',
+      ],
     },
     {
       '@type': ['LocalBusiness', 'GeneralContractor'],
@@ -174,6 +193,15 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       image,
       description: seoData.business.description,
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
+      knowsAbout: [
+        'zoning review',
+        'building code review',
+        'permit drawings',
+        'engineering coordination',
+        'site management',
+        'trade coordination',
+        'construction inspections',
+      ],
       address: {
         '@type': 'PostalAddress',
         addressLocality: seoData.business.locality,
@@ -253,6 +281,71 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
 };
 
 export const buildPageFaq = (page: SeoPage) => {
+  if (page.key === 'locations-hub') {
+    return [
+      {
+        question: 'Which GTA cities does Vitalite create service area pages for?',
+        answer:
+          'Vitalite organizes service area pages for Toronto, North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, and Etobicoke, with project pages for custom homes, garden suites, multiplexes, and additions.',
+      },
+      {
+        question: 'Why does each city need its own planning page?',
+        answer:
+          'Each municipality can differ in zoning, permit intake, grading, tree protection, inspections, and project logistics, so local pages help owners understand the early planning questions before construction pricing.',
+      },
+      {
+        question: 'Are city pages a replacement for a feasibility review?',
+        answer:
+          'No. City pages explain common planning factors, but a project still needs address-specific review of zoning, surveys, drawings, structure, servicing, access, budget, and timeline.',
+      },
+    ];
+  }
+
+  if (page.key === 'communities-hub') {
+    return [
+      {
+        question: 'Why does Vitalite publish neighbourhood construction pages?',
+        answer:
+          'Neighbourhood pages help Toronto and GTA owners understand how local property types, mature lots, access, trees, zoning, and approval paths can affect custom homes, additions, garden suites, multiplexes, and permits.',
+      },
+      {
+        question: 'Which neighbourhood services are covered?',
+        answer:
+          'The community pages cover custom home building, luxury renovations, garden suites, multiplex planning, and permit drawings across high-intent Toronto and GTA neighbourhoods.',
+      },
+      {
+        question: 'How should owners use a neighbourhood page?',
+        answer:
+          'Use it as a starting point for feasibility questions, then book a project review with property details, survey information, current drawings, budget direction, and timeline goals.',
+      },
+    ];
+  }
+
+  if (page.key === 'faq' || page.key === 'ai-gta-design-build-guide') {
+    return [
+      {
+        question: 'What does Vitalite Construction Corp. do?',
+        answer:
+          'Vitalite Construction Corp. is a GTA design-build, general contracting, and construction management company that coordinates consultation, drawings, permits, engineering, budgets, construction, inspections, and warranty-oriented closeout.',
+      },
+      {
+        question: 'What project types does Vitalite focus on?',
+        answer:
+          'Vitalite focuses on custom homes, multi-unit and multiplex residential projects, garden suites, laneway houses, home additions, major renovations, permit drawings, project management, construction management, and ICI construction.',
+      },
+      {
+        question: 'Why use a design-build contractor instead of separate teams?',
+        answer:
+          'A design-build contractor helps connect design decisions, approval requirements, budgets, procurement, trade scheduling, site management, and inspections under one accountable delivery process.',
+      },
+      {
+        question: 'What areas does Vitalite serve?',
+        answer:
+          'Vitalite serves Toronto and the Greater Toronto Area, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and surrounding communities.',
+      },
+    ];
+  }
+
   if (page.key === 'contact-us') {
     return [
       {
@@ -280,6 +373,7 @@ export const buildPageFaq = (page: SeoPage) => {
 
   if (page.key.startsWith('location-') || page.key.startsWith('community-')) {
     const location = getLocationFromPage(page);
+    const context = getLocalContextFromPage(page);
     return [
       {
         question: `Does Vitalite provide ${page.primaryKeyword} services?`,
@@ -289,6 +383,14 @@ export const buildPageFaq = (page: SeoPage) => {
         question: `What should owners prepare before starting a project in ${location}?`,
         answer: `Owners should prepare the property address, project goals, current drawings or surveys if available, budget direction, preferred timeline, and any known zoning, access, structural, or approval concerns.`,
       },
+      ...(context
+        ? [
+            {
+              question: `What local planning issues matter for ${location}?`,
+              answer: `${context.planningContext} ${context.approvalFocus}`,
+            },
+          ]
+        : []),
       {
         question: 'Can Vitalite coordinate drawings, permits, engineering, and construction together?',
         answer: 'Yes. Vitalite is positioned as a one-stop design-build and construction management partner that coordinates design, permit documentation, engineering inputs, trade scheduling, inspections, and site delivery.',
@@ -323,6 +425,13 @@ const getLocationFromPage = (page: SeoPage) => {
   return communityMatch ? `${communityMatch.name}, ${communityMatch.municipality}` : 'the GTA';
 };
 
+const getLocalContextFromPage = (page: SeoPage) => {
+  const locationMatch = (rawSeoData.locations ?? []).find((location) => page.key.endsWith(`-${location.slug}`));
+  if (locationMatch) return rawSeoData.locationContexts?.[locationMatch.slug];
+  const communityMatch = (rawSeoData.communityLocations ?? []).find((community) => page.key.endsWith(`-${community.slug}`));
+  return communityMatch ? rawSeoData.communityContexts?.[communityMatch.slug] : undefined;
+};
+
 const buildBreadcrumbs = (page: SeoPage) => {
   const homeUrl = `${seoData.siteUrl}/`;
   const items = [{ name: 'Home', url: homeUrl }];
@@ -336,19 +445,28 @@ const buildBreadcrumbs = (page: SeoPage) => {
     'our-work': 'Our Work',
     blog: 'Blog',
     'contact-us': 'Contact Us',
+    locations: 'GTA Service Areas',
+    communities: 'Neighbourhood Service Areas',
+    ai: 'AI Construction Guide',
+    faq: 'FAQ',
   };
 
   const parentPath = `/${parts[0]}`;
   const parentPage = pages.find((candidate) => candidate.path === parentPath);
   if (parentPage) {
-    items.push({ name: parentMap[parts[0]] ?? parentPage.title, url: `${seoData.siteUrl}${parentPage.path}` });
+    items.push({ name: parentMap[parts[0]] ?? parentPage.title, url: getCanonicalUrl(parentPage.key) });
   }
 
   if (parts.length > 1) {
-    items.push({ name: page.title.split('|')[0].trim(), url: `${seoData.siteUrl}${page.path}` });
+    items.push({ name: page.title.split('|')[0].trim(), url: getCanonicalUrl(page.key) });
   }
 
   return items;
+};
+
+const canonicalPathFor = (path: string) => {
+  const normalized = normalizeRoutePath(path);
+  return normalized === '/' ? '/' : `${normalized}/`;
 };
 
 const setCanonical = (href: string) => {
