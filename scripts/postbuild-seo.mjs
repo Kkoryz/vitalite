@@ -203,12 +203,23 @@ function buildGeneratedPages() {
     })),
   );
 
+  const communityPages = (seoData.communityServices ?? []).flatMap((service) =>
+    (seoData.communityLocations ?? []).map((community) => ({
+      key: `${service.keyPrefix}-${community.slug}`,
+      path: `/communities/${service.pathPrefix}-${community.slug}`,
+      title: fillCommunityPattern(service.titlePattern, community),
+      description: fillCommunityPattern(service.descriptionPattern, community),
+      kind: 'service',
+      primaryKeyword: fillCommunityPattern(service.primaryKeywordPattern, community),
+    })),
+  );
+
   const longTailPages = (seoData.longTailPages ?? []).map((page) => ({
     ...page,
     kind: 'article',
   }));
 
-  return [...locationPages, ...longTailPages];
+  return [...locationPages, ...communityPages, ...longTailPages];
 }
 
 function buildPageFaq(page) {
@@ -237,7 +248,7 @@ function buildPageFaq(page) {
     ];
   }
 
-  if (page.key.startsWith('location-')) {
+  if (page.key.startsWith('location-') || page.key.startsWith('community-')) {
     const location = getLocationFromPage(page);
     return [
       {
@@ -277,7 +288,9 @@ function buildPageFaq(page) {
 
 function getLocationFromPage(page) {
   const location = (seoData.locations ?? []).find((item) => page.key.endsWith(`-${item.slug}`));
-  return location?.name ?? 'the GTA';
+  if (location) return location.name;
+  const community = (seoData.communityLocations ?? []).find((item) => page.key.endsWith(`-${item.slug}`));
+  return community ? `${community.name}, ${community.municipality}` : 'the GTA';
 }
 
 function canonicalFor(page) {
@@ -299,4 +312,11 @@ function escapeHtml(value) {
 
 function fillLocationPattern(pattern, location) {
   return pattern.replaceAll('{location}', location);
+}
+
+function fillCommunityPattern(pattern, community) {
+  return pattern
+    .replaceAll('{community}', community.name)
+    .replaceAll('{municipality}', community.municipality)
+    .replaceAll('{location}', community.name);
 }

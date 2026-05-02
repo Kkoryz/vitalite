@@ -15,6 +15,7 @@ const baseUrl = import.meta.env.BASE_URL ?? '/';
 const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
 
 type SeoLocation = { slug: string; name: string };
+type SeoCommunity = { slug: string; name: string; municipality: string };
 type LocationService = {
   keyPrefix: string;
   pathPrefix: string;
@@ -23,6 +24,7 @@ type LocationService = {
   descriptionPattern: string;
   primaryKeywordPattern: string;
 };
+type CommunityService = LocationService;
 type LongTailPage = {
   key: string;
   path: string;
@@ -34,11 +36,20 @@ type LongTailPage = {
 const rawSeoData = seoData as typeof seoData & {
   locations?: SeoLocation[];
   locationServices?: LocationService[];
+  communityLocations?: SeoCommunity[];
+  communityServices?: CommunityService[];
   longTailPages?: LongTailPage[];
 };
 
 function fillLocationPattern(pattern: string, location: string) {
   return pattern.replaceAll('{location}', location);
+}
+
+function fillCommunityPattern(pattern: string, community: SeoCommunity) {
+  return pattern
+    .replaceAll('{community}', community.name)
+    .replaceAll('{municipality}', community.municipality)
+    .replaceAll('{location}', community.name);
 }
 
 function normalizeRoutePath(path: string) {
@@ -57,12 +68,23 @@ const generatedLocationPages: SeoPage[] = (rawSeoData.locationServices ?? []).fl
   })),
 );
 
+const generatedCommunityPages: SeoPage[] = (rawSeoData.communityServices ?? []).flatMap((service) =>
+  (rawSeoData.communityLocations ?? []).map((community) => ({
+    key: `${service.keyPrefix}-${community.slug}`,
+    path: `/communities/${service.pathPrefix}-${community.slug}`,
+    title: fillCommunityPattern(service.titlePattern, community),
+    description: fillCommunityPattern(service.descriptionPattern, community),
+    kind: 'service' as const,
+    primaryKeyword: fillCommunityPattern(service.primaryKeywordPattern, community),
+  })),
+);
+
 const generatedLongTailPages: SeoPage[] = (rawSeoData.longTailPages ?? []).map((page) => ({
   ...page,
   kind: 'article' as const,
 }));
 
-export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages, ...generatedLongTailPages];
+export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages, ...generatedCommunityPages, ...generatedLongTailPages];
 export const pageByKey = new Map(pages.map((page) => [page.key, page]));
 export const pathByKey = new Map(pages.map((page) => [page.key, page.path]));
 const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page.key]));
@@ -256,7 +278,7 @@ export const buildPageFaq = (page: SeoPage) => {
     ];
   }
 
-  if (page.key.startsWith('location-')) {
+  if (page.key.startsWith('location-') || page.key.startsWith('community-')) {
     const location = getLocationFromPage(page);
     return [
       {
@@ -295,8 +317,10 @@ export const buildPageFaq = (page: SeoPage) => {
 };
 
 const getLocationFromPage = (page: SeoPage) => {
-  const match = (rawSeoData.locations ?? []).find((location) => page.key.endsWith(`-${location.slug}`));
-  return match?.name ?? 'the GTA';
+  const locationMatch = (rawSeoData.locations ?? []).find((location) => page.key.endsWith(`-${location.slug}`));
+  if (locationMatch) return locationMatch.name;
+  const communityMatch = (rawSeoData.communityLocations ?? []).find((community) => page.key.endsWith(`-${community.slug}`));
+  return communityMatch ? `${communityMatch.name}, ${communityMatch.municipality}` : 'the GTA';
 };
 
 const buildBreadcrumbs = (page: SeoPage) => {

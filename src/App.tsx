@@ -1726,7 +1726,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
 
 const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntries(
   seoPages
-    .filter((page) => page.key.startsWith('location-') || page.key.startsWith('guide-'))
+    .filter((page) => page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('guide-'))
     .map((page) => [page.key, createGeneratedLandingPage(page)]),
 );
 
@@ -1740,6 +1740,16 @@ const locationSeoCards: ImageCard[] = seoPages
   .map((page) => ({
     title: page.title.split('|')[0].trim(),
     eyebrow: 'GTA service area',
+    summary: page.description,
+    image: imageForSeoPage(page),
+    href: routeHref(page.key),
+  }));
+
+const communitySeoCards: ImageCard[] = seoPages
+  .filter((page) => page.key.startsWith('community-'))
+  .map((page) => ({
+    title: page.title.split('|')[0].trim(),
+    eyebrow: 'Neighbourhood service area',
     summary: page.description,
     image: imageForSeoPage(page),
     href: routeHref(page.key),
@@ -1930,22 +1940,23 @@ const SearchOverlay = ({
 };
 
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
-  const isLocation = page.key.startsWith('location-');
-  const parent: MainPageKey = isLocation ? 'services' : 'blog';
+  const isServiceArea = page.key.startsWith('location-') || page.key.startsWith('community-');
+  const isCommunity = page.key.startsWith('community-');
+  const parent: MainPageKey = isServiceArea ? 'services' : 'blog';
 
   return {
     parent,
-    category: isLocation ? 'GTA SERVICE AREA' : 'TORONTO GUIDE',
+    category: isCommunity ? 'COMMUNITY SERVICE AREA' : isServiceArea ? 'GTA SERVICE AREA' : 'TORONTO GUIDE',
     title: page.title.split('|')[0].trim(),
     subtitle: page.description,
     image: imageForSeoPage(page),
-    intro: isLocation
+    intro: isServiceArea
       ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.`
       : `This guide is built for owners planning ${page.primaryKeyword}. It explains the design-build considerations that usually affect feasibility, approvals, budget, timeline and construction delivery.`,
-    bullets: isLocation
+    bullets: isServiceArea
       ? ['Local feasibility and zoning review', 'Drawings, permits and engineering coordination', 'Budget, trades and site management', 'Inspection, PDI and warranty-oriented closeout']
       : ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
-    sections: isLocation
+    sections: isServiceArea
       ? [
           {
             heading: 'Local Project Fit',
@@ -2238,6 +2249,15 @@ const ServicesPage = () => (
           City and district pages are organized around the way owners search for local design-build help across custom homes, garden suites, multiplex projects and additions.
         </p>
         <CardGrid cards={locationSeoCards} />
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
+        <SubPageHeading title="Neighbourhood & Community Pages" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          Community pages target the smaller Toronto and GTA search patterns that owners use for custom homes, additions, garden suites, multiplex projects and permit-ready planning.
+        </p>
+        <CardGrid cards={communitySeoCards} />
       </motion.div>
     </section>
   </>
