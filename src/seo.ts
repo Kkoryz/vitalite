@@ -21,6 +21,19 @@ type LocalSeoContext = {
   projectFit: string;
   approvalFocus: string;
 };
+type LocalSeoMatch = {
+  label: string;
+  kind: 'location' | 'community';
+  slug: string;
+  municipality?: string;
+  context?: LocalSeoContext;
+};
+type ServicePlanningFocus = {
+  projectType: string;
+  searchIntent: string;
+  readiness: string;
+  approvals: string;
+};
 type LocationService = {
   keyPrefix: string;
   pathPrefix: string;
@@ -389,8 +402,11 @@ export const buildPageFaq = (page: SeoPage) => {
   }
 
   if (page.key.startsWith('location-') || page.key.startsWith('community-')) {
-    const location = getLocationFromPage(page);
-    const context = getLocalContextFromPage(page);
+    const local = getLocalMatchFromPage(page);
+    const location = local?.label ?? 'the GTA';
+    const context = local?.context;
+    const serviceName = getServiceNameFromPage(page);
+    const focus = getServicePlanningFocus(page);
     return [
       {
         question: `Does Vitalite provide ${page.primaryKeyword} services?`,
@@ -398,7 +414,7 @@ export const buildPageFaq = (page: SeoPage) => {
       },
       {
         question: `What should owners prepare before starting a project in ${location}?`,
-        answer: `Owners should prepare the property address, project goals, current drawings or surveys if available, budget direction, preferred timeline, and any known zoning, access, structural, or approval concerns.`,
+        answer: buildOwnerPreparationAnswer(focus),
       },
       ...(context
         ? [
@@ -408,6 +424,14 @@ export const buildPageFaq = (page: SeoPage) => {
             },
           ]
         : []),
+      {
+        question: `What type of ${serviceName.toLowerCase()} project is this page best for?`,
+        answer: `This page is most relevant for a ${focus.projectType}. It is meant for ${focus.searchIntent}.`,
+      },
+      {
+        question: `Can Vitalite help with permits and approvals for ${page.primaryKeyword}?`,
+        answer: `Yes. Vitalite can coordinate ${focus.approvals}, then connect the approved scope to budgeting, trade scheduling, procurement, site management and inspections.`,
+      },
       {
         question: 'Can Vitalite coordinate drawings, permits, engineering, and construction together?',
         answer: 'Yes. Vitalite is positioned as a one-stop design-build and construction management partner that coordinates design, permit documentation, engineering inputs, trade scheduling, inspections, and site delivery.',
@@ -442,11 +466,104 @@ const getLocationFromPage = (page: SeoPage) => {
   return communityMatch ? `${communityMatch.name}, ${communityMatch.municipality}` : 'the GTA';
 };
 
-const getLocalContextFromPage = (page: SeoPage) => {
+const getLocalMatchFromPage = (page: SeoPage): LocalSeoMatch | undefined => {
   const locationMatch = (rawSeoData.locations ?? []).find((location) => page.key.endsWith(`-${location.slug}`));
-  if (locationMatch) return rawSeoData.locationContexts?.[locationMatch.slug];
+  if (locationMatch) {
+    return {
+      label: locationMatch.name,
+      kind: 'location',
+      slug: locationMatch.slug,
+      context: rawSeoData.locationContexts?.[locationMatch.slug],
+    };
+  }
+
   const communityMatch = (rawSeoData.communityLocations ?? []).find((community) => page.key.endsWith(`-${community.slug}`));
-  return communityMatch ? rawSeoData.communityContexts?.[communityMatch.slug] : undefined;
+  if (communityMatch) {
+    return {
+      label: `${communityMatch.name}, ${communityMatch.municipality}`,
+      kind: 'community',
+      slug: communityMatch.slug,
+      municipality: communityMatch.municipality,
+      context: rawSeoData.communityContexts?.[communityMatch.slug],
+    };
+  }
+
+  return undefined;
+};
+
+const getLocalContextFromPage = (page: SeoPage) => {
+  return getLocalMatchFromPage(page)?.context;
+};
+
+const getServiceNameFromPage = (page: SeoPage) => {
+  const service = [...(rawSeoData.locationServices ?? []), ...(rawSeoData.communityServices ?? [])].find((item) =>
+    page.key.startsWith(`${item.keyPrefix}-`),
+  );
+  return service?.serviceName ?? page.primaryKeyword;
+};
+
+const getServicePlanningFocus = (page: SeoPage): ServicePlanningFocus => {
+  const key = page.key.toLowerCase();
+  const keyword = page.primaryKeyword.toLowerCase();
+
+  if (key.includes('custom-homes') || keyword.includes('custom home')) {
+    return {
+      projectType: 'custom home, teardown rebuild, estate home or major residential build',
+      searchIntent: 'owners comparing feasibility, architectural direction, permit strategy, budget range and construction management before choosing a builder',
+      readiness: 'survey, zoning goals, preferred home size, inspiration images, budget direction, timeline expectations and any known site constraints',
+      approvals: 'zoning review, setbacks, height, lot coverage, grading, tree protection, structural design, energy/code details and permit-ready drawings',
+    };
+  }
+
+  if (key.includes('garden-suites') || keyword.includes('garden suite') || keyword.includes('laneway')) {
+    return {
+      projectType: 'garden suite, laneway house, coach house or secondary dwelling unit',
+      searchIntent: 'homeowners looking to add rental income, family housing flexibility or long-term property value through an accessory dwelling',
+      readiness: 'survey, servicing information, access route, parking context, intended unit size, rental or family-use goals and preliminary budget',
+      approvals: 'zoning eligibility, setbacks, height, servicing, drainage, tree protection, fire access, building code review and permit drawings',
+    };
+  }
+
+  if (key.includes('multiplex') || keyword.includes('multiplex') || keyword.includes('multi-unit')) {
+    return {
+      projectType: 'multiplex, multi-unit conversion, legal suite strategy or small residential investment project',
+      searchIntent: 'owners and investors trying to increase land use, rental potential and code-compliant unit count without losing control of budget and approvals',
+      readiness: 'existing floor plans, unit goals, servicing assumptions, parking context, rent strategy, budget direction and tolerance for structural or mechanical upgrades',
+      approvals: 'zoning permissions, fire separation, egress, parking, servicing, HVAC, structural work, building code review and inspection planning',
+    };
+  }
+
+  if (key.includes('home-additions') || key.includes('luxury-renovations') || keyword.includes('addition') || keyword.includes('renovation')) {
+    return {
+      projectType: 'home addition, second-storey addition, rear extension, structural renovation or whole-home upgrade',
+      searchIntent: 'homeowners who need more space, a better layout or a higher-value renovation while keeping design continuity and structure under control',
+      readiness: 'existing drawings if available, survey, desired added area, structural concerns, finish level, temporary living needs, budget range and timeline',
+      approvals: 'setbacks, height, lot coverage, structural openings, HVAC changes, energy/code requirements, permit drawings and municipal inspections',
+    };
+  }
+
+  if (key.includes('permit-drawings') || keyword.includes('permit') || keyword.includes('drawing')) {
+    return {
+      projectType: 'permit drawing package, zoning review, building code review or engineering coordination scope',
+      searchIntent: 'owners who need clear drawings, municipal submission support and construction-aware documentation before pricing or site work',
+      readiness: 'property address, survey, existing drawings, scope notes, photos, known violation or order details, target timeline and construction goals',
+      approvals: 'architectural drawings, structural details where required, HVAC or mechanical inputs, zoning review, building code review and permit comments',
+    };
+  }
+
+  return {
+    projectType: 'design-build construction, renovation or construction management project',
+    searchIntent: 'owners comparing feasibility, budget, approvals, construction sequencing and one-team accountability before committing to a contractor',
+    readiness: 'property details, project goals, drawings or survey if available, budget direction, desired timeline and known structural or approval issues',
+    approvals: 'zoning, building code, permit drawings, engineering coordination, trade sequencing and inspection planning',
+  };
+};
+
+const buildOwnerPreparationAnswer = (focus: ServicePlanningFocus) => {
+  const supportingDetails = focus.readiness.toLowerCase().includes('property address')
+    ? 'budget direction, site photos, available surveys or drawings, inspection notes, municipal comments and timeline assumptions'
+    : 'the property address, existing surveys or drawings, photos, inspection notes, municipal comments, budget direction and timeline assumptions';
+  return `Owners should prepare ${focus.readiness}. Useful supporting information includes ${supportingDetails}.`;
 };
 
 const buildHowToSteps = (page: SeoPage) => {
