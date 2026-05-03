@@ -2239,6 +2239,19 @@ function getGeneratedRelatedLinks(page: SeoPage) {
     ]).slice(0, 10);
   }
 
+  if (page.key.startsWith('guide-')) {
+    return uniqueRelatedLinks([
+      { label: 'GTA design-build pre-construction checklist', key: 'guide-gta-pre-construction-checklist' },
+      { label: 'Why GTA construction proposals differ', key: 'guide-gta-construction-proposals-differ' },
+      { label: 'Design-build vs general contractor GTA', key: 'guide-design-build-vs-general-contractor-gta' },
+      { label: 'GTA construction management guide', key: 'guide-gta-construction-management' },
+      { label: 'Toronto permit-ready drawings checklist', key: 'guide-toronto-permit-ready-drawings-checklist' },
+      { label: 'GTA service areas', key: 'locations-hub' },
+      { label: 'Toronto & GTA communities', key: 'communities-hub' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
+    ]).slice(0, 10);
+  }
+
   return [
     { label: 'GTA service areas', key: 'locations-hub' },
     { label: 'Toronto & GTA communities', key: 'communities-hub' },
@@ -2250,6 +2263,116 @@ function getGuideProfile(page: SeoPage) {
   const keyword = page.primaryKeyword.toLowerCase();
   const title = page.title.toLowerCase();
   const topic = `${keyword} ${title}`;
+
+  if (topic.includes('proposal') || topic.includes('quote') || topic.includes('estimate') || topic.includes('allowance')) {
+    return {
+      answer: 'GTA construction proposals usually differ because contractors are not pricing the same scope. One proposal may include drawings, permit coordination, engineering, demolition, site protection, allowances, exclusions, trade management and inspection support, while another may leave those items undefined.',
+      bullets: ['Scope normalization', 'Allowances and exclusions', 'Drawing and permit readiness', 'Management and inspection responsibility'],
+      sections: [
+        {
+          heading: 'Scope Normalization',
+          text: 'Compare proposals against the same drawings, structural assumptions, permit status, finish level, demolition scope, site access, temporary protection, disposal, utility work and inspection requirements.',
+        },
+        {
+          heading: 'Allowances And Exclusions',
+          text: 'Low prices often hide provisional sums, owner-supplied materials, missing engineering, unclear permit fees, utility work, landscaping, contingency, cleanup, or change-order assumptions.',
+        },
+        {
+          heading: 'Management Risk',
+          text: 'A useful proposal should explain who coordinates trades, procurement, inspections, schedule updates, quality control, change decisions, site meetings and closeout.',
+        },
+      ],
+      steps: ['Define the same project scope for every bidder', 'Review drawings, permit status and engineering assumptions', 'Compare allowances, exclusions and provisional sums', 'Clarify trade, inspection and site management responsibility', 'Choose the proposal with transparent scope and risk control'],
+    };
+  }
+
+  if (topic.includes('pre-construction') || topic.includes('readiness') || (topic.includes('checklist') && !topic.includes('permit-ready'))) {
+    return {
+      answer: `${page.primaryKeyword} should confirm feasibility, zoning, survey information, drawings, engineering inputs, permit path, budget assumptions, procurement, trade sequencing, inspection requirements and client decisions before site work begins.`,
+      bullets: ['Feasibility and zoning inputs', 'Permit-ready drawings and engineering', 'Budget and procurement planning', 'Trade, inspection and site logistics'],
+      sections: [
+        {
+          heading: 'Feasibility Inputs',
+          text: 'Start with the property address, survey, existing drawings where available, photos, desired scope, target budget, timeline, zoning constraints, tree or grading concerns and access conditions.',
+        },
+        {
+          heading: 'Permit And Engineering Readiness',
+          text: 'Pre-construction should align architectural drawings, structural details, HVAC or mechanical inputs, building code requirements, municipal comments and inspection planning before final construction scheduling.',
+        },
+        {
+          heading: 'Buildability And Procurement',
+          text: 'The construction plan should identify long-lead materials, trade order, site protection, temporary services, inspection milestones, client selections and communication rhythm.',
+        },
+      ],
+      steps: ['Confirm goals, address and property constraints', 'Collect survey, drawings, photos and existing-condition details', 'Review zoning, code, permit and engineering requirements', 'Build a budget with allowances, procurement and trade input', 'Set the construction sequence, inspections and closeout plan'],
+    };
+  }
+
+  if (topic.includes('permit-ready')) {
+    return {
+      answer: 'A Toronto permit-ready drawing package requires clear scope, existing-condition information, zoning and building code review, architectural drawings, structural details where needed, HVAC or mechanical coordination, and a permit submission plan that can respond to municipal comments.',
+      bullets: ['Existing conditions and survey review', 'Architectural permit drawings', 'Structural, HVAC and mechanical inputs', 'Submission comments and construction handoff'],
+      sections: [
+        {
+          heading: 'Drawing Package',
+          text: 'A permit-ready package should show existing and proposed plans, elevations where needed, sections, construction notes, life-safety items, structural openings and the scope that municipal reviewers need to assess.',
+        },
+        {
+          heading: 'Coordination Inputs',
+          text: 'Structural engineering, HVAC, mechanical, energy/code items, grading, tree protection and servicing details should be identified early when they affect the permit path or construction cost.',
+        },
+        {
+          heading: 'Submission Readiness',
+          text: 'The package should be organized for municipal intake, comment response, revisions, inspection planning and handoff into trade scheduling and procurement.',
+        },
+      ],
+      steps: ['Confirm address, project scope and available survey information', 'Gather existing drawings, photos and site constraints', 'Complete zoning and building code review', 'Coordinate architectural, structural and HVAC documentation', 'Submit the permit package and respond to municipal comments'],
+    };
+  }
+
+  if (topic.includes('general contractor')) {
+    return {
+      answer: 'In the GTA, design-build vs general contractor is a delivery model decision. Design-build connects design, approvals, budgeting and construction management earlier, while a traditional general contractor is usually most effective after drawings, specifications and permit scope are already complete.',
+      bullets: ['When drawings are complete', 'When approvals are uncertain', 'When budget feedback should shape design', 'Who manages trades, permits and inspections'],
+      sections: [
+        {
+          heading: 'Delivery Model Decision',
+          text: 'Owners should decide whether they need a build team after completed drawings or an integrated team that can shape design, approvals, budgets, procurement and site execution together.',
+        },
+        {
+          heading: 'When General Contracting Fits',
+          text: 'A general contractor model can work well when drawings, engineering, selections and permit requirements are already clear enough for trade pricing and site scheduling.',
+        },
+        {
+          heading: 'When Design-Build Helps',
+          text: 'Design-build helps when feasibility, drawings, approvals, budgets, construction sequence and owner decisions need to be coordinated before a final price is reliable.',
+        },
+      ],
+      steps: ['Identify whether drawings and scope are complete', 'Review zoning, permit and engineering risk', 'Decide when budget feedback should enter design', 'Assign responsibility for trades, inspections and change control', 'Choose the delivery model before final pricing'],
+    };
+  }
+
+  if (topic.includes('construction management') || topic.includes('construction manager')) {
+    return {
+      answer: 'GTA construction management helps control schedule, budget, trades, inspections, procurement, site communication, quality and closeout across a complex project. It is especially useful when multiple consultants, approvals and sub-trades need active coordination.',
+      bullets: ['Schedule and budget controls', 'Trade and procurement coordination', 'Inspection and quality management', 'Client communication and closeout'],
+      sections: [
+        {
+          heading: 'What Construction Management Controls',
+          text: 'Construction management organizes the baseline schedule, scope decisions, procurement, trade sequencing, site meetings, municipal inspections, quality checks, change orders and PDI closeout.',
+        },
+        {
+          heading: 'Owner Visibility',
+          text: 'A managed process gives owners clearer reporting on decisions, risks, budget movement, inspection milestones, trade progress and items that need approval before work can proceed.',
+        },
+        {
+          heading: 'Risk Reduction',
+          text: 'The main value is fewer preventable gaps between drawings, permits, trades, materials, field conditions and client decisions during active construction.',
+        },
+      ],
+      steps: ['Define the project controls and reporting rhythm', 'Set the baseline schedule, budget and scope tracker', 'Organize trades, procurement and site logistics', 'Manage inspections, quality control and change decisions', 'Complete PDI, closeout documents and warranty-oriented follow-up'],
+    };
+  }
 
   if (topic.includes('cost') || topic.includes('per square foot') || topic.includes('budget')) {
     return {
@@ -2437,7 +2560,7 @@ function imageForSeoPage(page: SeoPage) {
   if (keyword.includes('addition') || keyword.includes('walkout') || keyword.includes('storey')) {
     return 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop';
   }
-  if (keyword.includes('permit') || keyword.includes('drawings') || keyword.includes('manager')) {
+  if (keyword.includes('permit') || keyword.includes('drawings') || keyword.includes('manager') || keyword.includes('management') || keyword.includes('proposal') || keyword.includes('checklist') || keyword.includes('general contractor')) {
     return 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop';
   }
   return 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop';

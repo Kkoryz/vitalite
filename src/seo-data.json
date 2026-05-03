@@ -858,6 +858,41 @@
       "title": "GTA Design-Build FAQ | Vitalite",
       "description": "A design-build FAQ for GTA homeowners and investors comparing contractors, architects, construction managers, permits, drawings, budgets, timelines, and project delivery.",
       "primaryKeyword": "GTA design-build FAQ"
+    },
+    {
+      "key": "guide-gta-construction-proposals-differ",
+      "path": "/blog/why-gta-construction-proposals-differ",
+      "title": "Why GTA Construction Proposals Differ | Vitalite Guide",
+      "description": "A GTA construction proposal comparison guide covering scope gaps, allowances, drawings, permits, site conditions, exclusions, timelines, and construction management risk.",
+      "primaryKeyword": "why GTA construction proposals differ"
+    },
+    {
+      "key": "guide-gta-pre-construction-checklist",
+      "path": "/blog/gta-design-build-pre-construction-checklist",
+      "title": "GTA Design-Build Pre-Construction Checklist | Vitalite",
+      "description": "A pre-construction checklist for GTA custom homes, additions, multiplex projects and garden suites, covering feasibility, drawings, permits, budgets, procurement, trades and inspections.",
+      "primaryKeyword": "GTA design-build pre-construction checklist"
+    },
+    {
+      "key": "guide-design-build-vs-general-contractor-gta",
+      "path": "/blog/design-build-vs-general-contractor-gta",
+      "title": "Design-Build vs General Contractor GTA | Vitalite",
+      "description": "Compare design-build and traditional general contracting for GTA homes, additions, multiplexes and permit-driven projects, including accountability, drawings, pricing and site management.",
+      "primaryKeyword": "design-build vs general contractor GTA"
+    },
+    {
+      "key": "guide-gta-construction-management",
+      "path": "/blog/gta-construction-management-guide",
+      "title": "GTA Construction Management Guide | Vitalite",
+      "description": "A GTA construction management guide covering schedule control, budgets, sub-trades, inspections, quality control, client communication, risk tracking and closeout.",
+      "primaryKeyword": "GTA construction management guide"
+    },
+    {
+      "key": "guide-toronto-permit-ready-drawings-checklist",
+      "path": "/blog/toronto-permit-ready-drawings-checklist",
+      "title": "Toronto Permit-Ready Drawings Checklist | Vitalite",
+      "description": "A Toronto permit-ready drawings checklist for custom homes, additions, garden suites, multiplexes and renovations, covering zoning, architectural drawings, structural inputs, HVAC and permit submission.",
+      "primaryKeyword": "Toronto permit-ready drawings checklist"
     }
   ]
 }

@@ -440,10 +440,60 @@ export const buildPageFaq = (page: SeoPage) => {
   }
 
   if (page.key.startsWith('guide-')) {
+    const topic = `${page.primaryKeyword} ${page.title}`.toLowerCase();
+    const topicFaq = (() => {
+      if (topic.includes('proposal') || topic.includes('quote') || topic.includes('estimate')) {
+        return [
+          {
+            question: 'Why can two GTA construction proposals be far apart?',
+            answer:
+              'Two proposals may include different assumptions for drawings, permits, engineering, demolition, site protection, allowances, exclusions, trade management, inspections, cleanup, contingency and change orders.',
+          },
+        ];
+      }
+      if (topic.includes('pre-construction') || (topic.includes('checklist') && !topic.includes('permit-ready'))) {
+        return [
+          {
+            question: 'What should be resolved before construction starts?',
+            answer:
+              'Pre-construction should resolve feasibility, zoning, drawings, engineering inputs, permit path, budget assumptions, procurement, trade sequencing, inspection requirements and client selections.',
+          },
+        ];
+      }
+      if (topic.includes('general contractor')) {
+        return [
+          {
+            question: 'When is design-build better than a traditional general contractor?',
+            answer:
+              'Design-build is usually better when design, approvals, budget feedback, construction sequencing and site management need to be coordinated before final drawings and pricing are complete.',
+          },
+        ];
+      }
+      if (topic.includes('construction management')) {
+        return [
+          {
+            question: 'What does construction management add to a GTA project?',
+            answer:
+              'Construction management adds schedule control, budget tracking, trade coordination, procurement planning, inspection management, quality control, owner communication and closeout discipline.',
+          },
+        ];
+      }
+      if (topic.includes('permit-ready')) {
+        return [
+          {
+            question: 'What makes drawings permit-ready in Toronto?',
+            answer:
+              'Permit-ready drawings should show clear scope, existing conditions, zoning and code alignment, architectural plans, required structural or HVAC coordination, and enough detail for municipal review and comments.',
+          },
+        ];
+      }
+      return [];
+    })();
     return [
+      ...topicFaq,
       {
-        question: `What does this ${page.primaryKeyword} guide cover?`,
-        answer: `This guide explains the planning factors behind ${page.primaryKeyword}, including early feasibility, drawings, approvals, budget drivers, construction sequencing, inspections, and risk control.`,
+        question: 'What does this guide cover?',
+        answer: 'This guide explains the planning factors behind the topic, including early feasibility, drawings, approvals, budget drivers, construction sequencing, inspections, and risk control.',
       },
       {
         question: 'When should a homeowner involve a design-build contractor?',
@@ -569,6 +619,26 @@ const buildOwnerPreparationAnswer = (focus: ServicePlanningFocus) => {
 const buildHowToSteps = (page: SeoPage) => {
   if (!page.key.startsWith('guide-')) return [];
   const topic = `${page.primaryKeyword} ${page.title}`.toLowerCase();
+
+  if (topic.includes('proposal') || topic.includes('quote') || topic.includes('estimate') || topic.includes('allowance')) {
+    return ['Define the same project scope for every bidder', 'Review drawings, permit status and engineering assumptions', 'Compare allowances, exclusions and provisional sums', 'Clarify trade, inspection and site management responsibility', 'Choose the proposal with transparent scope and risk control'];
+  }
+
+  if (topic.includes('pre-construction') || topic.includes('readiness') || (topic.includes('checklist') && !topic.includes('permit-ready'))) {
+    return ['Confirm goals, address and property constraints', 'Collect survey, drawings, photos and existing-condition details', 'Review zoning, code, permit and engineering requirements', 'Build a budget with allowances, procurement and trade input', 'Set the construction sequence, inspections and closeout plan'];
+  }
+
+  if (topic.includes('permit-ready')) {
+    return ['Confirm address, project scope and available survey information', 'Gather existing drawings, photos and site constraints', 'Complete zoning and building code review', 'Coordinate architectural, structural and HVAC documentation', 'Submit the permit package and respond to municipal comments'];
+  }
+
+  if (topic.includes('general contractor')) {
+    return ['Identify whether drawings and scope are complete', 'Review zoning, permit and engineering risk', 'Decide when budget feedback should enter design', 'Assign responsibility for trades, inspections and change control', 'Choose the delivery model before final pricing'];
+  }
+
+  if (topic.includes('construction management') || topic.includes('construction manager')) {
+    return ['Define the project controls and reporting rhythm', 'Set the baseline schedule, budget and scope tracker', 'Organize trades, procurement and site logistics', 'Manage inspections, quality control and change decisions', 'Complete PDI, closeout documents and warranty-oriented follow-up'];
+  }
 
   if (topic.includes('cost') || topic.includes('per square foot') || topic.includes('budget')) {
     return ['Define scope and property constraints', 'Review zoning, surveys and existing conditions', 'Coordinate drawings and engineering inputs', 'Build a budget with allowances and contingencies', 'Sequence procurement, permits, trades and inspections'];
