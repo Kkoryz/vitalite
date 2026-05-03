@@ -4,7 +4,7 @@
   "defaultImage": "/logo-transparent.png",
   "business": {
     "name": "Vitalite Construction Corp.",
-    "description": "Vitalite Construction Corp. is a GTA-based design-build, general contracting, and construction management company for custom homes, multiplex housing, additions, permits, engineering coordination, and ICI construction.",
+    "description": "Vitalite Construction Corp. is a GTA-based design-build, general contracting, and construction management company connecting feasibility, drawings, permits, budgets, construction and closeout for residential and ICI projects.",
     "areaServed": ["Greater Toronto Area", "Toronto", "North York", "Markham", "Richmond Hill", "Vaughan", "Mississauga", "Scarborough", "Etobicoke", "Rosedale", "Forest Hill", "Lawrence Park", "Leaside", "The Annex", "High Park", "Willowdale", "Bayview Village", "York Mills", "The Kingsway", "Unionville", "Angus Glen", "Thornhill", "Kleinburg", "Woodbridge", "Port Credit", "Lorne Park", "Mineola"],
     "locality": "Greater Toronto Area",
     "region": "ON",
@@ -15,7 +15,7 @@
       "key": "home",
       "path": "/",
       "title": "GTA Design-Build Contractor | Vitalite Construction",
-      "description": "Vitalite Construction Corp. is a GTA design-build contractor for custom homes, multiplex housing, additions, permits, project management, and ICI construction.",
+      "description": "Vitalite Construction Corp. is a GTA design-build contractor connecting feasibility, drawings, permits, budgets, construction management and closeout for custom homes, multiplex housing, additions and ICI projects.",
       "kind": "home",
       "primaryKeyword": "GTA design-build contractor"
     },

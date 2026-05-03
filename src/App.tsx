@@ -212,10 +212,20 @@ const frenchText: Record<string, string> = {
   'Garden Suite Ideas 2026': 'Idees de garden suite 2026',
   'Renovating A Fixer-Upper vs Buying New': 'Renover une propriete a reparer ou acheter neuf',
   'GTA Design-Build Contractor': 'Entrepreneur conception-construction dans le GTA',
+  'Design, Permits and Construction Under One GTA Team': 'Conception, permis et construction avec une seule equipe GTA',
   'Luxury Custom Homes, Built Around Your Vision': 'Maisons de luxe sur mesure, concues autour de votre vision',
+  'Custom Homes Planned Before They Are Priced': 'Maisons sur mesure planifiees avant le prix final',
   'Multiplex Housing, Garden Suites & Additions': 'Multiplex, garden suites et agrandissements',
+  'Multiplex, Garden Suite and Addition Projects Built for Approval': 'Multiplex, garden suites et agrandissements prepares pour les approbations',
   'Explore Vitalite services': 'Explorer les services Vitalite',
+  'Explore design-build services': 'Explorer les services conception-construction',
+  'Plan residential investment work': 'Planifier un projet residentiel d investissement',
   'Custom home design & build': 'Conception-construction de maison sur mesure',
+  'GTA Design-Build, Permits and Construction Management': 'Conception-construction, permis et gestion de construction dans le GTA',
+  'View Vitalite services': 'Voir les services Vitalite',
+  'Plan First. Build With Control.': 'Planifier d abord. Construire avec controle.',
+  'Design, Approvals and Construction in One Workflow.': 'Conception, approbations et construction dans un seul processus.',
+  'From First Review to Final Handover': 'De la premiere evaluation a la livraison finale',
   'Plan a project consultation': 'Planifier une consultation',
   'GTA DESIGN-BUILD': 'CONCEPTION-CONSTRUCTION GTA',
   'Full-Service Design-Build Renovations Include:': 'Services complets conception-construction inclus :',
@@ -566,25 +576,25 @@ const Navbar = ({
 
 const heroSlides = [
   {
-    category: 'DESIGN-BUILD',
-    title: 'GTA Design-Build Contractor',
-    desc: 'Vitalite Construction Corp. delivers one-stop design-build, permitting, construction management and warranty support for homeowners, investors and commercial clients.',
-    link: 'Explore Vitalite services',
+    category: 'GTA DESIGN-BUILD',
+    title: 'Design, Permits and Construction Under One GTA Team',
+    desc: 'Vitalite helps owners move from feasibility review to permit-ready drawings, construction management, inspections and warranty-oriented closeout without splitting the project across disconnected teams.',
+    link: 'Explore design-build services',
     video: publicAsset('vitalite-hero-design-build.mp4'),
     image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop',
   },
   {
     category: 'CUSTOM HOMES',
-    title: 'Luxury Custom Homes, Built Around Your Vision',
-    desc: 'From concept and drawings to budget planning, construction and final delivery, we build bespoke residences with disciplined project control and craftsmanship.',
+    title: 'Custom Homes Planned Before They Are Priced',
+    desc: 'We connect lifestyle goals, lot constraints, architectural direction, budgets and site execution before construction starts, so each custom home has a clear path from concept to handover.',
     link: 'Custom home design & build',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
   },
   {
     category: 'MULTI-UNIT HOUSING',
-    title: 'Multiplex, Garden Suite and Laneway House Delivery',
-    desc: 'We help property owners increase land use, rental potential and long-term value through compliant multi-unit residential and secondary dwelling projects.',
-    link: 'Residential investment projects',
+    title: 'Multiplex, Garden Suite and Addition Projects Built for Approval',
+    desc: 'For investors and homeowners adding density or space, Vitalite coordinates feasibility, zoning, drawings, permits, trades and inspections around one managed construction plan.',
+    link: 'Plan residential investment work',
     image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop',
   },
 ];
@@ -716,12 +726,12 @@ const IntegratedSolutions = () => {
         className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
       >
         <div>
-          <SectionHeading title="One-Stop Design-Build & Construction Management in the GTA" />
+          <SectionHeading title="GTA Design-Build, Permits and Construction Management" />
           <p className="text-lg text-gray-300 leading-relaxed max-w-xl mb-12">
-            Vitalite Construction Corp. is a GTA-based design-build, construction management and general contracting company specializing in custom homes, multi-unit residential projects, major additions, garden suites, laneway houses, ICI construction, permits, drawings and engineering coordination.
+            Vitalite Construction Corp. is built for projects where design decisions, zoning review, permit drawings, engineering, budget control and site execution need to stay connected. We support custom homes, multiplex housing, additions, garden suites, laneway houses and ICI projects across the GTA.
           </p>
           <a href={routeHref('services')} className="group inline-flex items-center text-xl font-medium text-white hover:text-gray-300 transition-colors">
-            Explore solutions <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
+            View Vitalite services <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
         <div className="relative h-[600px] hidden lg:block">
@@ -736,10 +746,10 @@ const IntegratedSolutions = () => {
 
 const Stats = () => {
   const stats = [
-    { value: 'GTA', label: 'Local zoning, permit and building code experience' },
-    { value: '7', label: 'Core residential, management and ICI service lines' },
-    { value: 'A-Z', label: 'Consultation, drawings, permits, construction and warranty' },
-    { value: 'PM', label: 'Schedule, budget, trade, inspection and quality control' },
+    { value: 'GTA', label: 'Toronto-area zoning, permit and inspection experience' },
+    { value: '7', label: 'Core service lines for residential and ICI projects' },
+    { value: 'A-Z', label: 'Consultation, drawings, permits, construction and closeout' },
+    { value: 'PM', label: 'Schedule, budget, trades, inspections and quality control' },
   ];
 
   return (
@@ -750,7 +760,7 @@ const Stats = () => {
         className="max-w-7xl mx-auto"
       >
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-center text-white mb-14 md:mb-20 tracking-tight">
-          Integrated Delivery. Clear Accountability.
+          Plan First. Build With Control.
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 text-center">
           {stats.map((stat, i) => (
@@ -779,49 +789,49 @@ const expertiseItems = [
   {
     tab: 'Custom Homes',
     title: 'Custom Home Design & Build',
-    desc: 'We design and build luxury custom homes tailored to each client\'s lifestyle, vision and long-term property value, with attention to planning, materials, craftsmanship and delivery control.',
+    desc: 'We help owners turn a custom-home idea into a buildable plan by aligning lifestyle goals, lot constraints, architectural drawings, budgets, permits, material choices and site delivery before construction begins.',
     link: 'Custom home approach',
     image: 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'Multiplex Housing',
     title: 'Multi-Unit & Multiplex Residential Construction',
-    desc: 'We help property owners and investors maximize land use and rental potential through compliant, efficient and well-managed multi-unit residential projects.',
+    desc: 'We help investors and property owners evaluate unit strategy, zoning fit, code requirements, systems upgrades, rental potential and construction sequencing for compliant multi-unit residential projects.',
     link: 'Multiplex construction',
     image: 'https://images.unsplash.com/photo-1600566753151-384129cf4e3e?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'Garden Suites',
     title: 'Garden Suites, Laneway Houses & Coach Houses',
-    desc: 'We design, permit and build secondary dwelling units that add flexible living space, rental income potential and long-term property value.',
+    desc: 'We coordinate garden suites, laneway houses and coach houses from early feasibility through drawings, permits, servicing, access planning and managed construction.',
     link: 'Secondary dwelling units',
     image: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'Additions',
     title: 'Home Additions & Major Renovations',
-    desc: 'We provide home additions, structural alterations and large-scale renovations that expand living space while maintaining design continuity and structural integrity.',
+    desc: 'We plan additions and major renovations around structure, code, permit path, existing-home conditions and finish continuity, so added space feels intentional rather than patched on.',
     link: 'Addition and renovation work',
     image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'Permits & Engineering',
     title: 'Drawings, Permits & Engineering Coordination',
-    desc: 'We prepare architectural and structural drawings, coordinate engineering documentation and manage permit applications to keep projects compliant and moving forward.',
+    desc: 'We organize architectural drawings, structural inputs, HVAC or mechanical coordination, zoning review and permit applications so construction pricing is based on a clearer scope.',
     link: 'Permit-ready documentation',
     image: 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'Project Management',
     title: 'Project Management & Construction Management',
-    desc: 'We manage schedules, budgets, trades, quality control, inspections and communication so complex projects are delivered efficiently and professionally.',
+    desc: 'We manage schedules, budgets, trades, procurement, inspections, site meetings, quality control and client communication so complex projects have visible accountability.',
     link: 'Construction management',
     image: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=2070&auto=format&fit=crop',
   },
   {
     tab: 'ICI Construction',
     title: 'Industrial, Commercial & Institutional Construction',
-    desc: 'We provide design and construction services for warehouses, offices, retail spaces and institutional facilities with a focus on durability, compliance and cost efficiency.',
+    desc: 'We support warehouses, offices, retail spaces and institutional facilities with practical design-build and construction management focused on compliance, durability and operating needs.',
     link: 'ICI construction services',
     image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
   },
@@ -838,9 +848,9 @@ const Expertise = () => {
         variants={fadeInVariants}
         className="max-w-7xl mx-auto"
       >
-        <SectionHeading title="End-to-End Expertise. One Accountable Team." />
+        <SectionHeading title="Design, Approvals and Construction in One Workflow." />
         <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mb-12">
-          Vitalite is not only a builder and not only a design office. We coordinate design, zoning review, engineering, permit applications, construction, inspections and closeout under one managed delivery process.
+          Vitalite is not a standalone design office or a basic construction crew. We coordinate the planning work that decides whether a project can be priced, approved and built with fewer avoidable gaps.
         </p>
 
         <div className="flex flex-nowrap md:flex-wrap items-center gap-3 md:gap-4 mb-12 md:mb-16 overflow-x-auto pb-2 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -894,37 +904,37 @@ const Markets = () => {
   const markets = [
     {
       name: 'Custom Homes',
-      summary: 'Luxury custom homes, bespoke residences, rebuilds and owner-focused design-build delivery.',
+      summary: 'Custom homes, rebuilds and owner-focused residences planned around lot conditions, approvals, budget and finish quality.',
       img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop',
     },
     {
       name: 'Multi-Unit / Multiplex',
-      summary: 'Multiplex housing, separate suites and investment residential planning for stronger land use.',
+      summary: 'Multi-unit housing, separate suites and investment residential projects planned for code compliance and rental potential.',
       img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2073&auto=format&fit=crop',
     },
     {
       name: 'Garden Suite / Laneway House',
-      summary: 'Secondary dwelling units that support family flexibility, rental income and property value.',
+      summary: 'Secondary dwelling units that add family flexibility, rental income potential and long-term property value.',
       img: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?q=80&w=2070&auto=format&fit=crop',
     },
     {
       name: 'Home Additions & Alterations',
-      summary: 'Additions, extensions, structural changes, major renovations and whole-house transformations.',
+      summary: 'Additions, extensions, structural changes and whole-house renovations coordinated with permits and existing conditions.',
       img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1931&auto=format&fit=crop',
     },
     {
       name: 'Drawings, Permits & Engineering',
-      summary: 'Architectural drawings, structural coordination, HVAC, zoning review and permit applications.',
+      summary: 'Permit-ready drawings, structural coordination, HVAC inputs, zoning review and municipal submission support.',
       img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2070&auto=format&fit=crop',
     },
     {
       name: 'Project / Construction Management',
-      summary: 'Budget, schedule, trades, quality control, site meetings, inspections and client communication.',
+      summary: 'Budget, schedule, trades, procurement, quality control, inspections and client communication managed together.',
       img: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=2074&auto=format&fit=crop',
     },
     {
       name: 'ICI Construction',
-      summary: 'Warehouse, office, retail, industrial and institutional projects built for compliance and durability.',
+      summary: 'Warehouse, office, retail, industrial and institutional projects planned around compliance, durability and operations.',
       img: 'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=2070&auto=format&fit=crop',
     },
   ];
@@ -943,7 +953,7 @@ const Markets = () => {
               Our Services
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed font-light">
-              Vitalite serves GTA homeowners, investors, developers and commercial clients with design-build general contracting and construction management across custom homes, multiplex housing, additions, secondary dwelling units, permit-ready drawings and ICI projects.
+              Vitalite serves GTA homeowners, investors, developers and commercial clients who need design-build general contracting, permit coordination and construction management under one accountable process.
             </p>
           </div>
           <div className="hidden sm:flex space-x-4 shrink-0">
@@ -1012,9 +1022,9 @@ const ProjectProcess = () => {
         variants={fadeInVariants}
         className="max-w-[1400px] mx-auto relative z-10"
       >
-        <SectionHeading title="From Consultation to Warranty" />
+        <SectionHeading title="From First Review to Final Handover" />
         <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mb-12">
-          Our process moves projects from early feasibility through design, zoning, building permits, pre-construction, construction, pre-delivery inspection and aftercare. The result is a managed path from idea to occupancy.
+          Our process gives owners a clear path before the site is active: feasibility, design, zoning, permits, engineering, budget planning, procurement, construction, inspections, PDI and warranty-oriented aftercare.
         </p>
         <a href={routeHref('why-the-vitalite-way')} className="group inline-flex items-center text-lg sm:text-xl font-medium text-white hover:text-gray-300 mb-12 md:mb-16 transition-colors">
           How Vitalite works <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
@@ -2281,6 +2291,18 @@ function getGuideProfile(page: SeoPage) {
           heading: 'Management Risk',
           text: 'A useful proposal should explain who coordinates trades, procurement, inspections, schedule updates, quality control, change decisions, site meetings and closeout.',
         },
+        {
+          heading: 'Questions To Ask Before Comparing Prices',
+          text: 'Ask whether the proposal includes permit coordination, engineering follow-up, demolition, temporary protection, disposal, site supervision, inspection attendance, cleanup, closeout and warranty-oriented support.',
+        },
+        {
+          heading: 'Proposal Red Flags',
+          text: 'Be careful when a price is much lower but does not show allowances, exclusions, owner-supplied items, permit assumptions, change-order rules, project management scope or what happens when municipal comments require revisions.',
+        },
+        {
+          heading: 'Best Next Step',
+          text: 'Before choosing a contractor, normalize every proposal against the same drawings, finish level, site conditions and management responsibilities. The cheapest number is not always the lowest-risk path.',
+        },
       ],
       steps: ['Define the same project scope for every bidder', 'Review drawings, permit status and engineering assumptions', 'Compare allowances, exclusions and provisional sums', 'Clarify trade, inspection and site management responsibility', 'Choose the proposal with transparent scope and risk control'],
     };
@@ -2302,6 +2324,18 @@ function getGuideProfile(page: SeoPage) {
         {
           heading: 'Buildability And Procurement',
           text: 'The construction plan should identify long-lead materials, trade order, site protection, temporary services, inspection milestones, client selections and communication rhythm.',
+        },
+        {
+          heading: 'Owner Decision List',
+          text: 'Owners should decide the target scope, must-have spaces, preferred finish level, temporary living plan, budget ceiling, timeline sensitivity and how quickly selections can be approved.',
+        },
+        {
+          heading: 'Documents To Gather',
+          text: 'Useful inputs include a survey, existing drawings, title or address details, site photos, inspiration images, inspection notes, municipal correspondence and any known structural, drainage, tree or access concerns.',
+        },
+        {
+          heading: 'When To Bring In Vitalite',
+          text: 'The best time to involve Vitalite is before final drawings and pricing are locked, when scope, approvals, engineering and budget tradeoffs can still be coordinated together.',
         },
       ],
       steps: ['Confirm goals, address and property constraints', 'Collect survey, drawings, photos and existing-condition details', 'Review zoning, code, permit and engineering requirements', 'Build a budget with allowances, procurement and trade input', 'Set the construction sequence, inspections and closeout plan'],
@@ -2325,6 +2359,18 @@ function getGuideProfile(page: SeoPage) {
           heading: 'Submission Readiness',
           text: 'The package should be organized for municipal intake, comment response, revisions, inspection planning and handoff into trade scheduling and procurement.',
         },
+        {
+          heading: 'Common Missing Items',
+          text: 'Permit packages often slow down when existing conditions, structural openings, HVAC changes, fire separation, grading, tree protection, energy/code notes or construction details are not clear enough for review.',
+        },
+        {
+          heading: 'Handling Municipal Comments',
+          text: 'A realistic permit process includes time for examiner comments, consultant revisions and scope clarification. The goal is not just submission; it is a package that can move into construction without new gaps.',
+        },
+        {
+          heading: 'Construction Handoff',
+          text: 'Once drawings are accepted, Vitalite translates the approved scope into trade coordination, procurement planning, inspection milestones and site management responsibilities.',
+        },
       ],
       steps: ['Confirm address, project scope and available survey information', 'Gather existing drawings, photos and site constraints', 'Complete zoning and building code review', 'Coordinate architectural, structural and HVAC documentation', 'Submit the permit package and respond to municipal comments'],
     };
@@ -2347,6 +2393,18 @@ function getGuideProfile(page: SeoPage) {
           heading: 'When Design-Build Helps',
           text: 'Design-build helps when feasibility, drawings, approvals, budgets, construction sequence and owner decisions need to be coordinated before a final price is reliable.',
         },
+        {
+          heading: 'Comparison Criteria',
+          text: 'Compare each delivery model by when pricing happens, who manages drawings, who responds to permit comments, how trades are selected, how change orders are controlled and how much coordination the owner must carry.',
+        },
+        {
+          heading: 'Budget Timing',
+          text: 'Traditional general contracting often prices a finished package. Design-build can bring budget feedback into planning earlier, which helps owners adjust scope before drawings and approvals go too far.',
+        },
+        {
+          heading: 'GTA Recommendation',
+          text: 'For permit-driven custom homes, additions, multiplex projects and major renovations, design-build is often stronger when the owner wants fewer handoffs between planning, approvals and site execution.',
+        },
       ],
       steps: ['Identify whether drawings and scope are complete', 'Review zoning, permit and engineering risk', 'Decide when budget feedback should enter design', 'Assign responsibility for trades, inspections and change control', 'Choose the delivery model before final pricing'],
     };
@@ -2368,6 +2426,18 @@ function getGuideProfile(page: SeoPage) {
         {
           heading: 'Risk Reduction',
           text: 'The main value is fewer preventable gaps between drawings, permits, trades, materials, field conditions and client decisions during active construction.',
+        },
+        {
+          heading: 'When It Is Worth It',
+          text: 'Construction management becomes more valuable when the project has a larger budget, multiple trades, custom finishes, permit inspections, long-lead materials, owner decisions and site constraints that need active follow-up.',
+        },
+        {
+          heading: 'What Owners Should See',
+          text: 'Owners should expect clear schedule updates, budget movement, change items, inspection status, trade sequencing, procurement notes, decision deadlines and closeout items rather than vague progress reports.',
+        },
+        {
+          heading: 'Closeout Discipline',
+          text: 'A managed project should finish with PDI review, deficiency tracking, document handoff, warranty-oriented support and a clear record of completed scope.',
         },
       ],
       steps: ['Define the project controls and reporting rhythm', 'Set the baseline schedule, budget and scope tracker', 'Organize trades, procurement and site logistics', 'Manage inspections, quality control and change decisions', 'Complete PDI, closeout documents and warranty-oriented follow-up'],
@@ -2521,7 +2591,7 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
     image: imageForSeoPage(page),
     intro: isServiceArea
       ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.${local?.context ? ` ${local.context.planningContext}` : ''}`
-      : `This guide is built for owners planning ${page.primaryKeyword}. It explains the design-build considerations that usually affect feasibility, approvals, budget, timeline and construction delivery.`,
+      : `Use this guide to understand ${page.primaryKeyword} before committing to drawings, pricing or a contractor. It explains the decisions, documents, approvals, budget assumptions and construction-management details that shape a stronger GTA project plan.`,
     bullets: isServiceArea
       ? [
           `${serviceName} feasibility`,

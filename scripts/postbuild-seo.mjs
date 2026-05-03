@@ -101,6 +101,23 @@ function buildPrerenderedRoot(page) {
 }
 
 function buildStaticSections(page) {
+  if (page.key === 'home') {
+    return [
+      {
+        heading: 'GTA Design-Build Contractor',
+        text: 'Vitalite Construction Corp. helps homeowners, investors and commercial clients move from feasibility review to permit-ready drawings, construction management, inspections and closeout through one connected GTA delivery team.',
+      },
+      {
+        heading: 'What Vitalite Coordinates',
+        text: 'The company coordinates custom homes, multiplex housing, garden suites, laneway houses, home additions, major renovations, permit drawings, engineering inputs, project management and ICI construction.',
+      },
+      {
+        heading: 'Why The Process Matters',
+        text: 'Many project problems begin before construction starts. Vitalite focuses on scope clarity, zoning review, building code considerations, budget assumptions, trade sequencing and municipal inspection planning before site work begins.',
+      },
+    ];
+  }
+
   if (page.key.startsWith('guide-') || page.kind === 'article') {
     const guide = buildGuideContent(page);
     if (guide) {
@@ -275,6 +292,18 @@ function buildGuideContent(page) {
           heading: 'Management Risk',
           text: 'A useful proposal should explain who coordinates trades, procurement, inspections, schedule updates, quality control, change decisions, site meetings and closeout.',
         },
+        {
+          heading: 'Questions To Ask Before Comparing Prices',
+          text: 'Ask whether the proposal includes permit coordination, engineering follow-up, demolition, temporary protection, disposal, site supervision, inspection attendance, cleanup, closeout and warranty-oriented support.',
+        },
+        {
+          heading: 'Proposal Red Flags',
+          text: 'Be careful when a price is much lower but does not show allowances, exclusions, owner-supplied items, permit assumptions, change-order rules, project management scope or what happens when municipal comments require revisions.',
+        },
+        {
+          heading: 'Best Next Step',
+          text: 'Before choosing a contractor, normalize every proposal against the same drawings, finish level, site conditions and management responsibilities. The cheapest number is not always the lowest-risk path.',
+        },
       ],
     };
   }
@@ -294,6 +323,18 @@ function buildGuideContent(page) {
         {
           heading: 'Buildability And Procurement',
           text: 'The construction plan should identify long-lead materials, trade order, site protection, temporary services, inspection milestones, client selections and communication rhythm.',
+        },
+        {
+          heading: 'Owner Decision List',
+          text: 'Owners should decide the target scope, must-have spaces, preferred finish level, temporary living plan, budget ceiling, timeline sensitivity and how quickly selections can be approved.',
+        },
+        {
+          heading: 'Documents To Gather',
+          text: 'Useful inputs include a survey, existing drawings, title or address details, site photos, inspiration images, inspection notes, municipal correspondence and any known structural, drainage, tree or access concerns.',
+        },
+        {
+          heading: 'When To Bring In Vitalite',
+          text: 'The best time to involve Vitalite is before final drawings and pricing are locked, when scope, approvals, engineering and budget tradeoffs can still be coordinated together.',
         },
       ],
     };
@@ -315,6 +356,18 @@ function buildGuideContent(page) {
           heading: 'Submission Readiness',
           text: 'The package should be organized for municipal intake, comment response, revisions, inspection planning and handoff into trade scheduling and procurement.',
         },
+        {
+          heading: 'Common Missing Items',
+          text: 'Permit packages often slow down when existing conditions, structural openings, HVAC changes, fire separation, grading, tree protection, energy/code notes or construction details are not clear enough for review.',
+        },
+        {
+          heading: 'Handling Municipal Comments',
+          text: 'A realistic permit process includes time for examiner comments, consultant revisions and scope clarification. The goal is not just submission; it is a package that can move into construction without new gaps.',
+        },
+        {
+          heading: 'Construction Handoff',
+          text: 'Once drawings are accepted, Vitalite translates the approved scope into trade coordination, procurement planning, inspection milestones and site management responsibilities.',
+        },
       ],
     };
   }
@@ -335,6 +388,18 @@ function buildGuideContent(page) {
           heading: 'When Design-Build Helps',
           text: 'Design-build helps when feasibility, drawings, approvals, budgets, construction sequence and owner decisions need to be coordinated before a final price is reliable.',
         },
+        {
+          heading: 'Comparison Criteria',
+          text: 'Compare each delivery model by when pricing happens, who manages drawings, who responds to permit comments, how trades are selected, how change orders are controlled and how much coordination the owner must carry.',
+        },
+        {
+          heading: 'Budget Timing',
+          text: 'Traditional general contracting often prices a finished package. Design-build can bring budget feedback into planning earlier, which helps owners adjust scope before drawings and approvals go too far.',
+        },
+        {
+          heading: 'GTA Recommendation',
+          text: 'For permit-driven custom homes, additions, multiplex projects and major renovations, design-build is often stronger when the owner wants fewer handoffs between planning, approvals and site execution.',
+        },
       ],
     };
   }
@@ -354,6 +419,18 @@ function buildGuideContent(page) {
         {
           heading: 'Risk Reduction',
           text: 'The main value is fewer preventable gaps between drawings, permits, trades, materials, field conditions and client decisions during active construction.',
+        },
+        {
+          heading: 'When It Is Worth It',
+          text: 'Construction management becomes more valuable when the project has a larger budget, multiple trades, custom finishes, permit inspections, long-lead materials, owner decisions and site constraints that need active follow-up.',
+        },
+        {
+          heading: 'What Owners Should See',
+          text: 'Owners should expect clear schedule updates, budget movement, change items, inspection status, trade sequencing, procurement notes, decision deadlines and closeout items rather than vague progress reports.',
+        },
+        {
+          heading: 'Closeout Discipline',
+          text: 'A managed project should finish with PDI review, deficiency tracking, document handoff, warranty-oriented support and a clear record of completed scope.',
         },
       ],
     };
