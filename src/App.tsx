@@ -80,6 +80,13 @@ type ImageCard = {
   href?: string;
 };
 
+type TextCard = {
+  title: string;
+  text: string;
+  eyebrow?: string;
+  pageKey?: PageKey;
+};
+
 type DetailPageContent = {
   parent: MainPageKey;
   category: string;
@@ -940,7 +947,7 @@ const Markets = () => {
   ];
 
   return (
-    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+    <section className="bg-gray-100 text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div
         initial="hidden" whileInView="visible" viewport={{ once: true }}
         variants={fadeInVariants}
@@ -1480,13 +1487,27 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     parent: 'why-vitalite',
     category: 'WHY VITALITE',
     title: 'About Us',
-    subtitle: 'A GTA design-build and construction management company.',
+    subtitle: 'A GTA design-build contractor for owners who need planning, approvals and construction managed together.',
     image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2070&auto=format&fit=crop',
-    intro: 'Vitalite Construction Corp. serves homeowners, investors and commercial clients who need more than a construction crew.',
+    intro: 'Vitalite Construction Corp. is a Greater Toronto Area design-build, general contracting and construction management company serving homeowners, property investors, developers and commercial clients.',
+    answer: 'Vitalite is built for GTA projects where feasibility, drawings, permits, engineering, budget planning and construction management need to stay connected from the first conversation to closeout.',
     bullets: ['Design-build general contractor', 'GTA residential and ICI focus', 'Permit, engineering and construction coordination', 'Project management from planning to warranty'],
     sections: [
-      { heading: 'Positioning', text: 'Vitalite is built as a one-stop partner for design, approvals, construction and delivery control.' },
-      { heading: 'Clients', text: 'We serve custom home owners, small developers, investors and commercial clients across the Greater Toronto Area.' },
+      { heading: 'Who We Serve', text: 'Vitalite works with owners planning custom homes, teardowns, rebuilds, multiplex housing, garden suites, laneway houses, additions, major renovations, permit drawing packages and ICI projects.' },
+      { heading: 'How We Work', text: 'The company connects early feasibility, design direction, zoning review, permit drawings, structural and mechanical coordination, budgeting, trade scheduling, site management, inspections and handover.' },
+      { heading: 'Why It Matters', text: 'Complex building projects often lose control when design, approvals and construction are handled as separate silos. Vitalite is structured to keep those decisions in one managed workflow.' },
+      { heading: 'GTA Focus', text: 'Projects are planned around Toronto-area realities such as zoning, lot constraints, mature neighbourhoods, municipal comments, inspection timing, site access, servicing, budget risk and owner communication.' },
+    ],
+    faqs: [
+      { question: 'What type of company is Vitalite Construction Corp.?', answer: 'Vitalite is a GTA design-build, general contracting and construction management company that coordinates planning, drawings, permits, budgets, construction and closeout.' },
+      { question: 'Who is Vitalite best suited for?', answer: 'Vitalite is best suited for homeowners, investors, developers and commercial owners planning projects that need more coordination than a basic construction crew can provide.' },
+      { question: 'Does Vitalite only build custom homes?', answer: 'No. Custom homes are a core service, but Vitalite also supports multiplex projects, garden suites, laneway houses, additions, major renovations, permits, project management and ICI work.' },
+    ],
+    relatedLinks: [
+      { label: 'The Vitalite Way', key: 'why-the-vitalite-way' },
+      { label: 'Why Design-Build?', key: 'why-design-build' },
+      { label: 'Services', key: 'services' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
     ],
   },
   'why-the-vitalite-way': {
@@ -1495,7 +1516,8 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     title: 'The Vitalite Way',
     subtitle: 'A managed path from initial consultation to warranty.',
     image: 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?q=80&w=2070&auto=format&fit=crop',
-    intro: 'Our process organizes the project before construction begins, then keeps design, approvals, budget, trades and quality aligned through delivery.',
+    intro: 'The Vitalite Way is a practical project sequence for GTA owners who need decisions made in the right order before money, drawings and construction time are committed.',
+    answer: 'The Vitalite Way moves a project through consultation, site evaluation, concept design, budget planning, contract model selection, zoning review, permit drawings, building code review, construction, PDI and warranty-oriented aftercare.',
     bullets: [
       'Initial Consultation',
       'On-Site Evaluation',
@@ -1507,8 +1529,23 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       'Construction, PDI & Warranty',
     ],
     sections: [
-      { heading: 'Front-End Clarity', text: 'We begin with consultation, site review, concept design, zoning review and budget planning.' },
-      { heading: 'Construction Control', text: 'During construction we coordinate trades, inspections, site meetings, client communication and quality control.' },
+      { heading: 'Initial Consultation', text: 'Vitalite starts by understanding the property, desired scope, budget direction, timeline, client priorities and whether the project is still at idea stage, drawings stage or construction-readiness stage.' },
+      { heading: 'Site And Existing-Condition Review', text: 'A site review helps identify access, structure, services, grading, tree, demolition, phasing and inspection issues that may affect drawings, budget and construction sequencing.' },
+      { heading: 'Design, Budget And Contract Model', text: 'Concept planning and budgetary review are used to choose the right path: general contracting, project management, construction management or a broader design-build delivery model.' },
+      { heading: 'Zoning, Permits And Engineering', text: 'The process then moves through zoning review, building code review, permit drawings, structural coordination, HVAC or mechanical inputs and municipal comment response where required.' },
+      { heading: 'Construction Through Closeout', text: 'During construction, Vitalite manages trades, procurement, site meetings, inspections, quality control, client communication, PDI items and warranty-oriented follow-up.' },
+    ],
+    steps: ['Consultation and project fit review', 'On-site evaluation and existing-condition check', 'Concept design, budget direction and delivery model', 'Zoning, drawings, engineering and permits', 'Construction, PDI, closeout and aftercare'],
+    faqs: [
+      { question: 'When should I involve Vitalite in the process?', answer: 'The best time is before drawings, permit assumptions and construction pricing are locked, especially if the project involves zoning, structural work, approvals or budget tradeoffs.' },
+      { question: 'Does the process apply to both homes and ICI projects?', answer: 'Yes. The same coordination logic applies to custom homes, additions, multiplex projects, garden suites and many commercial, industrial or institutional scopes.' },
+      { question: 'What makes this different from asking for a quick quote?', answer: 'A quick quote can miss scope, permit, engineering, site condition and allowance assumptions. The Vitalite Way defines those inputs before pricing is treated as reliable.' },
+    ],
+    relatedLinks: [
+      { label: 'About Vitalite', key: 'why-about-us' },
+      { label: 'Construction management', key: 'service-project-management' },
+      { label: 'Permit drawings', key: 'service-drawings-permits' },
+      { label: 'Start a project review', key: 'contact-us' },
     ],
   },
   'why-design-build': {
@@ -1517,37 +1554,80 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     title: 'Why Design-Build?',
     subtitle: 'One accountable team for design, approvals and construction.',
     image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop',
-    intro: 'Design-build reduces the gap between what gets drawn, what gets approved and what can be built efficiently.',
+    intro: 'Design-build is useful when an owner needs design decisions, permit strategy, engineering input, budget planning and site execution to inform each other before construction starts.',
+    answer: 'Design-build helps GTA owners reduce handoff gaps by connecting feasibility, drawings, approvals, budget feedback, procurement and construction management under one accountable delivery model.',
     bullets: ['Earlier budget visibility', 'Better coordination between drawings and site work', 'Fewer handoff gaps', 'Clearer accountability'],
     sections: [
-      { heading: 'For Owners', text: 'Owners get a simpler communication structure and fewer separate teams to manage.' },
-      { heading: 'For Complex Projects', text: 'Additions, multiplex projects, older homes and ICI work benefit from construction input during design and permitting.' },
+      { heading: 'The Core Problem', text: 'In a traditional process, drawings can move forward before budget, buildability, permit comments and trade sequencing are fully understood. That can create redesign, repricing and avoidable field changes.' },
+      { heading: 'Where Design-Build Helps', text: 'Design-build brings construction input into planning earlier so owners can compare scope, budget, approvals, long-lead materials and schedule risk before the project is too far along.' },
+      { heading: 'Best-Fit Project Types', text: 'Custom homes, additions, multiplexes, garden suites, older-home renovations and ICI work benefit when design, engineering, permits and construction responsibilities need active coordination.' },
+      { heading: 'What Owners Still Control', text: 'Owners still make the important decisions: scope, finish level, budget direction, priorities and timeline. The difference is that the tradeoffs are visible earlier.' },
+    ],
+    steps: ['Confirm whether the scope is still flexible', 'Review zoning, code and engineering risk', 'Bring budget feedback into design decisions', 'Coordinate permit drawings and trade input', 'Move into construction with clearer responsibility'],
+    faqs: [
+      { question: 'Is design-build always better than hiring an architect first?', answer: 'Not always. Architect-led work can be effective for some projects, but design-build is often stronger when budget, approvals and construction sequencing need to shape design decisions early.' },
+      { question: 'Does design-build mean faster construction?', answer: 'It can reduce delays caused by handoff gaps, but timeline still depends on scope, drawings, permits, municipal comments, material lead times and site conditions.' },
+      { question: 'Can Vitalite work with existing drawings?', answer: 'Yes. Vitalite can review existing drawings for scope, permit readiness, budget assumptions, engineering coordination and construction management needs.' },
+    ],
+    relatedLinks: [
+      { label: 'Design-build vs general contractor guide', key: 'guide-design-build-vs-general-contractor-gta' },
+      { label: 'Architectural services', key: 'service-architectural-services' },
+      { label: 'Project management', key: 'service-project-management' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
     ],
   },
   'why-testimonials': {
     parent: 'why-vitalite',
     category: 'WHY VITALITE',
     title: 'Testimonials',
-    subtitle: 'Client feedback and project reviews.',
+    subtitle: 'A structured place for verified client reviews, project feedback and future case-study proof.',
     image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop',
-    intro: 'This page is structured for future client reviews, project handover comments and homeowner/investor feedback.',
+    intro: 'Testimonials should do more than say the work looked good. For construction buyers, the useful proof is communication, scope control, budget transparency, inspection handling, quality and closeout support.',
+    answer: 'This page is prepared for verified Vitalite client testimonials and project reviews, organized around the trust signals owners look for before hiring a GTA design-build contractor.',
     bullets: ['Project communication', 'Schedule and budget management', 'Quality of finish', 'Post-delivery support'],
     sections: [
-      { heading: 'Content Slot', text: 'Add verified quotes, photos and project type labels as real testimonials become available.' },
-      { heading: 'Trust Signal', text: 'Testimonials should connect directly to project categories such as custom homes, additions, condos and multiplex work.' },
+      { heading: 'What Future Reviews Should Cover', text: 'Strong reviews should mention project type, location, stage when Vitalite became involved, communication rhythm, budget clarity, issue resolution, quality control and handover experience.' },
+      { heading: 'How Reviews Build Trust', text: 'For high-value construction decisions, owners need evidence that the company can manage planning complexity, not just finish surfaces. Testimonials should support that trust with specific project details.' },
+      { heading: 'Project Types To Label', text: 'Future testimonials should be grouped by custom homes, multiplex work, garden suites, additions, condo or apartment renovations, ICI projects and permit or construction management scopes.' },
+      { heading: 'Review Integrity', text: 'Testimonials should be verified, tied to real project categories and updated as the portfolio grows. Placeholder claims should not be treated as proof.' },
+    ],
+    faqs: [
+      { question: 'Why does this page not show invented reviews?', answer: 'Construction testimonials should be verified. Vitalite should add real client quotes, project type labels and photos as completed project feedback becomes available.' },
+      { question: 'What makes a useful construction testimonial?', answer: 'Useful testimonials mention communication, budget clarity, schedule control, trade coordination, inspection handling, quality and post-delivery support.' },
+      { question: 'Can testimonials support SEO?', answer: 'Yes. Verified reviews tied to service pages and project categories can improve trust, conversion and local authority signals.' },
+    ],
+    relatedLinks: [
+      { label: 'Our Work', key: 'our-work' },
+      { label: 'Custom homes', key: 'work-custom-homes' },
+      { label: 'Additions and renovations', key: 'work-additions' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
     ],
   },
   'why-in-the-news': {
     parent: 'why-vitalite',
     category: 'WHY VITALITE',
     title: 'In The News',
-    subtitle: 'Company updates and local project features.',
+    subtitle: 'Company updates, project features and local construction commentary for the GTA market.',
     image: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=2070&auto=format&fit=crop',
-    intro: 'This page is ready for media mentions, local construction insights, company milestones and featured project announcements.',
+    intro: 'An In The News page gives Vitalite a place to publish credibility content that is separate from service pages and practical planning guides.',
+    answer: 'This page is prepared for Vitalite company announcements, project features, local construction commentary, publication mentions and future press updates across the GTA design-build market.',
     bullets: ['Project features', 'Company announcements', 'Local construction commentary', 'Awards or publication mentions'],
     sections: [
-      { heading: 'Editorial Use', text: 'Keep news separate from the blog so company credibility content has its own place.' },
-      { heading: 'SEO Use', text: 'News posts can support local authority around GTA design-build, custom homes and construction management.' },
+      { heading: 'What Belongs Here', text: 'Use this page for company milestones, completed project features, media mentions, local construction insights, award announcements, partnership updates and important service-area news.' },
+      { heading: 'How It Supports Authority', text: 'News content can reinforce Vitalite as a GTA design-build entity by connecting the brand with real projects, neighbourhood context, construction process knowledge and public-facing updates.' },
+      { heading: 'How It Differs From Blog Content', text: 'The blog should answer planning questions such as cost, permits and timelines. The news section should document company credibility, project proof and local market presence.' },
+      { heading: 'Suggested Publishing Rhythm', text: 'Start with quarterly updates: one project feature, one local construction commentary, one process insight and one company milestone or announcement when available.' },
+    ],
+    faqs: [
+      { question: 'What should Vitalite publish in the news section?', answer: 'Publish verified company updates, completed project features, media mentions, awards, local construction commentary and announcements that build trust.' },
+      { question: 'Should every blog post also appear here?', answer: 'No. Keep practical SEO guides in the blog. Use In The News for company credibility, brand authority and project or media updates.' },
+      { question: 'Can this page help local SEO?', answer: 'Yes, if updates are specific, local and connected to real service areas, project types, expertise and internal links.' },
+    ],
+    relatedLinks: [
+      { label: 'Blog', key: 'blog' },
+      { label: 'Our Work', key: 'our-work' },
+      { label: 'Toronto service areas', key: 'locations-hub' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
     ],
   },
   'work-custom-homes': {
@@ -1901,6 +1981,152 @@ const contactPriorityLinks = [
   { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
   { label: 'Project and construction management', key: 'service-project-management' },
 ] satisfies Array<{ label: string; key: DetailPageKey }>;
+
+const serviceWorkflowCards: TextCard[] = [
+  {
+    eyebrow: '01',
+    title: 'Plan the scope before the price',
+    text: 'Vitalite starts by clarifying the property, owner goals, existing conditions, zoning questions, drawings, budget direction and likely approval path before construction pricing is treated as reliable.',
+  },
+  {
+    eyebrow: '02',
+    title: 'Connect approvals to buildability',
+    text: 'Architectural drawings, structural input, HVAC or mechanical coordination, permit comments, trade sequencing and material decisions are reviewed as one project path instead of separate handoffs.',
+  },
+  {
+    eyebrow: '03',
+    title: 'Manage the site through closeout',
+    text: 'During construction, Vitalite manages trades, schedule, procurement, inspections, quality control, owner communication, PDI items and warranty-oriented aftercare.',
+  },
+];
+
+const serviceStartingPointCards: TextCard[] = [
+  {
+    title: 'I have a property but no drawings',
+    text: 'Start with feasibility, concept planning, zoning review and architectural coordination so the project can move toward permit-ready documentation.',
+    pageKey: 'service-architectural-services',
+  },
+  {
+    title: 'I need permits or engineering coordinated',
+    text: 'Use the drawings, permits and engineering path when construction depends on municipal review, structural input, HVAC coordination or code questions.',
+    pageKey: 'service-drawings-permits',
+  },
+  {
+    title: 'I am comparing builders or proposals',
+    text: 'Start with project and construction management when you need schedule, budget, trade, inspection and quality-control responsibilities clearly defined.',
+    pageKey: 'service-project-management',
+  },
+];
+
+const whyProofCards: TextCard[] = [
+  {
+    title: 'One accountable delivery model',
+    text: 'Design decisions, approvals, budget planning and site execution are managed together, which helps owners avoid the gaps that often appear between separate consultants and contractors.',
+  },
+  {
+    title: 'GTA approval awareness',
+    text: 'Projects are planned around Toronto-area zoning review, permit drawings, building code questions, municipal comments, inspections, site access and local construction constraints.',
+  },
+  {
+    title: 'Construction management discipline',
+    text: 'Vitalite keeps focus on schedule, budget movement, procurement, trade sequencing, site meetings, quality control and closeout items throughout the build.',
+  },
+];
+
+const whyControlCards: TextCard[] = [
+  {
+    eyebrow: 'Before drawings',
+    title: 'Feasibility and scope decisions',
+    text: 'Owners get clearer direction on what can be designed, what needs approval, what should be priced early and which risks need engineering or municipal review.',
+  },
+  {
+    eyebrow: 'Before construction',
+    title: 'Budget and permit readiness',
+    text: 'Drawings, engineering inputs, allowances, exclusions, procurement assumptions and inspection requirements are aligned before the site schedule is finalized.',
+  },
+  {
+    eyebrow: 'During delivery',
+    title: 'Visible project control',
+    text: 'The construction phase is managed around trade coordination, schedule updates, quality checks, municipal inspections, change decisions and PDI closeout.',
+  },
+];
+
+const workFrameworkCards: TextCard[] = [
+  {
+    title: 'Residential value creation',
+    text: 'Custom homes, additions, garden suites and multiplex projects are evaluated by how design, approvals, budget, construction and long-term property value connect.',
+  },
+  {
+    title: 'Investment-oriented planning',
+    text: 'Multi-unit, garden suite and laneway projects need early review of unit strategy, servicing, egress, fire separation, parking, approvals and rental-use assumptions.',
+  },
+  {
+    title: 'Commercial and ICI readiness',
+    text: 'Commercial, industrial and institutional work is framed around durability, compliance, cost control, operational needs, trade coordination and inspection planning.',
+  },
+];
+
+const workEvidenceCards: TextCard[] = [
+  {
+    title: 'What each project page should show',
+    text: 'Future case studies should document the original condition, project goal, approval path, scope decisions, construction sequence, finish direction and handover result.',
+  },
+  {
+    title: 'How owners should compare work',
+    text: 'Look beyond finished photos. Review whether the builder managed drawings, approvals, structural work, trades, inspections, budget decisions and post-construction items.',
+  },
+  {
+    title: 'Where to start',
+    text: 'If your project type matches a category, use that page to understand the likely planning path, then contact Vitalite with address, drawings, budget direction and timeline.',
+    pageKey: 'contact-us',
+  },
+];
+
+const blogIntentCards: TextCard[] = [
+  {
+    title: 'Cost and proposal questions',
+    text: 'Guides explain why GTA construction quotes vary, how allowances and exclusions affect price, and what owners should compare before choosing a contractor.',
+    pageKey: 'guide-gta-construction-proposals-differ',
+  },
+  {
+    title: 'Permits and approval readiness',
+    text: 'Permit-focused content covers drawings, zoning review, building code questions, engineering coordination, municipal comments and handoff into construction.',
+    pageKey: 'guide-toronto-permit-ready-drawings-checklist',
+  },
+  {
+    title: 'Delivery model decisions',
+    text: 'Design-build and construction management guides help owners decide when they need one accountable team instead of disconnected design and build handoffs.',
+    pageKey: 'guide-design-build-vs-general-contractor-gta',
+  },
+];
+
+const contactNextStepCards: TextCard[] = [
+  {
+    eyebrow: 'Step 1',
+    title: 'Send the project basics',
+    text: 'Share the address or municipality, project type, current drawings or permit status, budget direction, timeline and the decision you need help making next.',
+  },
+  {
+    eyebrow: 'Step 2',
+    title: 'Clarify the right starting path',
+    text: 'Vitalite identifies whether the next move is feasibility review, architectural coordination, permit drawings, engineering input, budget planning or construction management.',
+  },
+  {
+    eyebrow: 'Step 3',
+    title: 'Move into a defined scope',
+    text: 'Once the path is clear, the project can move toward drawings, approvals, procurement, construction scheduling, site management and closeout planning.',
+  },
+];
+
+const getMainPageFaqs = (key: MainPageKey) => {
+  const page = seoPages.find((item) => item.key === key);
+  return page ? buildPageFaq(page) : [];
+};
+
+const servicesFaqs = getMainPageFaqs('services');
+const whyVitaliteFaqs = getMainPageFaqs('why-vitalite');
+const ourWorkFaqs = getMainPageFaqs('our-work');
+const blogFaqs = getMainPageFaqs('blog');
 
 const searchKindLabels: Record<string, string> = {
   home: 'Home',
@@ -2763,6 +2989,62 @@ const CardGrid = ({ cards }: { cards: ImageCard[] }) => (
   </div>
 );
 
+const TextCardGrid = ({ cards, dark = false }: { cards: TextCard[]; dark?: boolean }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    {cards.map((card) => {
+      const cardClass = dark
+        ? 'group border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 text-white hover:border-kiewit-yellow transition-colors'
+        : 'group border border-gray-200 bg-white rounded-2xl p-6 sm:p-8 text-black shadow-sm hover:border-kiewit-yellow transition-colors';
+      const content = (
+        <>
+          {card.eyebrow ? (
+            <div className={`text-[11px] font-bold tracking-[0.18em] uppercase mb-4 ${dark ? 'text-kiewit-yellow' : 'text-gray-500 group-hover:text-kiewit-yellow'}`}>
+              {card.eyebrow}
+            </div>
+          ) : null}
+          <h3 className="text-2xl sm:text-3xl font-semibold leading-tight mb-5">{card.title}</h3>
+          <p className={`text-base leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{card.text}</p>
+          {card.pageKey ? (
+            <div className={`mt-6 inline-flex items-center text-sm font-bold tracking-[0.12em] uppercase ${dark ? 'text-kiewit-yellow' : 'text-black group-hover:text-kiewit-yellow'}`}>
+              View page <ChevronRight className="w-4 h-4 ml-2" />
+            </div>
+          ) : null}
+        </>
+      );
+
+      return card.pageKey ? (
+        <a key={card.title} href={routeHref(card.pageKey)} className={cardClass}>
+          {content}
+        </a>
+      ) : (
+        <article key={card.title} className={cardClass}>
+          {content}
+        </article>
+      );
+    })}
+  </div>
+);
+
+const MainPageFaq = ({ faqs, dark = false }: { faqs: Array<{ question: string; answer: string }>; dark?: boolean }) => {
+  if (!faqs.length) return null;
+
+  return (
+    <section className={`${dark ? 'bg-kiewit-dark text-white' : 'bg-white text-black'} py-20 md:py-28 px-5 sm:px-8 md:px-24`}>
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
+        <SubPageHeading title="Frequently Asked Questions" dark={!dark} />
+        <div className={`divide-y ${dark ? 'divide-white/10 border-y border-white/10' : 'divide-gray-200 border-y border-gray-200'}`}>
+          {faqs.map((item) => (
+            <article key={item.question} className="py-7">
+              <h2 className="text-xl sm:text-2xl font-semibold mb-3">{item.question}</h2>
+              <p className={`text-base sm:text-lg leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{item.answer}</p>
+            </article>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
 const SeoHubPage = ({ pageKey }: { pageKey: 'locations-hub' | 'communities-hub' }) => {
   const seoPage = seoPages.find((page) => page.key === pageKey);
   const isLocations = pageKey === 'locations-hub';
@@ -2987,6 +3269,24 @@ const ServicesPage = () => (
       </motion.div>
     </section>
     <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="How Vitalite Organizes the Work" />
+        <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          The services are not separate menu items only. They form one managed path from early planning to approvals, construction and handover.
+        </p>
+        <TextCardGrid cards={serviceWorkflowCards} dark />
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="Choose the Right Starting Point" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          Owners often arrive at different stages. These paths help you enter the process based on what is already known and what still needs to be resolved.
+        </p>
+        <TextCardGrid cards={serviceStartingPointCards} />
+      </motion.div>
+    </section>
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
         <SubPageHeading title="GTA Service Area Pages" />
         <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
@@ -3004,6 +3304,7 @@ const ServicesPage = () => (
         <CardGrid cards={communitySeoCards} />
       </motion.div>
     </section>
+    <MainPageFaq faqs={servicesFaqs} dark />
   </>
 );
 
@@ -3017,6 +3318,15 @@ const WhyVitalitePage = () => (
           Vitalite is positioned as a one-stop design-build and construction management partner, not just a construction crew and not just a drawing office. The value is coordinated accountability from planning to closeout.
         </p>
         <CardGrid cards={whyPageCards} />
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="What Makes the Model Different" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          Vitalite is built for owners who need decisions, approvals and construction to stay connected instead of handing a project from one disconnected party to the next.
+        </p>
+        <TextCardGrid cards={whyProofCards} />
       </motion.div>
     </section>
     <section className="bg-kiewit-blue py-20 md:py-32 px-5 sm:px-8">
@@ -3036,6 +3346,16 @@ const WhyVitalitePage = () => (
         </div>
       </motion.div>
     </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="Owner Control Points" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          A design-build process should make decisions visible before they become expensive field changes. These are the points where Vitalite helps owners keep control.
+        </p>
+        <TextCardGrid cards={whyControlCards} />
+      </motion.div>
+    </section>
+    <MainPageFaq faqs={whyVitaliteFaqs} dark />
   </>
 );
 
@@ -3058,6 +3378,25 @@ const OurWorkPage = () => (
         <CardGrid cards={workPageCards} />
       </motion.div>
     </section>
+    <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="How Vitalite Frames Project Work" />
+        <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          The work section is organized around client intent: build a new home, add density, expand a property, modernize interiors or deliver a practical ICI space.
+        </p>
+        <TextCardGrid cards={workFrameworkCards} dark />
+      </motion.div>
+    </section>
+    <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="What to Look For in a Project" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          Finished images matter, but complex GTA projects also need evidence of planning quality, approval readiness, site management and closeout discipline.
+        </p>
+        <TextCardGrid cards={workEvidenceCards} />
+      </motion.div>
+    </section>
+    <MainPageFaq faqs={ourWorkFaqs} dark />
   </>
 );
 
@@ -3080,6 +3419,15 @@ const BlogPage = () => (
         <CardGrid cards={blogPageCards} />
       </motion.div>
     </section>
+    <section className="bg-gray-100 text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="Find the Guide That Matches Your Decision" dark />
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          Vitalite's content hub is built around the questions owners ask before hiring a builder: cost, permits, timeline, delivery model, local constraints and investment potential.
+        </p>
+        <TextCardGrid cards={blogIntentCards} />
+      </motion.div>
+    </section>
     <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-[1400px] mx-auto">
         <SubPageHeading title="Toronto Long-Tail Planning Guides" dark />
@@ -3089,6 +3437,7 @@ const BlogPage = () => (
         <CardGrid cards={longTailSeoCards} />
       </motion.div>
     </section>
+    <MainPageFaq faqs={blogFaqs} dark />
   </>
 );
 
@@ -3142,6 +3491,15 @@ const ContactPage = () => (
             Start Consultation
           </button>
         </form>
+      </motion.div>
+    </section>
+    <section className="bg-kiewit-dark py-20 md:py-28 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <SubPageHeading title="What Happens After You Reach Out" />
+        <p className="text-base sm:text-lg text-gray-300 leading-relaxed font-light max-w-4xl mb-12 md:mb-16">
+          The first conversation is used to identify the right next step, not to force every inquiry into the same construction quote.
+        </p>
+        <TextCardGrid cards={contactNextStepCards} dark />
       </motion.div>
     </section>
     <section className="bg-gray-100 text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">

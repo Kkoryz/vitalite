@@ -23,7 +23,7 @@
       "key": "services",
       "path": "/services",
       "title": "Design-Build Services in Toronto & GTA | Vitalite",
-      "description": "Explore Vitalite's GTA design-build services: custom homes, multiplex construction, garden suites, additions, permits, engineering, project management, and ICI work.",
+      "description": "Explore Vitalite's GTA design-build services for custom homes, multiplex housing, garden suites, additions, permit drawings, engineering coordination, construction management and ICI work.",
       "kind": "serviceCollection",
       "primaryKeyword": "design-build services Toronto"
     },
@@ -31,7 +31,7 @@
       "key": "why-vitalite",
       "path": "/why-vitalite",
       "title": "Why Vitalite | GTA Design-Build Construction Partner",
-      "description": "Learn how Vitalite coordinates design, zoning, permits, engineering, construction management, inspections, and warranty support for GTA building projects.",
+      "description": "Learn why GTA owners choose Vitalite for connected feasibility review, drawings, permits, budget planning, construction management, inspections and closeout.",
       "kind": "about",
       "primaryKeyword": "GTA design-build construction partner"
     },
@@ -39,7 +39,7 @@
       "key": "our-work",
       "path": "/our-work",
       "title": "Our Work | Custom Homes, Multiplex & Additions in GTA",
-      "description": "View Vitalite project categories across custom homes, multiplex housing, garden suites, additions, full interiors, and ICI construction in the Greater Toronto Area.",
+      "description": "Explore Vitalite project categories for GTA custom homes, multiplex housing, garden suites, laneway houses, additions, full interiors, condo renovations and ICI construction.",
       "kind": "collection",
       "primaryKeyword": "GTA construction projects"
     },
@@ -47,7 +47,7 @@
       "key": "blog",
       "path": "/blog",
       "title": "Toronto Renovation & Building Guides | Vitalite Blog",
-      "description": "Read practical GTA building guides on renovation costs, timelines, permits, garden suites, multiplex construction, and design-build project planning.",
+      "description": "Read GTA building guides on renovation costs, timelines, permits, construction proposals, design-build delivery, garden suites, multiplex projects and planning readiness.",
       "kind": "blog",
       "primaryKeyword": "Toronto renovation guides"
     },
@@ -55,7 +55,7 @@
       "key": "contact-us",
       "path": "/contact-us",
       "title": "Contact Vitalite | GTA Design-Build Consultation",
-      "description": "Book a GTA design-build consultation with Vitalite for custom homes, multiplexes, garden suites, additions, permits, project management and ICI projects.",
+      "description": "Contact Vitalite for a GTA design-build project review covering property goals, drawings, permits, budget direction, construction management and project delivery path.",
       "kind": "contact",
       "primaryKeyword": "GTA design-build consultation"
     },
@@ -247,7 +247,7 @@
       "key": "why-about-us",
       "path": "/why-vitalite/about-us",
       "title": "About Vitalite Construction Corp. | GTA Design-Build",
-      "description": "Vitalite Construction Corp. is a GTA design-build, general contracting, and construction management company serving homeowners, investors, and commercial clients.",
+      "description": "Learn about Vitalite Construction Corp., a GTA design-build, general contracting and construction management company connecting planning, permits, budgets and construction.",
       "kind": "about",
       "primaryKeyword": "Vitalite Construction Corp"
     },
@@ -255,7 +255,7 @@
       "key": "why-the-vitalite-way",
       "path": "/why-vitalite/the-vitalite-way",
       "title": "The Vitalite Way | Design, Permits, Build & Warranty",
-      "description": "Vitalite's process covers consultation, site evaluation, concept design, budget planning, zoning review, permits, construction, PDI, and warranty support.",
+      "description": "The Vitalite Way explains the GTA design-build process from consultation, site evaluation and concept design to budget planning, permits, construction, PDI and warranty support.",
       "kind": "about",
       "primaryKeyword": "design build process GTA"
     },
@@ -263,7 +263,7 @@
       "key": "why-design-build",
       "path": "/why-vitalite/why-design-build",
       "title": "Why Design-Build in Toronto? | Vitalite",
-      "description": "Learn why a design-build contractor can reduce handoff gaps between design, permits, engineering, budget planning, and construction execution.",
+      "description": "Learn why design-build can reduce handoff gaps between drawings, permits, engineering, budget planning, procurement and construction management for GTA projects.",
       "kind": "about",
       "primaryKeyword": "why design build Toronto"
     },
@@ -271,7 +271,7 @@
       "key": "why-testimonials",
       "path": "/why-vitalite/testimonials",
       "title": "Client Testimonials | Vitalite Construction Corp.",
-      "description": "A place for Vitalite client testimonials, project reviews, communication feedback, quality notes, and post-delivery support stories.",
+      "description": "A structured place for Vitalite client testimonials, verified project reviews, communication feedback, quality notes and future post-delivery support stories.",
       "kind": "about",
       "primaryKeyword": "Vitalite testimonials"
     },
@@ -279,7 +279,7 @@
       "key": "why-in-the-news",
       "path": "/why-vitalite/in-the-news",
       "title": "In The News | Vitalite Construction Corp.",
-      "description": "Company updates, project features, local construction commentary, and future media mentions for Vitalite Construction Corp. in the GTA.",
+      "description": "Company updates, project features, local construction commentary and future media mentions for Vitalite Construction Corp. in the GTA design-build market.",
       "kind": "about",
       "primaryKeyword": "Vitalite Construction news"
     },

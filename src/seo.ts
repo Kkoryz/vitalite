@@ -376,6 +376,186 @@ export const buildPageFaq = (page: SeoPage) => {
     ];
   }
 
+  if (page.key === 'services') {
+    return [
+      {
+        question: 'What services does Vitalite provide in the GTA?',
+        answer:
+          'Vitalite provides design-build, general contracting and construction management services for custom homes, multiplex housing, garden suites, laneway houses, home additions, permit drawings, engineering coordination and ICI projects.',
+      },
+      {
+        question: 'Can Vitalite help before drawings or permits are ready?',
+        answer:
+          'Yes. Vitalite can start with consultation, feasibility review, concept planning, zoning review, permit-ready drawings, engineering coordination and budget planning before construction pricing is finalized.',
+      },
+      {
+        question: 'How are Vitalite services different from hiring separate teams?',
+        answer:
+          'Vitalite connects design decisions, approvals, engineering, budgeting, procurement, site management, inspections and closeout under one managed process so owners have fewer handoffs to coordinate.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-vitalite') {
+    return [
+      {
+        question: 'Why should owners choose Vitalite for a GTA project?',
+        answer:
+          'Vitalite is built for projects where feasibility, drawings, approvals, budgets, trades, inspections and construction management need to stay connected under one accountable team.',
+      },
+      {
+        question: 'What is the Vitalite design-build advantage?',
+        answer:
+          'The design-build advantage is earlier coordination between planning, approval requirements, budget direction and site execution, which helps reduce avoidable gaps before construction starts.',
+      },
+      {
+        question: 'Does Vitalite manage the construction phase?',
+        answer:
+          'Yes. Vitalite can manage schedules, budgets, trades, procurement, inspections, quality control, site communication, PDI items and warranty-oriented closeout.',
+      },
+    ];
+  }
+
+  if (page.key === 'our-work') {
+    return [
+      {
+        question: 'What project categories does Vitalite show in Our Work?',
+        answer:
+          'The Our Work section is organized around custom homes, multiplex housing, garden suites, laneway houses, additions, ICI projects, condo and apartment renovations, lofts, older homes, townhouses and full interiors.',
+      },
+      {
+        question: 'How should owners evaluate a project example?',
+        answer:
+          'Owners should look beyond finished photos and consider the original condition, approval path, drawings, structural or mechanical scope, trade coordination, inspection requirements, finish decisions and closeout process.',
+      },
+      {
+        question: 'Can I contact Vitalite if my project does not match one category exactly?',
+        answer:
+          'Yes. Many projects combine categories, such as a custom home with a garden suite, a major addition with full interiors, or an investment property with multiplex planning.',
+      },
+    ];
+  }
+
+  if (page.key === 'blog') {
+    return [
+      {
+        question: 'What does the Vitalite blog cover?',
+        answer:
+          'The blog covers GTA renovation and construction planning topics including costs, timelines, permits, zoning, design-build delivery, construction management, garden suites, multiplexes and project readiness.',
+      },
+      {
+        question: 'Who are the guides written for?',
+        answer:
+          'The guides are written for homeowners, property investors, developers and commercial owners who want to understand project decisions before committing to drawings, pricing or a contractor.',
+      },
+      {
+        question: 'How should I use the blog before contacting Vitalite?',
+        answer:
+          'Use the guides to identify your project type, likely approval questions, budget drivers and documents to gather, then contact Vitalite with the property details and current project stage.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-about-us') {
+    return [
+      {
+        question: 'What type of company is Vitalite Construction Corp.?',
+        answer:
+          'Vitalite is a GTA design-build, general contracting and construction management company that coordinates planning, drawings, permits, budgets, construction and closeout.',
+      },
+      {
+        question: 'Who is Vitalite best suited for?',
+        answer:
+          'Vitalite is best suited for homeowners, investors, developers and commercial owners planning projects that need more coordination than a basic construction crew can provide.',
+      },
+      {
+        question: 'Does Vitalite only build custom homes?',
+        answer:
+          'No. Custom homes are a core service, but Vitalite also supports multiplex projects, garden suites, laneway houses, additions, major renovations, permits, project management and ICI work.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-the-vitalite-way') {
+    return [
+      {
+        question: 'When should I involve Vitalite in the process?',
+        answer:
+          'The best time is before drawings, permit assumptions and construction pricing are locked, especially if the project involves zoning, structural work, approvals or budget tradeoffs.',
+      },
+      {
+        question: 'Does the process apply to both homes and ICI projects?',
+        answer:
+          'Yes. The same coordination logic applies to custom homes, additions, multiplex projects, garden suites and many commercial, industrial or institutional scopes.',
+      },
+      {
+        question: 'What makes this different from asking for a quick quote?',
+        answer:
+          'A quick quote can miss scope, permit, engineering, site condition and allowance assumptions. The Vitalite Way defines those inputs before pricing is treated as reliable.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-design-build') {
+    return [
+      {
+        question: 'Is design-build always better than hiring an architect first?',
+        answer:
+          'Not always. Architect-led work can be effective for some projects, but design-build is often stronger when budget, approvals and construction sequencing need to shape design decisions early.',
+      },
+      {
+        question: 'Does design-build mean faster construction?',
+        answer:
+          'It can reduce delays caused by handoff gaps, but timeline still depends on scope, drawings, permits, municipal comments, material lead times and site conditions.',
+      },
+      {
+        question: 'Can Vitalite work with existing drawings?',
+        answer:
+          'Yes. Vitalite can review existing drawings for scope, permit readiness, budget assumptions, engineering coordination and construction management needs.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-testimonials') {
+    return [
+      {
+        question: 'Why does this page not show invented reviews?',
+        answer:
+          'Construction testimonials should be verified. Vitalite should add real client quotes, project type labels and photos as completed project feedback becomes available.',
+      },
+      {
+        question: 'What makes a useful construction testimonial?',
+        answer:
+          'Useful testimonials mention communication, budget clarity, schedule control, trade coordination, inspection handling, quality and post-delivery support.',
+      },
+      {
+        question: 'Can testimonials support SEO?',
+        answer:
+          'Yes. Verified reviews tied to service pages and project categories can improve trust, conversion and local authority signals.',
+      },
+    ];
+  }
+
+  if (page.key === 'why-in-the-news') {
+    return [
+      {
+        question: 'What should Vitalite publish in the news section?',
+        answer:
+          'Publish verified company updates, completed project features, media mentions, awards, local construction commentary and announcements that build trust.',
+      },
+      {
+        question: 'Should every blog post also appear here?',
+        answer:
+          'No. Keep practical SEO guides in the blog. Use In The News for company credibility, brand authority and project or media updates.',
+      },
+      {
+        question: 'Can this page help local SEO?',
+        answer:
+          'Yes, if updates are specific, local and connected to real service areas, project types, expertise and internal links.',
+      },
+    ];
+  }
+
   if (page.key === 'contact-us') {
     return [
       {
@@ -617,6 +797,10 @@ const buildOwnerPreparationAnswer = (focus: ServicePlanningFocus) => {
 };
 
 const buildHowToSteps = (page: SeoPage) => {
+  if (page.key === 'why-the-vitalite-way') {
+    return ['Consultation and project fit review', 'On-site evaluation and existing-condition check', 'Concept design, budget direction and delivery model', 'Zoning, drawings, engineering and permits', 'Construction, PDI, closeout and aftercare'];
+  }
+
   if (!page.key.startsWith('guide-')) return [];
   const topic = `${page.primaryKeyword} ${page.title}`.toLowerCase();
 
