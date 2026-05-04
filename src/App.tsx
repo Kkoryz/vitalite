@@ -633,6 +633,11 @@ const Hero = () => {
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
 
+    if (isPaused) {
+      video.pause();
+      return undefined;
+    }
+
     const playVideo = () => {
       void video.play().catch(() => {
         // Some mobile browsers block autoplay in low-power or data-saving modes.
@@ -646,7 +651,7 @@ const Hero = () => {
 
     video.addEventListener('canplay', playVideo, { once: true });
     return () => video.removeEventListener('canplay', playVideo);
-  }, [currentHeroSlide.video, currentSlide]);
+  }, [currentHeroSlide.video, currentSlide, isPaused]);
 
   return (
     <div className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black">
