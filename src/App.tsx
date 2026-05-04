@@ -11,9 +11,7 @@ import {
   Play,
   Plus,
   Search,
-  Twitter,
   X,
-  Youtube,
 } from 'lucide-react';
 import {
   applySeo,
@@ -41,6 +39,8 @@ const CONTACT_PHONE_TEL = '+16477180972';
 const CONTACT_EMAIL = 'Vitaliteconstruction@gmail.com';
 const CONTACT_ADDRESS_LINE1 = 'Suite 235, 7181 Woodbine Ave';
 const CONTACT_ADDRESS_LINE2 = 'Markham, ON L3R 1A3';
+// Replace with your Formspree endpoint: https://formspree.io/f/YOUR_ID
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xpwdvrzb';
 
 type MainPageKey = 'services' | 'why-vitalite' | 'our-work' | 'blog' | 'contact-us';
 type DetailPageKey =
@@ -3695,6 +3695,81 @@ const BlogPage = () => (
   </>
 );
 
+const ContactForm = () => {
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
+    const data = new FormData(e.currentTarget);
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        setStatus('success');
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div className="bg-kiewit-dark text-white rounded-2xl p-10 text-center space-y-4">
+        <div className="text-kiewit-yellow text-5xl font-bold">&#10003;</div>
+        <h3 className="text-2xl font-bold">Message Received</h3>
+        <p className="text-gray-300">We typically respond within one business day.</p>
+        <button
+          onClick={() => setStatus('idle')}
+          className="mt-4 text-kiewit-yellow text-sm underline underline-offset-2"
+        >
+          Send another message
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5">
+      <div>
+        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Name</label>
+        <input name="name" required className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Your name" />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Email</label>
+        <input name="email" type="email" required className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="you@example.com" />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Type</label>
+        <input name="project_type" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Custom home, addition, permit, multiplex..." />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Details</label>
+        <textarea name="message" className="w-full min-h-[150px] bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Tell us the property location, project stage, budget direction and timeline." />
+      </div>
+      {status === 'error' && (
+        <p className="text-red-400 text-sm">
+          Something went wrong. Please email us directly at{' '}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a>.
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={status === 'sending'}
+        className="w-full bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase py-4 rounded-lg hover:bg-white transition-colors disabled:opacity-60"
+      >
+        {status === 'sending' ? 'Sending...' : 'Start Consultation'}
+      </button>
+    </form>
+  );
+};
+
 const ContactPage = () => (
   <>
     <SubPageHero page="contact-us" />
@@ -3729,27 +3804,7 @@ const ContactPage = () => (
             ))}
           </div>
         </div>
-        <form className="bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5">
-          <div>
-            <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Name</label>
-            <input className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Your name" />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Email</label>
-            <input className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="you@example.com" />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Type</label>
-            <input className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Custom home, addition, permit, multiplex..." />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Details</label>
-            <textarea className="w-full min-h-[150px] bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Tell us the property location, project stage, budget direction and timeline." />
-          </div>
-          <button type="button" className="w-full bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase py-4 rounded-lg hover:bg-white transition-colors">
-            Start Consultation
-          </button>
-        </form>
+        <ContactForm />
       </motion.div>
     </section>
     <section className="bg-kiewit-dark py-20 md:py-28 px-5 sm:px-8 md:px-24">
@@ -3838,23 +3893,18 @@ const Footer = ({ language }: { language: Language }) => {
       <div className="bg-kiewit-yellow py-10 px-5 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-start gap-12">
           <div className="flex space-x-4">
-            {[{ Icon: Facebook, id: 'fb' }, { Icon: Twitter, id: 'x' }, { Icon: Instagram, id: 'ig' }, { Icon: Youtube, id: 'yt' }, { Icon: Linkedin, id: 'li' }].map(({ Icon, id }) => (
-              <div key={id} className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-kiewit-yellow hover:scale-110 transition-transform cursor-pointer">
+            {[
+              { Icon: Facebook, id: 'fb', label: 'Facebook', href: 'https://www.facebook.com/vitaliteconstruction' },
+              { Icon: Instagram, id: 'ig', label: 'Instagram', href: 'https://www.instagram.com/vitalite_construction' },
+              { Icon: Linkedin, id: 'li', label: 'LinkedIn', href: 'https://www.linkedin.com/company/vitalite-construction' },
+            ].map(({ Icon, id, label, href }) => (
+              <a key={id} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-kiewit-yellow hover:scale-110 transition-transform">
                 <Icon className="w-5 h-5" fill="currentColor" strokeWidth={0} />
-              </div>
+              </a>
             ))}
           </div>
           <div className="text-black text-sm">
-            <p className="font-bold mb-2">{copy('(c) 2026 Vitalite Construction Corp. All rights reserved.', language)}</p>
-            <div className="flex flex-wrap gap-4 text-black underline underline-offset-2">
-              <a href="#">{copy('Privacy Statement', language)}</a>
-              <span className="no-underline">|</span>
-              <a href="#">{copy('Terms and Conditions', language)}</a>
-              <span className="no-underline">|</span>
-              <a href="#">{copy('Accessibility', language)}</a>
-              <span className="no-underline">|</span>
-              <a href="#">{copy('Cookies Settings', language)}</a>
-            </div>
+            <p className="font-bold">{copy('(c) 2026 Vitalite Construction Corp. All rights reserved.', language)}</p>
           </div>
         </div>
       </div>

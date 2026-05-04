@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="250 150 500 500" role="img" aria-labelledby="title desc">
+  <title id="title">Vitalite gold icon</title>
+  <desc id="desc">Gold Vitalite emblem icon with transparent background.</desc>
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3B0"/>
+      <stop offset="18%" stop-color="#F5D974"/>
+      <stop offset="40%" stop-color="#D8AE3E"/>
+      <stop offset="62%" stop-color="#F2D56E"/>
+      <stop offset="82%" stop-color="#B8861B"/>
+      <stop offset="100%" stop-color="#FFE08A"/>
+    </linearGradient>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF8CF"/>
+      <stop offset="100%" stop-color="#B37A12"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7A5A16" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .gold-fill { fill: url(#goldGrad); }
+      .gold-stroke { stroke: url(#goldStroke); stroke-width: 6; }
+    </style>
+  </defs>
+  <g filter="url(#softShadow)">
+    <path d="M 674.6 396.8 A 210 210 0 1 1 672.3 296.6" fill="none" stroke="url(#goldGrad)" stroke-width="42" stroke-linecap="butt" stroke-linejoin="miter"/>
+    <path class="gold-fill gold-stroke" d="M 309 358 L 309 316 L 390 282 L 373 222 L 419 222 L 433 267 L 500 236 L 568 267 L 582 222 L 628 222 L 611 282 L 695 318 L 695 360 L 500 278 Z"/>
+    <path class="gold-fill gold-stroke" d="M 404 334 L 448 318 L 500 455 L 552 318 L 596 334 L 523 548 L 477 548 Z"/>
+    <rect class="gold-fill gold-stroke" x="479" y="314" width="17" height="17" rx="1"/>
+    <rect class="gold-fill gold-stroke" x="504" y="314" width="17" height="17" rx="1"/>
+    <rect class="gold-fill gold-stroke" x="479" y="339" width="17" height="17" rx="1"/>
+    <rect class="gold-fill gold-stroke" x="504" y="339" width="17" height="17" rx="1"/>
+  </g>
+</svg>
