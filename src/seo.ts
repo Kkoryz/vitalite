@@ -1,6 +1,7 @@
 import seoData from './seo-data.json';
+import projectsData from './projects-data.json';
 
-type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact';
+type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact' | 'project';
 
 export type SeoPage = {
   key: string;
@@ -10,6 +11,30 @@ export type SeoPage = {
   kind: SeoPageKind;
   primaryKeyword: string;
 };
+
+export type ProjectStatus = 'ongoing-2025' | 'coming-2026' | 'completed';
+export type ProjectCategory = 'custom-homes' | 'multiplex' | 'additions' | 'garden-suites';
+export type ProjectEntry = {
+  key: string;
+  path: string;
+  title: string;
+  description: string;
+  primaryKeyword: string;
+  status: ProjectStatus;
+  category: ProjectCategory;
+  communitySlug: string;
+  locationLabel: string;
+  size: string;
+  headline: string;
+  scope: string[];
+  narrative: string[];
+};
+
+export const projects: ProjectEntry[] = (projectsData.projects as ProjectEntry[]) ?? [];
+export const projectsByKey = new Map(projects.map((project) => [project.key, project]));
+export const projectStatusLabels: Record<ProjectStatus, string> = projectsData.statusLabels as Record<ProjectStatus, string>;
+export const projectCategoryLabels: Record<ProjectCategory, string> = projectsData.categoryLabels as Record<ProjectCategory, string>;
+export const projectCategoryParents: Record<ProjectCategory, string> = projectsData.categoryParents as Record<ProjectCategory, string>;
 
 const baseUrl = import.meta.env.BASE_URL ?? '/';
 const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
@@ -104,7 +129,16 @@ const generatedLongTailPages: SeoPage[] = (rawSeoData.longTailPages ?? []).map((
   kind: 'article' as const,
 }));
 
-export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages, ...generatedCommunityPages, ...generatedLongTailPages];
+const generatedProjectPages: SeoPage[] = projects.map((project) => ({
+  key: project.key,
+  path: project.path,
+  title: project.title,
+  description: project.description,
+  kind: 'project' as const,
+  primaryKeyword: project.primaryKeyword,
+}));
+
+export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages, ...generatedCommunityPages, ...generatedLongTailPages, ...generatedProjectPages];
 export const pageByKey = new Map(pages.map((page) => [page.key, page]));
 export const pathByKey = new Map(pages.map((page) => [page.key, page.path]));
 const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page.key]));
@@ -153,7 +187,7 @@ export const applySeo = (key: string) => {
   setMeta('name', 'robots', 'index, follow, max-image-preview:large');
   setMeta('name', 'author', seoData.business.name);
   setMeta('property', 'og:site_name', seoData.siteName);
-  setMeta('property', 'og:type', page.kind === 'article' ? 'article' : 'website');
+  setMeta('property', 'og:type', page.kind === 'article' || page.kind === 'project' ? 'article' : 'website');
   setMeta('property', 'og:title', page.title);
   setMeta('property', 'og:description', page.description);
   setMeta('property', 'og:url', canonical);
@@ -205,6 +239,8 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       image,
       description: seoData.business.description,
+      telephone: seoData.business.telephone,
+      email: seoData.business.email,
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       knowsAbout: [
         'zoning review',
@@ -217,7 +253,9 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       ],
       address: {
         '@type': 'PostalAddress',
-        addressLocality: seoData.business.locality,
+        streetAddress: seoData.business.streetAddress,
+        addressLocality: seoData.business.addressLocality ?? seoData.business.locality,
+        postalCode: seoData.business.postalCode,
         addressRegion: seoData.business.region,
         addressCountry: seoData.business.country,
       },
@@ -269,6 +307,35 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       datePublished: '2026-05-01',
       dateModified: '2026-05-01',
     });
+  }
+
+  if (page.kind === 'project') {
+    const project = projectsByKey.get(page.key);
+    if (project) {
+      graph.push({
+        '@type': 'Article',
+        '@id': `${canonical}#project`,
+        headline: page.title,
+        description: page.description,
+        about: project.locationLabel,
+        articleSection: projectCategoryLabels[project.category],
+        image,
+        author: { '@id': organizationId },
+        publisher: { '@id': organizationId },
+        mainEntityOfPage: { '@id': `${canonical}#webpage` },
+        datePublished: '2026-05-01',
+        dateModified: '2026-05-01',
+      });
+      graph.push({
+        '@type': 'Service',
+        '@id': `${canonical}#service`,
+        name: page.title.split('|')[0].trim(),
+        description: page.description,
+        provider: { '@id': localBusinessId },
+        areaServed: [{ '@type': 'Place', name: project.locationLabel }],
+        serviceType: project.primaryKeyword,
+      });
+    }
   }
 
   const howToSteps = buildHowToSteps(page);
@@ -577,6 +644,37 @@ export const buildPageFaq = (page: SeoPage) => {
         question: 'Which GTA areas can contact Vitalite for a project review?',
         answer:
           'Vitalite works with owners and investors across Toronto and the GTA, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and nearby municipalities.',
+      },
+    ];
+  }
+
+  if (page.key.startsWith('project-')) {
+    const project = projectsByKey.get(page.key);
+    if (!project) return [];
+    const status = projectStatusLabels[project.status] ?? project.status;
+    const categoryLabel = projectCategoryLabels[project.category] ?? project.category;
+    return [
+      {
+        question: `Where is this Vitalite project located?`,
+        answer: `This project is located in ${project.locationLabel}. Vitalite serves Toronto and the Greater Toronto Area, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke and surrounding communities.`,
+      },
+      {
+        question: `What is the current status of this project?`,
+        answer: `This project is currently ${status.toLowerCase()}. Vitalite organizes projects under ongoing 2025 builds, coming-soon 2026 builds, and completed past projects.`,
+      },
+      {
+        question: `What category of work does this project represent?`,
+        answer: `This is a ${categoryLabel.toLowerCase()} project. ${project.headline}`,
+      },
+      {
+        question: `Can I visit the construction site?`,
+        answer: project.status === 'completed'
+          ? 'Interior visits are no longer available for this completed project. Vitalite can arrange site visits at active 2025 projects on request.'
+          : 'You are welcome to schedule a visit to the construction site of an ongoing project. Contact Vitalite to coordinate a date and time.',
+      },
+      {
+        question: `How do I start a similar project with Vitalite?`,
+        answer: 'Share the property address, project type, current stage, drawings or permit status, target budget direction, and timeline. Vitalite begins with consultation, feasibility review, and conceptual planning before construction pricing is treated as final.',
       },
     ];
   }

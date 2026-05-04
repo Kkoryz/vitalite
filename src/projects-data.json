@@ -1,0 +1,539 @@
+{
+  "categoryLabels": {
+    "custom-homes": "Custom Homes",
+    "multiplex": "Multiplex / Multi-Unit",
+    "additions": "Additions & Renovations",
+    "garden-suites": "Garden Suites & Laneway"
+  },
+  "categoryParents": {
+    "custom-homes": "work-custom-homes",
+    "multiplex": "work-multiplex",
+    "additions": "work-additions",
+    "garden-suites": "work-garden-suites"
+  },
+  "statusLabels": {
+    "ongoing-2025": "2025 Ongoing",
+    "coming-2026": "Coming 2026",
+    "completed": "Completed"
+  },
+  "projects": [
+    {
+      "key": "project-willowdale-custom-home-4700",
+      "path": "/our-work/willowdale-custom-home-4700-sqft",
+      "title": "Willowdale Custom Home — 4,700 sq ft Modern Luxury | Vitalite",
+      "description": "A 4,700 sq ft new build detached home in Willowdale, North York. Modern luxury exterior, open-concept main floor, planned for both primary residence and investment value.",
+      "primaryKeyword": "Willowdale custom home builder",
+      "status": "ongoing-2025",
+      "category": "custom-homes",
+      "communitySlug": "willowdale",
+      "locationLabel": "Willowdale, North York",
+      "size": "4,700 sq ft",
+      "headline": "Modern luxury detached home with open-concept layout in one of North York's most active rebuild markets.",
+      "scope": [
+        "New build detached home",
+        "Modern luxury exterior",
+        "Open-concept main floor",
+        "Investment-grade finish quality"
+      ],
+      "narrative": [
+        "Willowdale rebuilds usually replace mid-century bungalows and split-levels with high-spec modern homes that match the area's land values. This 4,700 sq ft new build follows that pattern — a modern luxury exterior, an open-concept main floor, and an interior planned for family living that also performs as a long-term asset.",
+        "Vitalite manages the project end to end: zoning review, architectural and engineering coordination, building permit drawings, structural framing, mechanical systems, finishes, inspections and final closeout. Open-concept main floors at this scale need careful structural planning around long beams, HVAC routing and lighting so the finish reads as luxury rather than oversized.",
+        "Willowdale custom home buyers usually compare resale value, lot coverage and how much glazing the local zoning allows on the front and rear. The project was planned around those constraints first so the design moved through Committee of Adjustment and permit review without late redesigns."
+      ]
+    },
+    {
+      "key": "project-preston-lake-stouffville-addition",
+      "path": "/our-work/preston-lake-stouffville-200-sqft-addition",
+      "title": "Preston Lake Stouffville 200 sq ft Single-Storey Addition | Vitalite",
+      "description": "A 200 sq ft single-storey addition in Preston Lake, Stouffville with heated crawl space and vaulted cathedral roof. Expands the dining and family room in classic American country style.",
+      "primaryKeyword": "Stouffville home addition contractor",
+      "status": "ongoing-2025",
+      "category": "additions",
+      "communitySlug": "preston-lake",
+      "locationLabel": "Preston Lake, Stouffville",
+      "size": "200 sq ft addition",
+      "headline": "A precise single-storey addition that opens up the dining and family room without losing the home's country character.",
+      "scope": [
+        "200 sq ft single-storey addition",
+        "Heated crawl space below",
+        "Vaulted cathedral-style roof",
+        "Classic American country exterior"
+      ],
+      "narrative": [
+        "This Preston Lake project adds 200 sq ft to an existing house, extending the dining area and family room into one connected space. The addition uses a vaulted cathedral-style roof and a heated crawl space below, finished in a classic American country style that ties cleanly back into the existing home.",
+        "Single-storey additions at this scale need precise foundation work, properly insulated heated crawl spaces, structural tie-ins to the existing house, and roof framing that transitions cleanly between old and new. Vitalite coordinates architectural drawings, structural engineering, building permit, foundation, framing, mechanical and finishing trades on one schedule.",
+        "Stouffville additions are reviewed under Whitchurch-Stouffville zoning rules, so setbacks, lot coverage, and exterior design continuity all get resolved at the permit drawing stage before site work begins."
+      ]
+    },
+    {
+      "key": "project-lansdowne-toronto-multiplex-laneway",
+      "path": "/our-work/lansdowne-toronto-multiplex-laneway-house",
+      "title": "Lansdowne Toronto Multi-Unit Build with Laneway Suite | Vitalite",
+      "description": "A new multi-unit residential building in Lansdowne, Toronto. Each floor is a self-contained unit with independent access, plus a garage with laneway house at the rear.",
+      "primaryKeyword": "Toronto multiplex contractor with laneway",
+      "status": "ongoing-2025",
+      "category": "multiplex",
+      "communitySlug": "lansdowne",
+      "locationLabel": "Lansdowne, Toronto",
+      "size": "Multi-unit + laneway suite",
+      "headline": "A purpose-built multi-unit residential building paired with a laneway suite to maximize rental return on a single lot.",
+      "scope": [
+        "Ground-up multi-unit residential build",
+        "Self-contained unit per floor with independent access",
+        "Rear garage + laneway house",
+        "Investment-focused unit layouts"
+      ],
+      "narrative": [
+        "This Lansdowne project is a ground-up multi-unit residential build where every floor functions as a separate, self-contained living unit with its own access. A garage with a laneway suite at the rear adds another rentable unit on the same lot, maximizing investment return without overshadowing the streetscape.",
+        "Multi-unit projects in Toronto require careful work on zoning permissions, fire separation between units, egress, parking, servicing, and HVAC layout. Vitalite handles zoning review, permit drawings, structural and mechanical engineering coordination, and the construction sequence so each unit is delivered code-compliant and rent-ready.",
+        "Lansdowne sits in an area where Toronto's multiplex zoning reforms and laneway suite by-laws can stack into significant rental income. Property owners who plan early for fire separation, parking, and laneway access typically move faster through Committee of Adjustment."
+      ]
+    },
+    {
+      "key": "project-erindale-mississauga-side-split-addition",
+      "path": "/our-work/erindale-mississauga-side-split-vertical-addition",
+      "title": "Erindale Mississauga Side-Split Vertical Addition + Backyard Extension | Vitalite",
+      "description": "Large-scale addition expanding an Erindale, Mississauga side-split from four storeys to six, plus a backyard extension. Trussed roof, vaulted foyer, aluminum alloy doors and windows.",
+      "primaryKeyword": "Mississauga vertical home addition",
+      "status": "ongoing-2025",
+      "category": "additions",
+      "communitySlug": "erindale",
+      "locationLabel": "Erindale, Mississauga",
+      "size": "4-storey to 6-storey + backyard extension",
+      "headline": "A vertical addition that resets a side-split's presence while adding usable family space.",
+      "scope": [
+        "Two new floors added vertically",
+        "Backyard extension",
+        "New trussed roof system",
+        "Vaulted foyer",
+        "Aluminum alloy doors and windows"
+      ],
+      "narrative": [
+        "This Erindale project is a major expansion of an existing four-storey side-split — adding two more levels and a backyard extension to bring the home to six storeys total. A new trussed roof, a vaulted foyer, and aluminum alloy doors and windows reset the home's exterior presence on the street.",
+        "Vertical additions on side-split houses are structurally complex. Existing foundations, walls and floor systems must be analyzed before adding floors, and the roof system has to be redesigned around new load paths. Vitalite coordinates the structural engineering, architectural drawings, permit submission, demolition, framing, mechanical upgrades and finishes so every stage stays in sync.",
+        "Mississauga building permit reviews typically focus on lot coverage, height, grading, and structural sufficiency — all factors that get resolved during pre-construction, before any framing begins."
+      ]
+    },
+    {
+      "key": "project-york-toronto-lot-severance-semi",
+      "path": "/our-work/york-toronto-lot-severance-two-semi-detached",
+      "title": "York Toronto Lot Severance — Two New Semi-Detached Homes | Vitalite",
+      "description": "Coming 2026: a 38'x120' lot in York, Toronto severed into two parcels with two new semi-detached homes (2,100 sq ft each). Investment-focused infill project.",
+      "primaryKeyword": "Toronto lot severance semi-detached builder",
+      "status": "coming-2026",
+      "category": "custom-homes",
+      "communitySlug": "york",
+      "locationLabel": "York, Toronto",
+      "size": "2 × 2,100 sq ft semi-detached",
+      "headline": "One lot, two homes — a clean infill play that turns an underutilized parcel into two new semi-detached residences.",
+      "scope": [
+        "Lot severance on 38'x120' parcel",
+        "Two semi-detached homes built in parallel",
+        "2,100 sq ft gross floor area each",
+        "Committee of Adjustment + building permits"
+      ],
+      "narrative": [
+        "This 2026 project takes a single 38'x120' lot in York, Toronto and severs it into two equal parcels, each with a new semi-detached home of 2,100 sq ft gross floor area. It's a typical pattern of Toronto infill: turning one underutilized lot into two homes that fit the existing streetscape.",
+        "Severance projects move through the Committee of Adjustment first, then proceed to zoning compliance, architectural drawings, structural and mechanical coordination, and building permits for both new homes. Vitalite prepares the application package, handles drawings and engineering, and runs the construction schedule for both halves in parallel.",
+        "Lot severance work in Toronto often hinges on minimum lot frontage, parking, and fit with the surrounding character. Owners who run zoning review early have a much smoother path to approvals."
+      ]
+    },
+    {
+      "key": "project-bedford-park-mixed-use-rental",
+      "path": "/our-work/bedford-park-mixed-use-vertical-addition-rentals",
+      "title": "Bedford Park Mixed-Use Vertical Addition + 5 Rental Apartments | Vitalite",
+      "description": "Coming 2026: a complex vertical expansion on a Bedford Park, North York mixed-use building. Two new floors and five rental apartments above existing commercial and residential.",
+      "primaryKeyword": "Bedford Park mixed-use construction",
+      "status": "coming-2026",
+      "category": "multiplex",
+      "communitySlug": "bedford-park",
+      "locationLabel": "Bedford Park, North York",
+      "size": "2 new floors + 5 rental apartments",
+      "headline": "Building rental density on top of an active mixed-use property without disrupting commercial cash flow.",
+      "scope": [
+        "Two-storey vertical addition",
+        "Five new rental apartments",
+        "Existing commercial and residential remain in use",
+        "Mixed-use structural and fire separation"
+      ],
+      "narrative": [
+        "This Bedford Park project builds on an existing two-storey mixed-use property — commercial at grade and residential above — adding two more storeys and five rental apartments. It's one of the more complex types of construction we handle: live commercial below, occupied residential, and significant new vertical construction above.",
+        "Vertical additions over occupied buildings require detailed structural assessment, careful staging, and thorough coordination with tenants and the City of Toronto. Vitalite plans the engineering, fire separation between uses, mechanical and electrical risers, building permit drawings, and the construction sequence so the existing tenants can stay in place during most of the work.",
+        "Bedford Park sits along Yonge Street north of Lawrence — a corridor where mixed-use density is increasingly viable. Owners who add rental units the right way can build long-term value while keeping commercial cash flow."
+      ]
+    },
+    {
+      "key": "project-avondale-custom-home-3200",
+      "path": "/our-work/avondale-north-york-custom-home-3200-sqft",
+      "title": "Avondale North York Custom Home — 3,200 sq ft Transitional Style | Vitalite",
+      "description": "Coming 2026: a 3,200 sq ft custom detached home in Avondale, North York with transitional styling that blends traditional warmth and contemporary design.",
+      "primaryKeyword": "Avondale North York custom home builder",
+      "status": "coming-2026",
+      "category": "custom-homes",
+      "communitySlug": "avondale",
+      "locationLabel": "Avondale, North York",
+      "size": "3,200 sq ft",
+      "headline": "A transitional-style custom home where detail execution carries the design weight.",
+      "scope": [
+        "3,200 sq ft new detached home",
+        "Transitional architectural style",
+        "Family-scale floor plan",
+        "Detail-driven exterior + interior finishes"
+      ],
+      "narrative": [
+        "This 2026 Avondale build is a 3,200 sq ft detached home with transitional styling — a deliberate blend of traditional warmth and contemporary clean lines. The exterior and interior are designed to be simple yet polished, with material details carrying most of the design weight.",
+        "Transitional builds depend heavily on detail execution: trim profiles, window proportions, finish transitions, and the way materials meet at corners. Vitalite coordinates the architectural drawings, finish selections, structural and mechanical engineering, building permit, and on-site quality control so the design intent survives construction.",
+        "Avondale is a North York area where buyers expect family-sized homes with strong long-term resale. A 3,200 sq ft detached on a well-planned lot fits that demand directly."
+      ]
+    },
+    {
+      "key": "project-stouffville-retrofit-cathedral-walkup",
+      "path": "/our-work/stouffville-retrofit-cathedral-ceiling-walkup",
+      "title": "Stouffville Retrofit + Multi-Space Expansion | Vitalite",
+      "description": "Coming 2026: a large-scale Stouffville home retrofit adding a front foyer, study, sunroom, and basement walk-up. Existing roof transformed into a cathedral-style ceiling.",
+      "primaryKeyword": "Stouffville home retrofit and addition",
+      "status": "coming-2026",
+      "category": "additions",
+      "communitySlug": "stouffville-central",
+      "locationLabel": "Stouffville",
+      "size": "Multi-room expansion + roof transformation",
+      "headline": "A retrofit that adds usable rooms across the home and opens the upper floor with a cathedral ceiling.",
+      "scope": [
+        "Front foyer addition",
+        "New study and sunroom",
+        "Backyard basement walk-up staircase",
+        "Cathedral-style ceiling roof transformation"
+      ],
+      "narrative": [
+        "This Stouffville project is a major retrofit on an existing home — adding a front foyer, a dedicated study, a sunroom, and a backyard basement walk-up staircase. The existing roof structure is also being transformed into a cathedral-style ceiling, opening the upper floor entirely.",
+        "Retrofits at this scope sit between a renovation and a custom home build. Vitalite handles structural analysis of the existing house, demolition planning, foundation extensions for the additions, basement walkout structural work, roof reframing for the cathedral ceiling, mechanical and electrical upgrades, and full interior finishes.",
+        "Stouffville projects fall under Whitchurch-Stouffville municipal building permit review. Lot grading, drainage, setbacks, and structural permits all need to be coordinated before the first wall comes down."
+      ]
+    },
+    {
+      "key": "project-rural-stouffville-american-country",
+      "path": "/our-work/rural-stouffville-custom-home-american-country",
+      "title": "Rural Stouffville Custom Home — American Country Style | Vitalite",
+      "description": "Coming 2026: a new detached custom home on the rural outskirts of Stouffville. Wood-grain siding, fluted panels, Hardie board, and stucco define the American country aesthetic.",
+      "primaryKeyword": "rural Stouffville custom home builder",
+      "status": "coming-2026",
+      "category": "custom-homes",
+      "communitySlug": "rural-stouffville",
+      "locationLabel": "Rural Stouffville",
+      "size": "Detached custom home",
+      "headline": "A fresh take on American country style, executed with modern materials that hold up on a rural lot.",
+      "scope": [
+        "New detached custom home",
+        "Wood-grain siding",
+        "Fluted panels and Hardie board",
+        "Stucco finishes",
+        "American country exterior aesthetic"
+      ],
+      "narrative": [
+        "This Stouffville rural custom home is built around an American country-style aesthetic, executed with modern building materials. Wood-grain siding, fluted panels, Hardie board, and stucco are layered together to give the exterior a deliberate, fresh take on the country style without the maintenance burden of traditional cladding.",
+        "Rural builds in Whitchurch-Stouffville come with their own constraints — septic and well coordination, larger setbacks, road access, drainage, and occasionally conservation authority review. Vitalite plans these inputs into the design and permit drawings before the foundation is poured.",
+        "American country style works on a rural lot when the materials are chosen carefully and the proportions are honest. The cladding combination on this build is the design hinge — it's what carries the whole exterior."
+      ]
+    },
+    {
+      "key": "project-willowdale-expansion-5200",
+      "path": "/our-work/willowdale-expansion-3700-to-5200-sqft",
+      "title": "Willowdale Expansion — 3,700 sq ft Home Grown to 5,200 sq ft | Vitalite",
+      "description": "Coming 2026: a Willowdale, North York expansion that keeps the original foundation and adds 1,500 sq ft. Final home is 5,200 sq ft with 11-ft and 9.5-ft ceiling heights.",
+      "primaryKeyword": "Willowdale home expansion contractor",
+      "status": "coming-2026",
+      "category": "additions",
+      "communitySlug": "willowdale",
+      "locationLabel": "Willowdale, North York",
+      "size": "3,700 → 5,200 sq ft",
+      "headline": "A foundation-preserving expansion that grows the home by 1,500 sq ft and adds significant ceiling height.",
+      "scope": [
+        "Original foundation retained",
+        "1,500 sq ft added (3,700 → 5,200 sq ft)",
+        "11-ft main-floor ceilings",
+        "9.5-ft second-floor ceilings"
+      ],
+      "narrative": [
+        "This Willowdale project takes a 3,700 sq ft home and expands it by 1,500 sq ft — keeping the original foundation intact while adding new framed area. The result is 5,200 sq ft of finished home with an 11-ft main-floor ceiling height and 9.5-ft on the second floor.",
+        "Expansions that retain the original foundation are a careful balance between cost savings and structural integrity. Vitalite assesses the existing foundation capacity, designs the new framing to load it correctly, raises the ceiling heights through structural beam upgrades, and re-coordinates the mechanical, electrical, and finishing trades around the larger volume.",
+        "Willowdale buyers often weigh expansion against full rebuild. Keeping the foundation can shorten the project timeline and reduce demolition and grading costs, but only when the existing structure can carry the new program."
+      ]
+    },
+    {
+      "key": "project-past-willowdale-1",
+      "path": "/our-work/past-willowdale-north-york-custom-home-1",
+      "title": "Completed Custom Home — Willowdale, North York | Vitalite",
+      "description": "A completed Vitalite custom home project in Willowdale, North York. Interior tours are no longer available; the project remains part of our portfolio history.",
+      "primaryKeyword": "Willowdale completed custom home",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "willowdale",
+      "locationLabel": "Willowdale, North York",
+      "size": "Custom home",
+      "headline": "A past Willowdale custom home that informs how Vitalite plans new builds in the area today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Willowdale, North York",
+        "Interior tours no longer available",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "This Willowdale project was completed by Vitalite as part of our earlier custom home and rebuild work in North York. Willowdale is one of Toronto's most active rebuild markets — older bungalows and split-levels regularly being replaced with modern, family-scale custom homes.",
+        "Past projects in this neighbourhood have helped shape how Vitalite approaches zoning, design fit, and construction logistics on Willowdale lots. The interior is no longer accessible for visits, but the experience — its planning, structural work, permit coordination, and finish-stage management — informs how we deliver Willowdale projects today."
+      ]
+    },
+    {
+      "key": "project-past-cachet-markham-1",
+      "path": "/our-work/past-cachet-markham-custom-home-1",
+      "title": "Completed Custom Home — Cachet, Markham | Vitalite",
+      "description": "A completed Vitalite custom home in Cachet, Markham. Interior visits are no longer available; the project remains part of our portfolio history.",
+      "primaryKeyword": "Cachet Markham completed custom home",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "cachet",
+      "locationLabel": "Cachet, Markham",
+      "size": "Custom home",
+      "headline": "A past Cachet custom home that informs how Vitalite plans estate-style projects in north Markham today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Cachet, Markham",
+        "Estate-style residential context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "This Cachet project was part of Vitalite's earlier custom home work in Markham. Cachet is known for its larger lots, mature streets, and strong demand for high-spec detached homes — buyers and owners in the area expect serious finish quality and disciplined construction management.",
+        "Interior visits are no longer available, but the project sits within a portfolio of Markham builds that shape how Vitalite handles design, zoning, and trade coordination in similar neighbourhoods today."
+      ]
+    },
+    {
+      "key": "project-past-cachet-markham-2",
+      "path": "/our-work/past-cachet-markham-custom-home-2",
+      "title": "Completed Custom Home — Cachet, Markham (Second Project) | Vitalite",
+      "description": "A second completed Vitalite custom home in Cachet, Markham. Interior visits are no longer available.",
+      "primaryKeyword": "Cachet Markham custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "cachet",
+      "locationLabel": "Cachet, Markham",
+      "size": "Custom home",
+      "headline": "A second Cachet custom home delivered as part of Vitalite's Markham portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Cachet, Markham",
+        "Estate-style residential context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Vitalite has completed multiple custom home projects in Cachet, Markham. Each one informs the next — site logistics, municipal permit timing, finish-trade coordination and quality control improve with repeat work in the same neighbourhood.",
+        "Interior tours are no longer available for this project, but the experience continues to shape how Vitalite handles new Cachet inquiries from initial feasibility through closeout."
+      ]
+    },
+    {
+      "key": "project-past-richvale-richmond-hill",
+      "path": "/our-work/past-richvale-richmond-hill-custom-home",
+      "title": "Completed Custom Home — Richvale, Richmond Hill | Vitalite",
+      "description": "A completed Vitalite custom home in Richvale, Richmond Hill. Interior visits are no longer available; the project remains part of our portfolio history.",
+      "primaryKeyword": "Richmond Hill custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "richvale",
+      "locationLabel": "Richvale, Richmond Hill",
+      "size": "Custom home",
+      "headline": "A past Richvale custom home that informs how Vitalite plans Richmond Hill projects today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Richvale, Richmond Hill",
+        "Suburban detached residential",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "This Richvale project was completed as part of Vitalite's earlier Richmond Hill residential work. Richmond Hill projects often involve grading, servicing, and structural coordination tied to suburban lot conditions, and finish expectations on higher-value homes are typically high.",
+        "Interior visits are no longer available, but the project sits within a portfolio of Richmond Hill work that informs how Vitalite plans zoning, structure, and finish quality on similar lots today."
+      ]
+    },
+    {
+      "key": "project-past-willowdale-2",
+      "path": "/our-work/past-willowdale-north-york-custom-home-2",
+      "title": "Completed Custom Home — Willowdale, North York (Second Project) | Vitalite",
+      "description": "A second completed Vitalite custom home in Willowdale, North York. Interior visits are no longer available.",
+      "primaryKeyword": "Willowdale custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "willowdale",
+      "locationLabel": "Willowdale, North York",
+      "size": "Custom home",
+      "headline": "A second Willowdale custom home delivered as part of Vitalite's North York portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Willowdale, North York",
+        "Active rebuild market context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Willowdale is a rebuild market — older homes regularly come down and are replaced with modern, family-scale custom homes. This second Willowdale project added to Vitalite's experience working with the area's typical lot widths, setbacks, and design expectations.",
+        "Interior tours are no longer available, but project experience continues to inform how Vitalite handles Willowdale custom home inquiries today, from zoning review through closeout."
+      ]
+    },
+    {
+      "key": "project-past-bullock-markham-1",
+      "path": "/our-work/past-bullock-markham-custom-home-1",
+      "title": "Completed Custom Home — Bullock, Markham | Vitalite",
+      "description": "A completed Vitalite custom home in Bullock, Markham. Interior visits are no longer available; the project remains part of our portfolio history.",
+      "primaryKeyword": "Bullock Markham custom home",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "bullock",
+      "locationLabel": "Bullock, Markham",
+      "size": "Custom home",
+      "headline": "A past Bullock custom home that informs how Vitalite plans Markham residential work today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Bullock, Markham",
+        "Established residential context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "This Bullock project was completed as part of Vitalite's earlier Markham custom home work. Bullock has a mix of established detached homes and rebuild activity, and projects in the area typically need careful design fit with neighbouring properties.",
+        "Interior visits are no longer available. The project sits within Vitalite's broader Markham portfolio and continues to inform how new Bullock inquiries are scoped today."
+      ]
+    },
+    {
+      "key": "project-past-cachet-markham-3",
+      "path": "/our-work/past-cachet-markham-custom-home-3",
+      "title": "Completed Custom Home — Cachet, Markham (Third Project) | Vitalite",
+      "description": "A third completed Vitalite custom home in Cachet, Markham. Interior visits are no longer available.",
+      "primaryKeyword": "Markham custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "cachet",
+      "locationLabel": "Cachet, Markham",
+      "size": "Custom home",
+      "headline": "A third Cachet custom home in Vitalite's Markham portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Cachet, Markham",
+        "Repeat work in the neighbourhood",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Repeat work in the same Markham neighbourhood compounds: site logistics, municipal permit timing, and trade coordination all become more efficient. This third Cachet project is part of that pattern — each one builds on the last.",
+        "Interior tours are no longer available, but the project history shapes how Vitalite handles Cachet inquiries today, from feasibility review through finish-trade coordination."
+      ]
+    },
+    {
+      "key": "project-past-bullock-markham-2",
+      "path": "/our-work/past-bullock-markham-custom-home-2",
+      "title": "Completed Custom Home — Bullock, Markham (Second Project) | Vitalite",
+      "description": "A second completed Vitalite custom home in Bullock, Markham. Interior visits are no longer available.",
+      "primaryKeyword": "Bullock Markham custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "bullock",
+      "locationLabel": "Bullock, Markham",
+      "size": "Custom home",
+      "headline": "A second Bullock custom home delivered in Vitalite's Markham portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Bullock, Markham",
+        "Repeat neighbourhood work",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Bullock projects often involve sensitivity to neighbouring homes and the established streetscape. This second Bullock build is part of Vitalite's growing experience on these specific design and zoning conditions.",
+        "Interior tours are no longer available. The work continues to inform how Vitalite scopes new Bullock and surrounding-Markham inquiries today."
+      ]
+    },
+    {
+      "key": "project-past-don-valley-north-york",
+      "path": "/our-work/past-don-valley-north-york-custom-home",
+      "title": "Completed Custom Home — Don Valley, North York | Vitalite",
+      "description": "A completed Vitalite custom home in the Don Valley area of North York. Interior visits are no longer available.",
+      "primaryKeyword": "Don Valley North York custom home",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "don-valley",
+      "locationLabel": "Don Valley, North York",
+      "size": "Custom home",
+      "headline": "A past Don Valley custom home that informs Vitalite's approach to ravine-adjacent projects today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Don Valley, North York",
+        "Ravine-adjacent residential context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Don Valley projects often involve grading, ravine-adjacent considerations, and detailed site logistics. This North York custom home was completed under those conditions and contributed to Vitalite's experience with similar lot types.",
+        "Interior tours are no longer available, but the project's planning, drawing coordination, and construction work continue to shape how Vitalite handles new Don Valley inquiries today."
+      ]
+    },
+    {
+      "key": "project-past-willowdale-3",
+      "path": "/our-work/past-willowdale-north-york-custom-home-3",
+      "title": "Completed Custom Home — Willowdale, North York (Third Project) | Vitalite",
+      "description": "A third completed Vitalite custom home in Willowdale, North York. Interior visits are no longer available.",
+      "primaryKeyword": "Willowdale custom home contractor",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "willowdale",
+      "locationLabel": "Willowdale, North York",
+      "size": "Custom home",
+      "headline": "A third Willowdale custom home in Vitalite's North York portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Willowdale, North York",
+        "Repeat rebuild-market work",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Willowdale's rebuild activity has produced repeat opportunities for Vitalite. This third Willowdale project added more local experience with typical lot widths, glazing rules, and finish expectations on the area's high-value homes.",
+        "Interior tours are no longer available. The project continues to inform Vitalite's Willowdale custom home work today."
+      ]
+    },
+    {
+      "key": "project-past-bullock-markham-3",
+      "path": "/our-work/past-bullock-markham-custom-home-3",
+      "title": "Completed Custom Home — Bullock, Markham (Third Project) | Vitalite",
+      "description": "A third completed Vitalite custom home in Bullock, Markham. Interior visits are no longer available.",
+      "primaryKeyword": "Markham Bullock custom home",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "bullock",
+      "locationLabel": "Bullock, Markham",
+      "size": "Custom home",
+      "headline": "A third Bullock custom home delivered in Vitalite's Markham portfolio.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Bullock, Markham",
+        "Repeat neighbourhood work",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Three Bullock projects represent a meaningful body of local work. Each one reinforced the planning, zoning, and construction lessons that apply to similar Markham residential streets.",
+        "Interior tours are no longer available. Vitalite's Bullock experience continues to shape new Markham inquiries today."
+      ]
+    },
+    {
+      "key": "project-past-bayview-village-north-york",
+      "path": "/our-work/past-bayview-village-north-york-custom-home",
+      "title": "Completed Custom Home — Bayview Village, North York | Vitalite",
+      "description": "A completed Vitalite custom home in Bayview Village, North York. Interior visits are no longer available.",
+      "primaryKeyword": "Bayview Village custom home builder",
+      "status": "completed",
+      "category": "custom-homes",
+      "communitySlug": "bayview-village",
+      "locationLabel": "Bayview Village, North York",
+      "size": "Custom home",
+      "headline": "A past Bayview Village custom home that informs Vitalite's approach to high-value North York lots today.",
+      "scope": [
+        "Completed Vitalite custom home",
+        "Bayview Village, North York",
+        "Mature suburban lot context",
+        "Part of Vitalite portfolio history"
+      ],
+      "narrative": [
+        "Bayview Village owners typically expect mature suburban lots, premium finishes, and careful coordination across structural, mechanical and finish trades. This North York custom home was completed under those conditions.",
+        "Interior tours are no longer available. The project continues to inform how Vitalite handles new Bayview Village inquiries today, from feasibility through closeout."
+      ]
+    }
+  ]
+}

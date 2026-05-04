@@ -5,6 +5,11 @@
   "business": {
     "name": "Vitalite Construction Corp.",
     "description": "Vitalite Construction Corp. is a GTA-based design-build, general contracting, and construction management company connecting feasibility, drawings, permits, budgets, construction and closeout for residential and ICI projects.",
+    "telephone": "+16477180972",
+    "email": "Vitaliteconstruction@gmail.com",
+    "streetAddress": "Suite 235, 7181 Woodbine Ave",
+    "addressLocality": "Markham",
+    "postalCode": "L3R 1A3",
     "areaServed": ["Greater Toronto Area", "Toronto", "North York", "Markham", "Richmond Hill", "Vaughan", "Mississauga", "Scarborough", "Etobicoke", "Rosedale", "Forest Hill", "Lawrence Park", "Leaside", "The Annex", "High Park", "Willowdale", "Bayview Village", "York Mills", "The Kingsway", "Unionville", "Angus Glen", "Thornhill", "Kleinburg", "Woodbridge", "Port Credit", "Lorne Park", "Mineola"],
     "locality": "Greater Toronto Area",
     "region": "ON",

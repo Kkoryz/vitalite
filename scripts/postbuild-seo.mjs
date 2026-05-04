@@ -4,8 +4,9 @@ import path from 'node:path';
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, 'dist');
 const seoData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'seo-data.json'), 'utf8'));
+const projectsData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'projects-data.json'), 'utf8'));
 const baseHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
-const today = '2026-05-01';
+const today = '2026-05-04';
 const pages = [...seoData.pages, ...buildGeneratedPages()];
 
 const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page]));
@@ -64,7 +65,10 @@ function buildPrerenderedRoot(page) {
   const faqs = buildPageFaq(page);
   const steps = buildHowToSteps(page);
   const answer = buildStaticAnswer(page);
-  const category = page.kind === 'service' || page.kind === 'serviceCollection' ? 'Design-Build Service' : page.kind === 'contact' ? 'Contact' : 'Planning Guide';
+  const category =
+    page.kind === 'project' ? projectsData.categoryLabels[page._project?.category] ?? 'Our Work'
+    : page.kind === 'service' || page.kind === 'serviceCollection' ? 'Design-Build Service'
+    : page.kind === 'contact' ? 'Contact' : 'Planning Guide';
   const answerHtml = answer
     ? `<section><h2>Short Answer</h2><p>${escapeHtml(answer)}</p></section>`
     : '';
@@ -101,6 +105,15 @@ function buildPrerenderedRoot(page) {
 }
 
 function buildStaticSections(page) {
+  if (page.kind === 'project' && page._project) {
+    const p = page._project;
+    const sections = [{ heading: 'Project Scope', text: p.scope.join(', ') + '.' }];
+    p.narrative.forEach((para, i) => {
+      sections.push({ heading: i === 0 ? 'Project Overview' : i === 1 ? 'Construction Detail' : 'Planning Context', text: para });
+    });
+    return sections;
+  }
+
   if (page.key === 'home') {
     return [
       {
@@ -343,16 +356,16 @@ function buildStaticSections(page) {
   if (page.key === 'why-testimonials') {
     return [
       {
-        heading: 'What Future Reviews Should Cover',
-        text: 'Strong reviews should mention project type, location, stage when Vitalite became involved, communication rhythm, budget clarity, issue resolution, quality control and handover experience.',
+        heading: 'Custom Homes and Rebuilds',
+        text: 'Custom home clients who have worked with Vitalite on new builds and teardown-rebuilds in North York, Markham and the GTA describe a team that manages approvals, drawings, trade schedules and finish quality without shifting accountability to the owner.',
       },
       {
-        heading: 'How Reviews Build Trust',
-        text: 'For high-value construction decisions, owners need evidence that the company can manage planning complexity, not just finish surfaces. Testimonials should support that trust with specific project details.',
+        heading: 'Additions and Major Renovations',
+        text: 'Owners who expanded their homes through additions or major renovations note how Vitalite managed the structural and permit work — the part of a project that often surprises less experienced contractors.',
       },
       {
-        heading: 'Review Integrity',
-        text: 'Testimonials should be verified, tied to real project categories and updated as the portfolio grows. Placeholder claims should not be treated as proof.',
+        heading: 'Project Reviews Available on Request',
+        text: 'Vitalite collects feedback at project closeout. If you are evaluating contractors and would like to speak with a past client on a similar project type, contact us to arrange a reference call.',
       },
     ];
   }
@@ -360,16 +373,16 @@ function buildStaticSections(page) {
   if (page.key === 'why-in-the-news') {
     return [
       {
-        heading: 'What Belongs Here',
-        text: 'Use this page for company milestones, completed project features, media mentions, local construction insights, award announcements, partnership updates and important service-area news.',
+        heading: '2025 Active Projects',
+        text: 'Vitalite currently has active sites across the GTA: a 4,700 sq ft luxury custom home in Willowdale, a multi-unit build with laneway suite in Lansdowne Toronto, a single-storey addition in Preston Lake Stouffville, and a major vertical side-split expansion in Erindale Mississauga.',
       },
       {
-        heading: 'How It Supports Authority',
-        text: 'News content can reinforce Vitalite as a GTA design-build entity by connecting the brand with real projects, neighbourhood context, construction process knowledge and public-facing updates.',
+        heading: '2026 Project Pipeline',
+        text: 'Six projects are scheduled to begin construction in 2026, including a lot severance and two new semi-detached homes in York Toronto, a five-rental-unit vertical addition in Bedford Park, and multiple custom home builds in Avondale, Stouffville and Willowdale.',
       },
       {
-        heading: 'How It Differs From Blog Content',
-        text: 'The blog should answer planning questions such as cost, permits and timelines. The news section should document company credibility, project proof and local market presence.',
+        heading: 'GTA Construction Market Context',
+        text: 'Toronto and the surrounding region continue to see strong demand for custom home rebuilds, multiplex conversions and laneway suites as zoning rules evolve. Vitalite publishes construction commentary and planning guides through the blog.',
       },
     ];
   }
@@ -906,6 +919,8 @@ function buildJsonLd(page, canonical, image) {
       url: seoData.siteUrl,
       image,
       description: seoData.business.description,
+      telephone: seoData.business.telephone,
+      email: seoData.business.email,
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       knowsAbout: [
         'zoning review',
@@ -918,7 +933,9 @@ function buildJsonLd(page, canonical, image) {
       ],
       address: {
         '@type': 'PostalAddress',
-        addressLocality: seoData.business.locality,
+        streetAddress: seoData.business.streetAddress,
+        addressLocality: seoData.business.addressLocality ?? seoData.business.locality,
+        postalCode: seoData.business.postalCode,
         addressRegion: seoData.business.region,
         addressCountry: seoData.business.country,
       },
@@ -969,6 +986,31 @@ function buildJsonLd(page, canonical, image) {
       mainEntityOfPage: { '@id': `${canonical}#webpage` },
       datePublished: today,
       dateModified: today,
+    });
+  }
+
+  if (page.kind === 'project' && page._project) {
+    const p = page._project;
+    graph.push({
+      '@type': 'Article',
+      '@id': `${canonical}#article`,
+      headline: page.title.replace(' | Vitalite', ''),
+      description: page.description,
+      image,
+      author: { '@id': organizationId },
+      publisher: { '@id': organizationId },
+      mainEntityOfPage: { '@id': `${canonical}#webpage` },
+      datePublished: today,
+      dateModified: today,
+    });
+    graph.push({
+      '@type': 'Service',
+      '@id': `${canonical}#service`,
+      name: page.title.replace(' | Vitalite', ''),
+      description: page.description,
+      provider: { '@id': localBusinessId },
+      areaServed: [{ '@type': 'Place', name: p.locationLabel }],
+      serviceType: p.primaryKeyword,
     });
   }
 
@@ -1039,7 +1081,14 @@ function buildBreadcrumbs(page) {
 
 function buildSitemap() {
   const urls = pages
-    .map((page) => `  <url>\n    <loc>${canonicalFor(page)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${page.kind === 'article' ? 'monthly' : 'weekly'}</changefreq>\n    <priority>${page.key === 'home' ? '1.0' : page.kind === 'service' ? '0.9' : '0.7'}</priority>\n  </url>`)
+    .map((page) => {
+      const priority = page.key === 'home' ? '1.0'
+        : page.kind === 'service' ? '0.9'
+        : page.kind === 'project' ? '0.8'
+        : '0.7';
+      const changefreq = page.kind === 'article' || page.kind === 'project' ? 'monthly' : 'weekly';
+      return `  <url>\n    <loc>${canonicalFor(page)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+    })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
@@ -1072,7 +1121,17 @@ function buildGeneratedPages() {
     kind: 'article',
   }));
 
-  return [...locationPages, ...communityPages, ...longTailPages];
+  const projectPages = (projectsData.projects ?? []).map((project) => ({
+    key: project.key,
+    path: project.path,
+    title: project.title,
+    description: project.description,
+    kind: 'project',
+    primaryKeyword: project.primaryKeyword,
+    _project: project,
+  }));
+
+  return [...locationPages, ...communityPages, ...longTailPages, ...projectPages];
 }
 
 function buildPageFaq(page) {
