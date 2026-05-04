@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ChevronLeft,
@@ -612,6 +612,7 @@ const heroSlides = [
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const currentHeroSlide = heroSlides[currentSlide];
 
   useEffect(() => {
@@ -622,27 +623,54 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, [currentHeroSlide.displayDurationMs, isPaused]);
 
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video || !currentHeroSlide.video) return undefined;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    const playVideo = () => {
+      void video.play().catch(() => {
+        // Some mobile browsers block autoplay in low-power or data-saving modes.
+      });
+    };
+
+    if (video.readyState >= 2) {
+      playVideo();
+      return undefined;
+    }
+
+    video.addEventListener('canplay', playVideo, { once: true });
+    return () => video.removeEventListener('canplay', playVideo);
+  }, [currentHeroSlide.video, currentSlide]);
+
   return (
     <div className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
           {currentHeroSlide.video ? (
             <video
+              ref={heroVideoRef}
               src={currentHeroSlide.video}
               poster={currentHeroSlide.image}
               className="w-full h-full object-cover"
               autoPlay
+              defaultMuted
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
               aria-label="Vitalite design-build project video"
             />
           ) : (
