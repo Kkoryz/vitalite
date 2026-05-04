@@ -401,7 +401,7 @@ const Navbar = ({
       {/* Logo Area */}
       <a href={routeHref('home')} className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
         <img
-          src="logo-transparent.png?v=20260430-1340"
+          src={publicAsset('logo-transparent.png?v=20260430-1340')}
           alt="Vitalite Construction"
           className="w-[185px] md:w-[345px] h-auto max-h-[68px] lg:max-h-[84px] object-contain"
         />
@@ -588,6 +588,7 @@ const heroSlides = [
     desc: 'Vitalite helps owners move from feasibility review to permit-ready drawings, construction management, inspections and warranty-oriented closeout without splitting the project across disconnected teams.',
     link: 'Explore design-build services',
     video: publicAsset('vitalite-hero-design-build.mp4'),
+    displayDurationMs: 16000,
     image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop',
   },
   {
@@ -595,6 +596,7 @@ const heroSlides = [
     title: 'Custom Homes Planned Before They Are Priced',
     desc: 'We connect lifestyle goals, lot constraints, architectural direction, budgets and site execution before construction starts, so each custom home has a clear path from concept to handover.',
     link: 'Custom home design & build',
+    displayDurationMs: 6500,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
   },
   {
@@ -602,6 +604,7 @@ const heroSlides = [
     title: 'Multiplex, Garden Suite and Addition Projects Built for Approval',
     desc: 'For investors and homeowners adding density or space, Vitalite coordinates feasibility, zoning, drawings, permits, trades and inspections around one managed construction plan.',
     link: 'Plan residential investment work',
+    displayDurationMs: 6500,
     image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop',
   },
 ];
@@ -615,9 +618,9 @@ const Hero = () => {
     if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
+    }, currentHeroSlide.displayDurationMs);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [currentHeroSlide.displayDurationMs, isPaused]);
 
   return (
     <div className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black">
