@@ -324,6 +324,18 @@ const visuals = {
   timeline: visualAsset('renovation-timeline'),
   fixerUpper: visualAsset('fixer-upper-vs-new'),
   designBuildVsArchitect: visualAsset('design-build-vs-architect'),
+  bulletConceptLayouts: visualAsset('bullet-concept-layouts'),
+  bulletPermitPackages: visualAsset('bullet-permit-packages'),
+  bulletZoningReview: visualAsset('bullet-zoning-review'),
+  bulletScopeCoordination: visualAsset('bullet-scope-coordination'),
+  bulletSiteFeasibility: visualAsset('bullet-site-feasibility'),
+  bulletBudgetPlanning: visualAsset('bullet-budget-planning'),
+  bulletTradeScheduling: visualAsset('bullet-trade-scheduling'),
+  bulletQualityInspection: visualAsset('bullet-quality-inspection'),
+  bulletMepCoordination: visualAsset('bullet-mep-coordination'),
+  bulletFireEgress: visualAsset('bullet-fire-egress'),
+  bulletClientCommunication: visualAsset('bullet-client-communication'),
+  bulletCloseoutWarranty: visualAsset('bullet-closeout-warranty'),
 };
 
 const translateVisibleText = (language: Language) => {
@@ -3758,6 +3770,53 @@ function imageForSeoPage(page: SeoPage) {
   return visuals.designBuild;
 }
 
+function imageForDetailBullet(item: string, page: DetailPageContent) {
+  const text = `${item} ${page.title} ${page.category}`.toLowerCase();
+  const has = (...terms: string[]) => terms.some((term) => text.includes(term));
+
+  if (has('fire separation', 'egress', 'life-safety', 'life safety', 'sound control', 'smoke alarm', 'sprinkler')) {
+    return visuals.bulletFireEgress;
+  }
+  if (has('structural', 'hvac', 'mechanical', 'electrical', 'plumbing', 'servicing', 'rough-in', 'engineering')) {
+    return visuals.bulletMepCoordination;
+  }
+  if (has('pdi', 'warranty', 'closeout', 'handover', 'aftercare', 'deficiency', 'move-in')) {
+    return visuals.bulletCloseoutWarranty;
+  }
+  if (has('communication', 'reporting', 'client', 'owner', 'progress', 'reference')) {
+    return visuals.bulletClientCommunication;
+  }
+  if (has('inspection', 'quality', 'building code', 'code review', 'code-compliant')) {
+    return visuals.bulletQualityInspection;
+  }
+  if (has('permit', 'drawing package', 'submission', 'municipal', 'approval', 'comment response', 'board package')) {
+    return visuals.bulletPermitPackages;
+  }
+  if (has('zoning', 'bylaw', 'setback', 'lot coverage', 'variance', 'committee', 'grading', 'tree', 'streetscape')) {
+    return visuals.bulletZoningReview;
+  }
+  if (has('budget', 'price', 'pricing', 'cost', 'allowance', 'exclusion', 'estimate', 'contingency', 'rental return')) {
+    return visuals.bulletBudgetPlanning;
+  }
+  if (has('trade', 'schedule', 'sequencing', 'site management', 'construction management', 'phasing', 'staging')) {
+    return visuals.bulletTradeScheduling;
+  }
+  if (has('material', 'finish', 'fixture', 'procurement', 'cabinet', 'millwork', 'tile', 'flooring', 'kitchen', 'bath')) {
+    return visuals.materialSelection;
+  }
+  if (has('scope coordination', 'design-build scope', 'single-team', 'accountability', 'delivery model', 'proposal')) {
+    return visuals.bulletScopeCoordination;
+  }
+  if (has('concept', 'layout', 'design direction', 'visualization', 'massing', 'elevation', 'space planning')) {
+    return visuals.bulletConceptLayouts;
+  }
+  if (has('feasibility', 'site review', 'existing condition', 'survey', 'property address', 'local property')) {
+    return visuals.bulletSiteFeasibility;
+  }
+
+  return page.image;
+}
+
 const subPageHeroes: Record<MainPageKey, { category: string; title: string; desc: string; image: string }> = {
   services: {
     category: 'SERVICES',
@@ -4094,11 +4153,16 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
             </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {page.bullets.map((item) => (
-              <div key={item} className="border border-gray-200 bg-gray-50 rounded-lg p-5 text-black font-medium">
-                {item}
-              </div>
-            ))}
+            {page.bullets.map((item) => {
+              const bulletImage = imageForDetailBullet(item, page);
+
+              return (
+                <div key={`${pageKey}-${item}`} className="overflow-hidden border border-gray-200 bg-gray-50 rounded-lg text-black font-medium">
+                  <img src={bulletImage} alt={`${page.title}: ${item}`} loading="lazy" decoding="async" className="h-32 w-full object-cover" />
+                  <div className="p-5">{item}</div>
+                </div>
+              );
+            })}
           </div>
         </motion.div>
       </section>
