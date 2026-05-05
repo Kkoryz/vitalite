@@ -148,7 +148,7 @@
       "key": "service-custom-homes",
       "path": "/services/custom-home-design-build-toronto",
       "title": "Custom Home Design & Build Toronto | Vitalite",
-      "description": "Design and build luxury custom homes in Toronto and the GTA with concept planning, permit coordination, budget control, construction management, and warranty support.",
+      "description": "GTA custom home design-build for owners who need concept planning, permit drawings, engineering, budget control, site management, and closeout.",
       "kind": "service",
       "primaryKeyword": "custom home design build Toronto"
     },
@@ -156,7 +156,7 @@
       "key": "service-multiplex",
       "path": "/services/multi-unit-multiplex-construction-toronto",
       "title": "Multiplex Construction Toronto | Multi-Unit Homes",
-      "description": "Plan and build multi-unit residential and multiplex projects in Toronto and the GTA with zoning review, permit coordination, engineering, and construction management.",
+      "description": "Toronto multiplex construction for investors and owners, covering zoning review, unit planning, permits, engineering, code, and site management.",
       "kind": "service",
       "primaryKeyword": "multiplex construction Toronto"
     },
@@ -164,7 +164,7 @@
       "key": "service-garden-suites",
       "path": "/services/garden-suites-laneway-houses-toronto",
       "title": "Garden Suites & Laneway Houses Toronto | Vitalite",
-      "description": "Design, permit, and build garden suites, laneway houses, coach houses, and secondary dwelling units for rental income, family space, and property value.",
+      "description": "Design, permit, and build Toronto garden suites, laneway houses, and coach houses for rental income, family space, and property value.",
       "kind": "service",
       "primaryKeyword": "garden suites Toronto"
     },
@@ -172,7 +172,7 @@
       "key": "service-home-additions",
       "path": "/services/home-additions-renovations-toronto",
       "title": "Home Additions & Major Renovations Toronto | Vitalite",
-      "description": "Home additions, structural alterations, extensions, second-storey additions, and major renovations managed from design and permits through construction.",
+      "description": "Toronto home additions and major renovations planned from zoning, structure, drawings, permits, engineering, and construction management.",
       "kind": "service",
       "primaryKeyword": "home additions Toronto"
     },
@@ -180,7 +180,7 @@
       "key": "service-drawings-permits",
       "path": "/services/drawings-permits-engineering-toronto",
       "title": "Drawings, Permits & Engineering Toronto | Vitalite",
-      "description": "Architectural drawings, structural coordination, HVAC documentation, zoning review, building code review, and building permit application support in the GTA.",
+      "description": "Toronto permit drawings, structural coordination, HVAC documentation, zoning review, building code review, and permit application support.",
       "kind": "service",
       "primaryKeyword": "building permits drawings Toronto"
     },
@@ -260,7 +260,7 @@
       "key": "why-the-vitalite-way",
       "path": "/why-vitalite/the-vitalite-way",
       "title": "The Vitalite Way | Design, Permits, Build & Warranty",
-      "description": "The Vitalite Way explains the GTA design-build process from consultation, site evaluation and concept design to budget planning, permits, construction, PDI and warranty support.",
+      "description": "The Vitalite Way explains how GTA projects move from consultation, site review, budget planning, permits, construction, PDI, and warranty support.",
       "kind": "about",
       "primaryKeyword": "design build process GTA"
     },
@@ -275,10 +275,10 @@
     {
       "key": "why-testimonials",
       "path": "/why-vitalite/testimonials",
-      "title": "Client Testimonials | Vitalite Construction Corp.",
-      "description": "A structured place for Vitalite client testimonials, verified project reviews, communication feedback, quality notes and future post-delivery support stories.",
+      "title": "Proof & References | Vitalite Construction Corp.",
+      "description": "How Vitalite builds trust with project context, permit documentation, reference pathways, PDI closeout, and warranty-oriented support.",
       "kind": "about",
-      "primaryKeyword": "Vitalite testimonials"
+      "primaryKeyword": "Vitalite references"
     },
     {
       "key": "why-in-the-news",
@@ -742,7 +742,7 @@
       "key": "guide-garden-suite-cost-toronto",
       "path": "/blog/garden-suite-cost-toronto",
       "title": "Garden Suite Cost Toronto | Planning Guide",
-      "description": "A Toronto garden suite cost planning guide covering feasibility, drawings, permits, servicing, access, finishes, construction management, and contingency planning.",
+      "description": "Toronto garden suite cost guide covering lot feasibility, servicing, access, drawings, permits, finishes, contingency, and construction planning.",
       "primaryKeyword": "garden suite cost Toronto"
     },
     {
@@ -756,7 +756,7 @@
       "key": "guide-multiplex-conversion-cost-toronto",
       "path": "/blog/multiplex-conversion-cost-toronto",
       "title": "Multiplex Conversion Cost Toronto | Vitalite Guide",
-      "description": "Understand Toronto multiplex conversion cost drivers, including zoning, unit planning, structure, mechanical systems, permits, finishes, and construction management.",
+      "description": "Toronto multiplex conversion cost guide for unit strategy, fire separation, egress, structure, systems, permits, finishes, and management.",
       "primaryKeyword": "multiplex conversion cost Toronto"
     },
     {
@@ -805,7 +805,7 @@
       "key": "guide-toronto-permit-drawings",
       "path": "/blog/toronto-permit-drawings-guide",
       "title": "Toronto Permit Drawings Guide | Vitalite",
-      "description": "A Toronto permit drawings guide covering architectural drawings, structural coordination, HVAC and mechanical documentation, zoning review, and building permit applications.",
+      "description": "Toronto permit drawings guide covering existing plans, proposed drawings, zoning data, code notes, structural, HVAC, and permit submission.",
       "primaryKeyword": "Toronto permit drawings"
     },
     {
