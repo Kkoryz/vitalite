@@ -345,6 +345,17 @@ const visuals = {
   serviceIci: visualAsset('service-ici-design-build'),
   serviceSiteManagement: visualAsset('service-construction-site-management'),
   serviceTownhouse: visualAsset('service-townhouse-renovations'),
+  whyAboutUs: visualAsset('why-about-us'),
+  whyVitaliteWay: visualAsset('why-vitalite-way'),
+  workCustomHomes: visualAsset('work-custom-homes'),
+  workMultiplex: visualAsset('work-multiplex'),
+  workGardenSuites: visualAsset('work-garden-suites'),
+  workAdditions: visualAsset('work-additions'),
+  workIci: visualAsset('work-ici'),
+  workTownhouses: visualAsset('work-townhouses'),
+  blogRenovationCosts: visualAsset('blog-renovation-costs'),
+  blogRenovationLaws: visualAsset('blog-renovation-laws'),
+  blogGardenSuiteIdeas: visualAsset('blog-garden-suite-ideas'),
 };
 
 const translateVisibleText = (language: Language) => {
@@ -1297,13 +1308,13 @@ const whyPageCards: ImageCard[] = [
   {
     title: 'About Vitalite',
     summary: 'Vitalite Construction Corp. is a GTA-based design-build, general contracting and construction management company for residential and ICI projects.',
-    image: visuals.designBuild,
+    image: visuals.whyAboutUs,
     href: '#why-about-us',
   },
   {
     title: 'The Vitalite Way',
     summary: 'We move through consultation, site evaluation, concept design, budget planning, zoning review, permits, construction, PDI and warranty support.',
-    image: visuals.process,
+    image: visuals.whyVitaliteWay,
     href: '#why-the-vitalite-way',
   },
   {
@@ -1330,31 +1341,31 @@ const workPageCards: ImageCard[] = [
   {
     title: 'Custom Homes',
     summary: 'Teardown-rebuilds, new detached homes and lot severances — delivered under one contract from permit drawings to handover.',
-    image: visuals.customHome,
+    image: visuals.workCustomHomes,
     href: '#work-custom-homes',
   },
   {
     title: 'Multi-Unit / Multiplex',
     summary: 'Multi-unit residential built for rental yield: fire separation, independent egress and separate services planned from the first zoning check.',
-    image: visuals.multiplex,
+    image: visuals.workMultiplex,
     href: '#work-multiplex',
   },
   {
     title: 'Garden Suites & Laneway Houses',
     summary: 'Rental income on your existing lot — zoning eligibility confirmed, permit drawings prepared and construction managed without a separate consultant for each step.',
-    image: visuals.gardenSuite,
+    image: visuals.workGardenSuites,
     href: '#work-garden-suites',
   },
   {
     title: 'Additions & Major Renovations',
     summary: 'More space without moving — if the structure, zoning and budget support it. Vitalite checks all three before drawings start.',
-    image: visuals.addition,
+    image: visuals.workAdditions,
     href: '#work-additions',
   },
   {
     title: 'Industrial / Commercial / Institutional',
     summary: 'Commercial and institutional construction that keeps the building operational and hits the occupancy date.',
-    image: visuals.ici,
+    image: visuals.workIci,
     href: '#work-ici',
   },
   {
@@ -1384,7 +1395,7 @@ const workPageCards: ImageCard[] = [
   {
     title: 'Townhouses & Semi-Detached',
     summary: 'Party wall coordination, narrow-lot logistics and permit-sensitive structural changes managed from concept through construction.',
-    image: visuals.addition,
+    image: visuals.workTownhouses,
     href: '#work-townhouses',
   },
 ];
@@ -1399,7 +1410,7 @@ const blogPageCards: ImageCard[] = [
   {
     title: 'Toronto Renovations: Cost Per SQ FT',
     summary: 'How custom home, addition, multiplex and renovation budgets are shaped by scope, structure, finishes and approvals.',
-    image: visuals.renovationCost,
+    image: visuals.blogRenovationCosts,
     href: '#blog-renovation-costs',
   },
   {
@@ -1417,13 +1428,13 @@ const blogPageCards: ImageCard[] = [
   {
     title: 'Toronto Renovation Laws',
     summary: 'A plain-English introduction to zoning review, building permits, drawings and inspections for residential projects.',
-    image: visuals.permitGuide,
+    image: visuals.blogRenovationLaws,
     href: '#blog-renovation-laws',
   },
   {
     title: 'Garden Suite Ideas 2026',
     summary: 'Design, rental and approval considerations for owners planning a garden suite, laneway house or coach house.',
-    image: visuals.gardenSuite,
+    image: visuals.blogGardenSuiteIdeas,
     href: '#blog-garden-suite-ideas',
   },
   {
@@ -1961,7 +1972,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'WHY VITALITE',
     title: 'About Us',
     subtitle: "Built for GTA projects where drawings, permits and construction need to answer to the same team.",
-    image: visuals.designBuild,
+    image: visuals.whyAboutUs,
     intro: "Vitalite Construction Corp. started from a straightforward observation: most GTA construction problems are not technical — they are organizational. The drawings go ahead before the budget is real. The permits stall because the engineering was never coordinated. The trades arrive without a clear sequence. Vitalite is structured to solve that. We handle design coordination, permit drawings, engineering, budgeting and construction management as one connected workflow for residential and ICI clients across the Greater Toronto Area.",
     answer: "Vitalite is a GTA design-build and construction management company that keeps drawings, permits, budget and construction under one accountable team. We work with homeowners, investors and commercial clients on projects from 500 sq ft additions to 6,000 sq ft custom homes and multi-unit ICI builds.",
     bullets: ['Design-build general contractor', 'Custom homes, multiplexes and additions', 'Drawings, permits and engineering coordination', 'Project management from first review to warranty'],
@@ -1988,7 +1999,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'WHY VITALITE',
     title: 'The Vitalite Way',
     subtitle: "A sequence that answers budget, approval and scope questions before construction money gets spent.",
-    image: visuals.process,
+    image: visuals.whyVitaliteWay,
     intro: "Most GTA project problems start the same way: a quote is accepted before permit drawings are finished, or engineering scope gets added after the contract is signed, or a zoning issue surfaces mid-construction that a site visit in week two would have caught. The Vitalite Way is a deliberate sequence designed to surface those issues while they are still cheap to solve.",
     answer: "The Vitalite Way moves through consultation, on-site evaluation, concept design, budget review, delivery model selection, permit drawings, building code review, construction, PDI and warranty-oriented aftercare — in an order that reduces avoidable surprises.",
     bullets: [
@@ -2106,7 +2117,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Custom Homes',
     subtitle: 'Custom homes where the design team and the build team answer to the same project.',
-    image: visuals.customHome,
+    image: visuals.workCustomHomes,
     intro: "Most GTA custom home delays happen in the gap between the architect who draws the plans and the contractor who builds them. When construction budget feedback arrives after the design is finished, the drawings get revised — and the revision rounds cost time and money that owners didn't budget for. Vitalite delivers custom homes under one contract, so construction input reaches the design before the drawings are committed.",
     answer: "Active builds include a 4,700 sq ft modern build in Willowdale and a two-semi lot severance in York Toronto. Completed projects span Cachet Markham, Bullock Markham, Richvale Richmond Hill, Don Valley and Bayview Village.",
     bullets: ['New detached custom homes', 'Teardown-rebuilds on existing lots', 'Lot severance and infill', 'Luxury interiors and exterior detailing'],
@@ -2151,7 +2162,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Multi-Unit / Multiplex',
     subtitle: 'Multi-unit residential built for rental yield — not just for the building permit.',
-    image: visuals.multiplex,
+    image: visuals.workMultiplex,
     intro: "A multiplex is not a house with more units attached. It requires fire separation between units, independent egress from each, separate utility metering and a permit path with more review layers than a single-family project. Get any of those wrong and the building either doesn't pass inspection or doesn't function as a rental asset. Vitalite plans multiplexes around those realities from the first zoning check.",
     answer: "Active projects include a ground-up multi-unit build with integrated laneway suite in Lansdowne Toronto and a five-rental-unit vertical addition over an occupied mixed-use building in Bedford Park — scheduled for 2026.",
     bullets: ['Ground-up multi-unit residential builds', 'Vertical additions over occupied buildings', 'Laneway suites integrated with main build', 'Investment-focused unit layouts'],
@@ -2182,7 +2193,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Garden Suites & Laneway Houses',
     subtitle: 'Rental income on your existing lot — without selling, subdividing or moving.',
-    image: visuals.gardenSuite,
+    image: visuals.workGardenSuites,
     intro: "A garden suite or laneway house lets GTA homeowners add a self-contained dwelling unit on their existing lot. No lot severance, no major rezoning application — just a careful review of local by-laws, setbacks, lot coverage, site access and servicing before the design begins. Vitalite handles the full process from eligibility check through construction.",
     answer: "Vitalite designs, permits and builds garden suites and laneway houses across the City of Toronto, Whitchurch-Stouffville, Mississauga and other GTA municipalities — zoning review, permit drawings, engineering and site construction under one contract.",
     bullets: ['Garden suites in rear yards', 'Laneway houses over rear garages', 'Coach house and detached ADU construction', 'Rental-use feasibility and permit coordination'],
@@ -2209,7 +2220,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Additions & Major Renovations',
     subtitle: 'More space without moving — if the structure, zoning and budget can support it.',
-    image: visuals.addition,
+    image: visuals.workAdditions,
     intro: "A home addition is not just a room at the back. It is a foundation assessment, a zoning check, a structural review of the existing framing, permit drawings with engineering coordination and a construction sequence that keeps the house livable through the build. Vitalite manages GTA home additions with the same delivery discipline as a custom home — because for most families, the complexity is comparable.",
     answer: "Active projects include a single-storey addition in Preston Lake Stouffville, a major vertical expansion in Erindale Mississauga and a whole-home retrofit in Stouffville. Completed work includes a 1,500 sq ft expansion that grew a Willowdale home from 3,700 to 5,200 sq ft.",
     bullets: ['Single-storey rear and side additions', 'Vertical additions and second-storey expansions', 'Whole-home retrofits and reconfiguration', 'Basement walkout and foundation extensions'],
@@ -2242,7 +2253,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Industrial / Commercial / Institutional',
     subtitle: 'Commercial and institutional construction that keeps the building operational while the work gets done.',
-    image: visuals.ici,
+    image: visuals.workIci,
     intro: "Commercial construction clients have a different set of priorities than residential owners. The building often has to stay open during the work. The schedule has a hard end date tied to a lease or a business opening. Code compliance — accessibility, fire separation, occupancy load — carries more review weight. Vitalite applies the same design-build coordination model to ICI work that it uses on residential projects, adapted for commercial timelines and compliance requirements.",
     answer: "Vitalite builds and fits out warehouses, offices, retail tenant spaces and institutional facilities across the GTA — managing trades, permits, inspections and occupancy coordination from drawings through closeout.",
     bullets: ['Warehouse and light industrial projects', 'Office build-outs and tenant improvements', 'Retail space construction', 'Institutional facility improvements'],
@@ -2350,7 +2361,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'OUR WORK',
     title: 'Townhouses & Semi-Detached Homes',
     subtitle: 'Party wall, narrow lot and permit-sensitive structural changes — planned for before drawings start.',
-    image: visuals.addition,
+    image: visuals.workTownhouses,
     intro: "Toronto townhouses and semis concentrate several construction constraints into one property type. The shared party wall is load-bearing on the neighbour's side. The lot is 15 to 20 feet wide. Site access for equipment and materials is limited. And the basement is often the only place to add space without zoning review. Vitalite plans townhouse renovations around these realities before a drawing line is committed.",
     answer: "Vitalite manages townhouse and semi-detached renovations in Toronto — structural review, party wall engineering, permit coordination, basement alterations and narrow-site construction logistics, from concept through closeout.",
     bullets: ['Rear additions on narrow lots', 'Second-storey additions with party wall coordination', 'Basement walkouts and underpinning', 'Whole-home renovations from gut to finish'],
@@ -2437,7 +2448,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'BLOG',
     title: 'Toronto Renovations: Cost Per SQ FT',
     subtitle: 'Why cost-per-square-foot numbers mislead GTA owners — and what actually drives renovation budgets.',
-    image: visuals.renovationCost,
+    image: visuals.blogRenovationCosts,
     intro: 'The number most GTA owners hear first — cost per square foot — is the least useful one for planning a specific project. It averages across conditions, finishes, structural complexity and approvals that may have nothing to do with your property or your goals.',
     answer: 'GTA renovation costs are driven by six factors: structural condition, mechanical systems age, finish and material selection, permit and engineering requirements, site access constraints, and trade sequencing complexity. Square footage tells you how many decisions you need to make. It does not tell you how any single one will price out.',
     bullets: [
@@ -2536,7 +2547,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'BLOG',
     title: 'Toronto Renovation Laws',
     subtitle: 'Permits, zoning, building code and board approvals — explained for GTA homeowners.',
-    image: visuals.permitGuide,
+    image: visuals.blogRenovationLaws,
     intro: 'Most GTA owners do not realize how many of their planned renovation steps require a permit, a drawing or an engineer\'s stamp. The ones who find out after starting construction pay twice.',
     answer: 'In Toronto and the GTA, any work that changes structure, adds living space, alters mechanical systems or modifies the building footprint requires a building permit. This includes basement underpinning, additions, second-unit creation, structural wall removal and major HVAC work. Condo and rental building work adds a second approval layer: the building\'s property management or board.',
     bullets: [
@@ -2569,7 +2580,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'BLOG',
     title: 'Garden Suite Ideas 2026',
     subtitle: 'Design, approval and budget considerations for GTA owners planning a backyard dwelling.',
-    image: visuals.gardenSuite,
+    image: visuals.blogGardenSuiteIdeas,
     intro: 'The City of Toronto legalized garden suites city-wide in 2022. The zoning permission exists. What most owners discover is that lot constraints, utility connections, setback requirements and construction cost make some properties far better candidates than others — and that finding out before spending money on design matters.',
     answer: 'A garden suite on a suitable GTA lot can generate $2,000–$3,500/month in rental income, create independent living space for family or increase property value. Feasibility depends on lot depth, rear access, utility service capacity and zoning setbacks. Confirm these before committing to design fees.',
     bullets: [
@@ -3827,10 +3838,30 @@ function imageForDetailBullet(item: string, page: DetailPageContent) {
 }
 
 function imageForDetailSection(section: { heading: string; text: string }, page: DetailPageContent) {
-  if (page.category !== 'SERVICES') return page.image;
-
   const text = `${section.heading} ${section.text} ${page.title}`.toLowerCase();
   const has = (...terms: string[]) => terms.some((term) => text.includes(term));
+
+  if (has('proof', 'reference', 'documentation', 'trust', 'closeout and warranty')) return visuals.proofReferences;
+  if (has('news', 'media', 'market context', 'project pipeline', 'company milestone', 'recognition')) return visuals.news;
+  if (has('about', 'who we work with', 'how we approach', 'why the structure matters', 'gta realities')) {
+    return visuals.whyAboutUs;
+  }
+  if (has('vitalite way', 'consultation', 'site and existing-condition', 'sequence', 'pdi', 'aftercare')) {
+    return visuals.whyVitaliteWay;
+  }
+  if (has('custom home', 'teardown', 'willowdale', 'markham', 'infill', 'lot severance')) {
+    return visuals.workCustomHomes;
+  }
+  if (has('multiplex', 'multi-unit', 'rental unit', 'unit strategy', 'fire separation', 'lansdowne', 'bedford park')) {
+    return visuals.workMultiplex;
+  }
+  if (has('garden suite', 'laneway', 'coach house', 'backyard dwelling')) return visuals.workGardenSuites;
+  if (has('addition', 'vertical expansion', 'rear addition', 'side addition', 'second-storey')) return visuals.workAdditions;
+  if (has('warehouse', 'office', 'retail', 'institutional', 'tenant', 'commercial', 'ici')) return visuals.workIci;
+  if (has('townhouse', 'semi-detached', 'party wall', 'narrow lot')) return visuals.workTownhouses;
+  if (has('cost per square foot', 'cost driver', 'budget', 'pricing', 'carrying cost')) return visuals.blogRenovationCosts;
+  if (has('renovation law', 'permit', 'zoning', 'building code', 'board approval')) return visuals.blogRenovationLaws;
+  if (has('garden suite ideas', 'rental income', 'secondary suite')) return visuals.blogGardenSuiteIdeas;
 
   if (has('portfolio', 'active examples', 'scope examples', 'project types', 'examples')) return page.image;
   if (has('construction', 'site logistics', 'site sequencing', 'living through construction', 'occupied', 'operational')) {
@@ -3869,13 +3900,13 @@ const subPageHeroes: Record<MainPageKey, { category: string; title: string; desc
     category: 'WHY VITALITE',
     title: 'A Toronto Design-Build Partner Built for Complex Projects',
     desc: 'We combine local permit knowledge, disciplined construction management and residential-commercial delivery experience so clients can move from idea to occupancy with fewer gaps.',
-    image: visuals.process,
+    image: visuals.whyVitaliteWay,
   },
   'our-work': {
     category: 'OUR WORK',
     title: 'Projects that moved from drawings to permit to site — under one team',
     desc: 'Custom homes, multiplex housing, garden suites, additions, ICI construction and full interiors across the GTA. Every project went through the same managed delivery path.',
-    image: visuals.willowdale,
+    image: visuals.workCustomHomes,
   },
   blog: {
     category: 'BLOG',
@@ -4212,7 +4243,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
         <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {page.sections.map((section) => {
-              const sectionImage = page.category === 'SERVICES' ? imageForDetailSection(section, page) : null;
+              const sectionImage = ['SERVICES', 'WHY VITALITE', 'OUR WORK', 'BLOG'].includes(page.category) ? imageForDetailSection(section, page) : null;
 
               return (
                 <article key={section.heading} className={`border border-white/10 bg-white/5 rounded-2xl ${sectionImage ? 'overflow-hidden' : 'p-6 sm:p-8'}`}>
