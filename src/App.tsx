@@ -97,6 +97,7 @@ type TextCard = {
   title: string;
   text: string;
   eyebrow?: string;
+  image?: string;
   pageKey?: PageKey;
 };
 
@@ -356,6 +357,12 @@ const visuals = {
   blogRenovationCosts: visualAsset('blog-renovation-costs'),
   blogRenovationLaws: visualAsset('blog-renovation-laws'),
   blogGardenSuiteIdeas: visualAsset('blog-garden-suite-ideas'),
+  servicesOverviewScope: visualAsset('services-overview-scope-before-price'),
+  servicesOverviewApprovals: visualAsset('services-overview-approval-buildability'),
+  servicesOverviewCloseout: visualAsset('services-overview-closeout-management'),
+  servicesOverviewProperty: visualAsset('services-overview-property-no-drawings'),
+  servicesOverviewPermits: visualAsset('services-overview-permits-engineering'),
+  servicesOverviewCompare: visualAsset('services-overview-compare-builders'),
 };
 
 const translateVisibleText = (language: Language) => {
@@ -1198,13 +1205,13 @@ const ProjectProcess = () => {
   );
 };
 
-const serviceInclusions: Array<{ label: string; href: `#${DetailPageKey}` }> = [
-  { label: 'Architectural Services', href: '#service-architectural-services' },
-  { label: 'Interior Design', href: '#service-interior-design' },
-  { label: 'Rendering', href: '#service-rendering' },
-  { label: 'Material Selection / Procurement', href: '#service-material-selection' },
-  { label: 'Building + Board Approvals', href: '#service-building-board-approvals' },
-  { label: 'Construction & Site Management', href: '#service-construction-site-management' },
+const serviceInclusions: Array<{ label: string; href: `#${DetailPageKey}`; image: string }> = [
+  { label: 'Architectural Services', href: '#service-architectural-services', image: visuals.architectural },
+  { label: 'Interior Design', href: '#service-interior-design', image: visuals.interiorDesign },
+  { label: 'Rendering', href: '#service-rendering', image: visuals.rendering },
+  { label: 'Material Selection / Procurement', href: '#service-material-selection', image: visuals.materialSelection },
+  { label: 'Building + Board Approvals', href: '#service-building-board-approvals', image: visuals.boardApprovals },
+  { label: 'Construction & Site Management', href: '#service-construction-site-management', image: visuals.serviceSiteManagement },
 ];
 
 const servicePageCards: ImageCard[] = [
@@ -2827,16 +2834,19 @@ const serviceWorkflowCards: TextCard[] = [
     eyebrow: '01',
     title: 'Scope before price',
     text: 'Construction numbers based on incomplete drawings will move. Vitalite establishes the property, zoning, owner goals and approval path before a build price is treated as a commitment.',
+    image: visuals.servicesOverviewScope,
   },
   {
     eyebrow: '02',
     title: 'Connect approvals to buildability',
     text: "Your architect's drawings don't automatically reflect your engineer's requirements or your contractor's procurement constraints. Vitalite reviews them together so field surprises get caught on paper first.",
+    image: visuals.servicesOverviewApprovals,
   },
   {
     eyebrow: '03',
     title: 'Manage through closeout',
     text: 'Trade gaps, inspection delays and unresolved punch lists are the three things that stretch GTA projects past their schedule. Vitalite manages all three from site mobilization to final inspection.',
+    image: visuals.servicesOverviewCloseout,
   },
 ];
 
@@ -2844,16 +2854,19 @@ const serviceStartingPointCards: TextCard[] = [
   {
     title: 'I have a property but no drawings',
     text: 'Most permit delays start with drawings that missed a zoning requirement, a structural constraint or a site access issue. Start here to get clarity before the drawings begin.',
+    image: visuals.servicesOverviewProperty,
     pageKey: 'service-architectural-services',
   },
   {
     title: 'I need permits or engineering coordinated',
     text: 'The permit office will flag structural questions. The engineer will flag mechanical questions. Use this path when you need someone who can answer both.',
+    image: visuals.servicesOverviewPermits,
     pageKey: 'service-drawings-permits',
   },
   {
     title: 'I am comparing builders or proposals',
     text: 'Conflicting contractor proposals usually mean the scope was not defined tightly enough. This path adds construction management discipline before a single trade is hired.',
+    image: visuals.servicesOverviewCompare,
     pageKey: 'service-project-management',
   },
 ];
@@ -4020,22 +4033,27 @@ const TextCardGrid = ({ cards, dark = false }: { cards: TextCard[]; dark?: boole
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
     {cards.map((card) => {
       const cardClass = dark
-        ? 'group border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 text-white hover:border-kiewit-yellow transition-colors'
-        : 'group border border-gray-200 bg-white rounded-2xl p-6 sm:p-8 text-black shadow-sm hover:border-kiewit-yellow transition-colors';
+        ? `group border border-white/10 bg-white/5 rounded-2xl ${card.image ? 'overflow-hidden' : 'p-6 sm:p-8'} text-white hover:border-kiewit-yellow transition-colors`
+        : `group border border-gray-200 bg-white rounded-2xl ${card.image ? 'overflow-hidden' : 'p-6 sm:p-8'} text-black shadow-sm hover:border-kiewit-yellow transition-colors`;
       const content = (
         <>
-          {card.eyebrow ? (
-            <div className={`text-[11px] font-bold tracking-[0.18em] uppercase mb-4 ${dark ? 'text-kiewit-yellow' : 'text-gray-500 group-hover:text-kiewit-yellow'}`}>
-              {card.eyebrow}
-            </div>
+          {card.image ? (
+            <img src={card.image} alt={card.title} loading="lazy" decoding="async" className="h-44 w-full object-cover" />
           ) : null}
-          <h3 className="text-2xl sm:text-3xl font-semibold leading-tight mb-5">{card.title}</h3>
-          <p className={`text-base leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{card.text}</p>
-          {card.pageKey ? (
-            <div className={`mt-6 inline-flex items-center text-sm font-bold tracking-[0.12em] uppercase ${dark ? 'text-kiewit-yellow' : 'text-black group-hover:text-kiewit-yellow'}`}>
-              View page <ChevronRight className="w-4 h-4 ml-2" />
-            </div>
-          ) : null}
+          <div className={card.image ? 'p-6 sm:p-8' : ''}>
+            {card.eyebrow ? (
+              <div className={`text-[11px] font-bold tracking-[0.18em] uppercase mb-4 ${dark ? 'text-kiewit-yellow' : 'text-gray-500 group-hover:text-kiewit-yellow'}`}>
+                {card.eyebrow}
+              </div>
+            ) : null}
+            <h3 className="text-2xl sm:text-3xl font-semibold leading-tight mb-5">{card.title}</h3>
+            <p className={`text-base leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{card.text}</p>
+            {card.pageKey ? (
+              <div className={`mt-6 inline-flex items-center text-sm font-bold tracking-[0.12em] uppercase ${dark ? 'text-kiewit-yellow' : 'text-black group-hover:text-kiewit-yellow'}`}>
+                View page <ChevronRight className="w-4 h-4 ml-2" />
+              </div>
+            ) : null}
+          </div>
         </>
       );
 
@@ -4351,8 +4369,9 @@ const ServicesPage = () => (
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {serviceInclusions.map((item) => (
-            <a key={item.href} href={routeHrefFromLegacyHash(item.href)} className="border border-white/10 bg-white/5 rounded-lg p-5 text-white font-medium hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors">
-              {item.label}
+            <a key={item.href} href={routeHrefFromLegacyHash(item.href)} className="group overflow-hidden border border-white/10 bg-white/5 rounded-lg text-white font-medium hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors">
+              <img src={item.image} alt={item.label} loading="lazy" decoding="async" className="h-28 w-full object-cover opacity-85 group-hover:opacity-100 transition-opacity" />
+              <div className="p-5">{item.label}</div>
             </a>
           ))}
         </div>
