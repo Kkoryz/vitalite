@@ -336,6 +336,15 @@ const visuals = {
   bulletFireEgress: visualAsset('bullet-fire-egress'),
   bulletClientCommunication: visualAsset('bullet-client-communication'),
   bulletCloseoutWarranty: visualAsset('bullet-closeout-warranty'),
+  serviceCustomHome: visualAsset('service-custom-home-design-build'),
+  serviceMultiplex: visualAsset('service-multiplex-construction'),
+  serviceGardenLaneway: visualAsset('service-garden-laneway-house'),
+  serviceHomeAdditions: visualAsset('service-home-additions-renovations'),
+  servicePermitsEngineering: visualAsset('service-drawings-permits-engineering'),
+  serviceProjectManagement: visualAsset('service-project-construction-management'),
+  serviceIci: visualAsset('service-ici-design-build'),
+  serviceSiteManagement: visualAsset('service-construction-site-management'),
+  serviceTownhouse: visualAsset('service-townhouse-renovations'),
 };
 
 const translateVisibleText = (language: Language) => {
@@ -1192,49 +1201,49 @@ const servicePageCards: ImageCard[] = [
     title: 'Custom Home Design & Build',
     eyebrow: 'Custom homes',
     summary: 'A GTA custom home where the designer and the builder answer to the same contract — so what gets drawn is what gets built.',
-    image: visuals.customHome,
+    image: visuals.serviceCustomHome,
     href: '#service-custom-homes',
   },
   {
     title: 'Multi-Unit & Multiplex Construction',
     eyebrow: 'Multiplex & investment housing',
     summary: 'Multi-unit residential built to current zoning, code and rental market realities — without the surprises that come from disconnected consultants.',
-    image: visuals.multiplex,
+    image: visuals.serviceMultiplex,
     href: '#service-multiplex',
   },
   {
     title: 'Garden Suites & Laneway Houses',
     eyebrow: 'Secondary suites',
     summary: 'A separate structure on your existing lot — for rental income, a family member, or long-term flexibility — designed and built under one roof.',
-    image: visuals.gardenSuite,
+    image: visuals.serviceGardenLaneway,
     href: '#service-garden-suites',
   },
   {
     title: 'Home Additions & Major Renovations',
     eyebrow: 'Additions',
     summary: 'More space without moving — if the structure, zoning and budget can support it. Vitalite checks before the drawings start.',
-    image: visuals.addition,
+    image: visuals.serviceHomeAdditions,
     href: '#service-home-additions',
   },
   {
     title: 'Drawings, Permits & Engineering',
     eyebrow: 'Permit-ready planning',
     summary: 'Permit drawings that pass on the first submission — and engineering that does not hold up the build while the inspector waits.',
-    image: visuals.permits,
+    image: visuals.servicePermitsEngineering,
     href: '#service-drawings-permits',
   },
   {
     title: 'Project & Construction Management',
     eyebrow: 'Budget and schedule control',
     summary: 'Budget, schedule and trade accountability when the project is too complex to manage with a weekly phone call.',
-    image: visuals.management,
+    image: visuals.serviceProjectManagement,
     href: '#service-project-management',
   },
   {
     title: 'Industrial, Commercial & Institutional',
     eyebrow: 'ICI construction',
     summary: 'Commercial and institutional construction that stays on schedule and keeps the building operational during the work.',
-    image: visuals.ici,
+    image: visuals.serviceIci,
     href: '#service-ici-construction',
   },
 ];
@@ -1272,7 +1281,7 @@ const serviceRenovationCards: ImageCard[] = [
     title: 'Townhouse & Semi-Detached Renovations',
     eyebrow: 'Tight-lot & party wall',
     summary: 'Shared walls, limited site access and permit-sensitive structural changes managed from concept through construction in Toronto townhouses and semis.',
-    image: visuals.addition,
+    image: visuals.serviceTownhouse,
     href: '#service-townhouse-renovations',
   },
   {
@@ -1567,7 +1576,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Construction & Site Management',
     subtitle: "Someone on site who is accountable for the sequence, the quality and the communication — every day.",
-    image: visuals.management,
+    image: visuals.serviceSiteManagement,
     intro: "Most construction problems are visible before they become expensive — if someone is actually watching. A framing crew that misread the drawing. A sub-trade who arrived before the previous trade finished. A material delivery scheduled for the wrong week. Vitalite provides construction and site management as the accountable party on the ground: coordinating trades, managing the schedule, controlling quality and communicating clearly to the owner.",
     answer: "Vitalite manages daily site execution — trade sequencing, procurement timing, quality checks, municipal inspections and client updates — so the construction phase delivers what the drawings and contract promised.",
     bullets: ['Daily trade and schedule coordination', 'Quality control and inspection management', 'Procurement and material timing', 'Owner communication and progress reporting'],
@@ -1594,7 +1603,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Custom Home Design & Build',
     subtitle: "A GTA custom home built without the gap between the design team and the build team.",
-    image: visuals.customHome,
+    image: visuals.serviceCustomHome,
     intro: "Custom home projects in the GTA are long, expensive and heavily dependent on decisions made in the first few months. The zoning determines what the footprint can be. The structural engineer shapes the interior spans. The permit drawings lock in the budget assumptions. And the construction team — if they were not involved during design — often inherits details that cost more to build than the budget assumed. Vitalite manages GTA custom home projects from the first feasibility conversation through drawings, permits, construction and warranty as one connected team.",
     answer: "Vitalite delivers GTA custom homes under a design-build model: one team for concept planning, permit drawings, engineering coordination, trade management, inspections and post-occupancy warranty support.",
     bullets: ['Concept design and architectural coordination', 'Budget planning and construction pricing', 'Permit drawings, engineering and municipal approvals', 'Trade scheduling, site management and PDI'],
@@ -1649,7 +1658,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Townhouse & Semi-Detached Renovations',
     subtitle: "Tight Toronto lots, shared walls and permit-sensitive changes — managed from the start.",
-    image: visuals.addition,
+    image: visuals.serviceTownhouse,
     intro: "Toronto townhouses and semi-detached homes concentrate several construction challenges in one property type: limited side access, party walls that require careful structural and acoustic management, foundation types not always known until demolition starts, and tight footprints where every square foot of addition matters for zoning compliance. Vitalite plans townhouse renovations with these site realities built into the design and construction approach from day one.",
     answer: "Vitalite manages townhouse and semi-detached renovations in Toronto — handling structural review, permit coordination, party wall engineering and construction sequencing for tight-site, permit-sensitive projects.",
     bullets: ['Structural review and engineering coordination', 'Party wall and neighbour considerations', 'Permit applications and inspections', 'Tight-site construction management'],
@@ -1785,7 +1794,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Multi-Unit & Multiplex Construction',
     subtitle: "Multi-unit residential built to zoning, code and rental market realities.",
-    image: visuals.multiplex,
+    image: visuals.serviceMultiplex,
     intro: "Toronto zoning changes have made multiplex conversions and new multi-unit residential builds more viable than at any point in recent history. But viable is not the same as straightforward. Zoning interpretation, site feasibility, building code compliance for separate units, fire separation, parking requirements, utility servicing and permit coordination make multiplex projects among the most technically complex residential work in the city. Vitalite plans and builds multiplex housing with the coordination these projects require.",
     answer: "Vitalite manages GTA multiplex projects from zoning feasibility and design through permit drawings, building code review, construction and occupancy — for investors, developers and homeowners increasing rental density on existing lots.",
     bullets: ['Zoning and site feasibility review', 'Multi-unit architectural and engineering coordination', 'Permit applications and building code compliance', 'Construction management and occupancy planning'],
@@ -1813,7 +1822,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Garden Suites & Laneway Houses',
     subtitle: "A separate structure on your existing lot — for rental income, a family member, or long-term flexibility.",
-    image: visuals.gardenSuite,
+    image: visuals.serviceGardenLaneway,
     intro: "Garden suites, laneway houses and coach houses are standalone dwelling units built on an existing residential lot. They do not require selling the property, applying for a subdivision or major zoning approval in most GTA municipalities. They do require a careful look at lot dimensions, setbacks, site access, servicing, grading and the specific zoning rules that govern secondary suites — before any design work begins.",
     answer: "Vitalite designs, permits and builds garden suites and laneway houses as fully independent dwelling units — handling zoning review, concept design, permit drawings, construction and site coordination from start to finish.",
     bullets: ['Garden suites and laneway houses', 'Zoning and site feasibility review', 'Permit drawings and servicing coordination', 'Construction and site management'],
@@ -1840,7 +1849,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Home Additions & Major Renovations',
     subtitle: "More space without moving — if the structure, zoning and budget can support it.",
-    image: visuals.addition,
+    image: visuals.serviceHomeAdditions,
     intro: "A home addition sounds simple: add a room at the back, add a floor on top. In practice, additions involve structural review of the existing foundation and framing, zoning confirmation of setbacks and height limits, permit drawings with engineering coordination, and a construction sequence that keeps the existing home livable through the build. Vitalite manages home additions with the same coordination as a custom home project — because the complexity is often comparable.",
     answer: "Vitalite plans, permits and builds GTA home additions — rear additions, side additions, second-storey additions and structural alterations — with integrated design, engineering, permit and construction management.",
     bullets: ['Rear and side additions', 'Second-storey and vertical expansions', 'Structural alteration and reconfiguration', 'Permit drawings, engineering and inspections'],
@@ -1868,7 +1877,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Drawings, Permits & Engineering',
     subtitle: "Permit drawings that pass on the first submission — and engineering that does not hold up the build.",
-    image: visuals.permits,
+    image: visuals.servicePermitsEngineering,
     intro: "A permit drawing package is not just design drawings with a stamp on them. It is a specific document set organized per Toronto Building's requirements, with zoning data sheets, code compliance notes, applicable engineer references and the right scope definition for the approval path being taken. Packages that miss required content get returned — adding weeks to a project that cannot move forward without the permit. Vitalite prepares complete permit packages for GTA residential and ICI projects.",
     answer: "Vitalite prepares and coordinates architectural drawings, structural engineering, zoning review, HVAC references and building permit applications for GTA residential and commercial projects — so approvals move forward without rework.",
     bullets: ['Architectural permit drawing packages', 'Zoning and bylaw compliance review', 'Structural and HVAC engineering coordination', 'Municipal permit applications and comment response'],
@@ -1896,7 +1905,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Project & Construction Management',
     subtitle: "Budget, schedule and trade accountability when the project is too complex to manage informally.",
-    image: visuals.management,
+    image: visuals.serviceProjectManagement,
     intro: "Project management in construction is not overhead — it is the difference between a project that delivers what it promised and one that discovers its gaps in the field. For GTA residential and ICI projects above a certain complexity — multiple trades, long schedules, owner-funded procurement, permit sequencing, structural coordination — informal site visits and weekly calls are not sufficient management. Vitalite provides construction project management as a professional service: structured reporting, trade accountability, budget tracking and decision support.",
     answer: "Vitalite manages GTA construction projects end to end — schedules, sub-trade contracts, quality control, inspections, budget tracking and client communication — as the accountable project management layer between the owner and the construction process.",
     bullets: ['Schedule and trade sequencing', 'Budget tracking and change control', 'Quality control and inspection management', 'Client reporting and decision support'],
@@ -1924,7 +1933,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     category: 'SERVICES',
     title: 'Industrial, Commercial & Institutional Construction',
     subtitle: "Commercial and institutional construction that stays on schedule and keeps the building operational.",
-    image: visuals.ici,
+    image: visuals.serviceIci,
     intro: "ICI construction in the GTA operates under different constraints than residential work: tighter operational windows, more complex permit categories, higher insurance requirements and clients whose business continuity depends on the project finishing on time. Vitalite brings the same disciplined planning and coordination it uses for residential design-build to commercial, industrial and institutional scopes — with the added attention to operational sequencing, occupancy compliance and building communication that occupied facilities require.",
     answer: "Vitalite delivers ICI construction services — warehouses, offices, retail build-outs and institutional facilities — under a design-build or construction management model focused on compliance, schedule control and operational continuity.",
     bullets: ['Warehouse and light industrial', 'Office and retail build-outs', 'Institutional facility improvements', 'Compliance, permitting and operations continuity'],
@@ -3817,6 +3826,38 @@ function imageForDetailBullet(item: string, page: DetailPageContent) {
   return page.image;
 }
 
+function imageForDetailSection(section: { heading: string; text: string }, page: DetailPageContent) {
+  if (page.category !== 'SERVICES') return page.image;
+
+  const text = `${section.heading} ${section.text} ${page.title}`.toLowerCase();
+  const has = (...terms: string[]) => terms.some((term) => text.includes(term));
+
+  if (has('portfolio', 'active examples', 'scope examples', 'project types', 'examples')) return page.image;
+  if (has('construction', 'site logistics', 'site sequencing', 'living through construction', 'occupied', 'operational')) {
+    return visuals.serviceSiteManagement;
+  }
+  if (has('condo board', 'property manager', 'committee of adjustment', 'municipal permit', 'approval')) {
+    return visuals.boardApprovals;
+  }
+  if (has('drawing', 'permit package', 'submission', 'engineering coordination', 'comment response')) {
+    return visuals.servicePermitsEngineering;
+  }
+  if (has('budget', 'pricing', 'cost', 'lead time', 'procurement')) {
+    return visuals.bulletBudgetPlanning;
+  }
+  if (has('zoning', 'setback', 'lot coverage', 'height', 'lot', 'bylaw', 'site feasibility')) {
+    return visuals.bulletZoningReview;
+  }
+  if (has('structural', 'mechanical', 'hvac', 'electrical', 'plumbing', 'foundation')) {
+    return visuals.bulletMepCoordination;
+  }
+  if (has('interior', 'finish', 'material', 'kitchen', 'bath', 'millwork', 'cabinetry')) {
+    return visuals.interiorDesign;
+  }
+
+  return imageForDetailBullet(`${section.heading} ${section.text}`, page);
+}
+
 const subPageHeroes: Record<MainPageKey, { category: string; title: string; desc: string; image: string }> = {
   services: {
     category: 'SERVICES',
@@ -4170,12 +4211,21 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {page.sections.length > 0 ? (
         <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-            {page.sections.map((section) => (
-              <article key={section.heading} className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8">
-                <h2 className="text-2xl sm:text-3xl font-medium text-white mb-5">{section.heading}</h2>
-                <p className="text-base sm:text-lg text-gray-300 leading-relaxed">{section.text}</p>
-              </article>
-            ))}
+            {page.sections.map((section) => {
+              const sectionImage = page.category === 'SERVICES' ? imageForDetailSection(section, page) : null;
+
+              return (
+                <article key={section.heading} className={`border border-white/10 bg-white/5 rounded-2xl ${sectionImage ? 'overflow-hidden' : 'p-6 sm:p-8'}`}>
+                  {sectionImage ? (
+                    <img src={sectionImage} alt={`${page.title}: ${section.heading}`} loading="lazy" decoding="async" className="h-56 w-full object-cover opacity-90" />
+                  ) : null}
+                  <div className={sectionImage ? 'p-6 sm:p-8' : ''}>
+                    <h2 className="text-2xl sm:text-3xl font-medium text-white mb-5">{section.heading}</h2>
+                    <p className="text-base sm:text-lg text-gray-300 leading-relaxed">{section.text}</p>
+                  </div>
+                </article>
+              );
+            })}
           </motion.div>
         </section>
       ) : null}
