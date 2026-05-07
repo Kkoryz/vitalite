@@ -1,20 +1,16 @@
 import assert from 'node:assert/strict';
 import {
-  LEAD_CTA_ENTRY_PLACEMENT,
-  LEAD_CTA_POPUP_DELAY_MS,
   getLeadDisqualification,
-  shouldShowLeadCtaEntry,
+  shouldShowMobileContactBar,
   shouldBlockLeadSubmission,
   type LeadInquiryType,
 } from './leadQualification';
 
 const blockedInquiryTypes: LeadInquiryType[] = ['career', 'vendor', 'small-repair'];
 
-assert.equal(LEAD_CTA_POPUP_DELAY_MS, 60_000);
-assert.equal(LEAD_CTA_ENTRY_PLACEMENT, 'bottom-right');
-assert.equal(shouldShowLeadCtaEntry('home'), true);
-assert.equal(shouldShowLeadCtaEntry('service-custom-homes'), true);
-assert.equal(shouldShowLeadCtaEntry('contact-us'), false);
+assert.equal(shouldShowMobileContactBar('home'), true);
+assert.equal(shouldShowMobileContactBar('service-custom-homes'), true);
+assert.equal(shouldShowMobileContactBar('contact-us'), false);
 
 for (const inquiryType of blockedInquiryTypes) {
   assert.equal(

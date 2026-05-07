@@ -12,7 +12,6 @@ import {
   Instagram,
   Linkedin,
   Menu,
-  MessageCircle,
   Pause,
   PhoneCall,
   Play,
@@ -21,10 +20,8 @@ import {
   X,
 } from 'lucide-react';
 import {
-  LEAD_CTA_ENTRY_PLACEMENT,
-  LEAD_CTA_POPUP_DELAY_MS,
   getLeadDisqualification,
-  shouldShowLeadCtaEntry,
+  shouldShowMobileContactBar,
   type LeadInquiryType,
 } from './leadQualification';
 import {
@@ -5532,7 +5529,7 @@ const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: C
     setStatus('sending');
     data.set('lead_source', source);
     data.set('lead_filter', 'qualified-project-inquiry');
-    data.set('_subject', source === '60-second-popup' ? 'Vitalite popup project inquiry' : 'Vitalite project inquiry');
+    data.set('_subject', 'Vitalite project inquiry');
 
     try {
       const res = await fetch(FORMSPREE_ENDPOINT, {
@@ -5714,146 +5711,27 @@ const ContactPage = () => (
   </>
 );
 
-const LEAD_CTA_DISMISSED_KEY = 'vitalite-lead-cta-dismissed';
-const LEAD_CTA_ENGAGED_KEY = 'vitalite-lead-cta-engaged';
-
-const LeadCtaPopup = ({ activePage }: { activePage: PageKey }) => {
-  const [open, setOpen] = useState(false);
-  const [formSource, setFormSource] = useState<'floating-cta' | '60-second-popup'>('floating-cta');
-  const showEntry = shouldShowLeadCtaEntry(activePage);
-  const entryPositionClass = LEAD_CTA_ENTRY_PLACEMENT === 'bottom-right' ? 'bottom-4 right-4 sm:bottom-6 sm:right-6' : '';
-
-  const rememberEngagement = () => {
-    window.localStorage.setItem(LEAD_CTA_ENGAGED_KEY, Date.now().toString());
-  };
-
-  const closePopup = () => {
-    window.localStorage.setItem(LEAD_CTA_DISMISSED_KEY, Date.now().toString());
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (!showEntry) {
-      setOpen(false);
-      return;
-    }
-
-    const alreadyHandled =
-      window.localStorage.getItem(LEAD_CTA_DISMISSED_KEY) ||
-      window.localStorage.getItem(LEAD_CTA_ENGAGED_KEY);
-
-    if (alreadyHandled) return;
-
-    const timer = window.setTimeout(() => {
-      setFormSource('60-second-popup');
-      setOpen(true);
-    }, LEAD_CTA_POPUP_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [showEntry]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const previousOverflow = document.body.style.overflow;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closePopup();
-    };
-
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
+const MobileContactBar = ({ activePage }: { activePage: PageKey }) => {
+  if (!shouldShowMobileContactBar(activePage)) return null;
 
   return (
-    <>
-      {showEntry && !open && (
-        <button
-          type="button"
-          onClick={() => {
-            setFormSource('floating-cta');
-            setOpen(true);
-          }}
-          aria-label="Open project review form"
-          className={`fixed ${entryPositionClass} z-[70] max-w-[calc(100vw-2rem)] bg-kiewit-yellow text-black shadow-2xl rounded-lg border border-black/10 px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 hover:bg-white hover:-translate-y-0.5 transition-all`}
+    <div className="fixed inset-x-0 bottom-0 z-[70] bg-black/92 border-t border-white/10 px-4 py-3 sm:hidden">
+      <div className="grid grid-cols-2 gap-3">
+        <a
+          href={`tel:${CONTACT_PHONE_TEL}`}
+          className="inline-flex items-center justify-center gap-2 bg-kiewit-yellow text-black font-bold rounded-lg py-3"
         >
-          <span className="w-9 h-9 rounded-full bg-black text-kiewit-yellow flex items-center justify-center shrink-0">
-            <MessageCircle className="w-5 h-5" />
-          </span>
-          <span className="text-sm sm:text-base font-extrabold leading-tight whitespace-nowrap">Project Form</span>
-        </button>
-      )}
-      <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[90] bg-black/72 backdrop-blur-sm px-4 py-6 sm:py-8 flex items-end sm:items-center justify-center"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Start a Vitalite project review"
+          <PhoneCall className="w-4 h-4" />
+          Call
+        </a>
+        <a
+          href={routeHref('contact-us')}
+          className="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-bold rounded-lg py-3 hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
         >
-          <motion.div
-            initial={{ y: 28, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 28, opacity: 0 }}
-            className="w-full max-w-[620px] max-h-[calc(100vh-2rem)] overflow-y-auto bg-kiewit-dark text-white border border-white/15 rounded-lg shadow-2xl"
-          >
-            <div className="p-5 sm:p-7">
-              <div className="flex items-start justify-between gap-5 mb-5">
-                <div>
-                  <div className="text-kiewit-yellow text-[12px] font-bold uppercase mb-2">Project Review</div>
-                  <h2 className="text-2xl sm:text-3xl font-bold leading-tight">Planning a GTA build or renovation?</h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={closePopup}
-                  aria-label="Close project review popup"
-                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors shrink-0"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-5">
-                Share an active design-build, permit, addition, multiplex, garden suite, renovation or ICI project. You can send details here or call Vitalite directly.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-5">
-                <a
-                  href={`tel:${CONTACT_PHONE_TEL}`}
-                  onClick={() => {
-                    rememberEngagement();
-                    setOpen(false);
-                  }}
-                  className="inline-flex items-center justify-center gap-2 bg-kiewit-yellow text-black font-bold rounded-lg px-4 py-3 hover:bg-white transition-colors"
-                >
-                  <PhoneCall className="w-5 h-5" />
-                  Call {CONTACT_PHONE_DISPLAY}
-                </a>
-                <a
-                  href={routeHref('contact-us')}
-                  onClick={rememberEngagement}
-                  className="inline-flex items-center justify-center gap-2 border border-white/20 rounded-lg px-4 py-3 font-bold hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
-                >
-                  Full form
-                  <ChevronRight className="w-4 h-4" />
-                </a>
-              </div>
-
-              <div className="border-t border-white/10 pt-5">
-                <ContactForm variant="compact" source={formSource} onSuccess={rememberEngagement} />
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-      </AnimatePresence>
-    </>
+          Project Form
+        </a>
+      </div>
+    </div>
   );
 };
 
@@ -6014,11 +5892,11 @@ export default function App() {
   }, [activePage, language, searchOpen]);
 
   return (
-    <div className="font-sans antialiased text-white bg-kiewit-dark">
+    <div className={`font-sans antialiased text-white bg-kiewit-dark ${shouldShowMobileContactBar(activePage) ? 'pb-[72px] sm:pb-0' : ''}`}>
       <Navbar activePage={activePage} language={language} onLanguageChange={setLanguage} onSearchOpen={() => setSearchOpen(true)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} />
       {renderPage(activePage)}
-      <LeadCtaPopup activePage={activePage} />
+      <MobileContactBar activePage={activePage} />
       <Footer language={language} />
     </div>
   );

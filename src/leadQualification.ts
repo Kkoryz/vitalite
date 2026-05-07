@@ -1,6 +1,3 @@
-export const LEAD_CTA_POPUP_DELAY_MS = 60_000;
-export const LEAD_CTA_ENTRY_PLACEMENT = 'bottom-right';
-
 export type LeadInquiryType =
   | 'project-owner'
   | 'owner-representative'
@@ -91,6 +88,6 @@ export function shouldBlockLeadSubmission(input: LeadQualificationInput) {
   return getLeadDisqualification(input) !== null;
 }
 
-export function shouldShowLeadCtaEntry(pageKey: string) {
+export function shouldShowMobileContactBar(pageKey: string) {
   return pageKey !== 'contact-us';
 }
