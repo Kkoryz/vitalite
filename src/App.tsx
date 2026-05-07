@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
+const ToolsHub = React.lazy(() => import('./Calculators').then((m) => ({ default: m.ToolsHub })));
+const AdditionCostCalculator = React.lazy(() => import('./Calculators').then((m) => ({ default: m.AdditionCostCalculator })));
+const LanewayCostCalculator = React.lazy(() => import('./Calculators').then((m) => ({ default: m.LanewayCostCalculator })));
+const TeardownDecisionTool = React.lazy(() => import('./Calculators').then((m) => ({ default: m.TeardownDecisionTool })));
+const PermitTimelineEstimator = React.lazy(() => import('./Calculators').then((m) => ({ default: m.PermitTimelineEstimator })));
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ChevronLeft,
@@ -114,6 +119,7 @@ type DetailPageContent = {
   steps?: string[];
   faqs?: Array<{ question: string; answer: string }>;
   relatedLinks?: Array<{ label: string; key: string }>;
+  officialResources?: Array<{ label: string; url: string; note?: string }>;
   projectKeys?: string[];
   isProject?: boolean;
   projectMeta?: {
@@ -123,6 +129,9 @@ type DetailPageContent = {
     size: string;
     headline: string;
     narrative: string[];
+    duration?: string;
+    approvalPath?: string;
+    projectType?: string;
   };
 };
 
@@ -131,6 +140,7 @@ type LocalSeoContext = {
   planningContext: string;
   projectFit: string;
   approvalFocus: string;
+  serviceNotes?: Record<string, { serviceScope: string; shortAnswer: string; introNote?: string; readinessNote?: string; helpNote?: string }>;
 };
 type SeoDataWithLocalContext = typeof seoData & {
   locations?: Array<{ slug: string; name: string }>;
@@ -171,6 +181,7 @@ const footerSeoLinks = [
   { key: 'communities-hub', label: 'Communities' },
   { key: 'faq', label: 'FAQ' },
   { key: 'ai-gta-design-build-guide', label: 'AI Guide' },
+  { key: 'tools-hub', label: 'Free Tools' },
 ];
 
 const pageKeys = navItems.map((item) => item.key);
@@ -178,7 +189,10 @@ const pageKeys = navItems.map((item) => item.key);
 const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
 const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
 const localSeoData = seoData as SeoDataWithLocalContext;
-const staticSeoPageKeys = ['locations-hub', 'communities-hub', 'faq', 'ai-gta-design-build-guide'];
+const staticSeoPageKeys = [
+  'locations-hub', 'communities-hub', 'faq', 'ai-gta-design-build-guide',
+  'tools-hub', 'tool-addition-cost', 'tool-laneway-cost', 'tool-teardown-decision', 'tool-permit-timeline',
+];
 
 const frenchText: Record<string, string> = {
   Services: 'Services',
@@ -348,12 +362,17 @@ const visuals = {
   serviceTownhouse: visualAsset('service-townhouse-renovations'),
   whyAboutUs: visualAsset('why-about-us'),
   whyVitaliteWay: visualAsset('why-vitalite-way'),
-  workCustomHomes: visualAsset('work-custom-homes'),
-  workMultiplex: visualAsset('work-multiplex'),
-  workGardenSuites: visualAsset('work-garden-suites'),
-  workAdditions: visualAsset('work-additions'),
-  workIci: visualAsset('work-ici'),
-  workTownhouses: visualAsset('work-townhouses'),
+  workOverview: visualAsset('ai-work-overview'),
+  workCustomHomes: visualAsset('ai-work-custom-homes'),
+  workMultiplex: visualAsset('ai-work-multiplex'),
+  workGardenSuites: visualAsset('ai-work-garden-suites'),
+  workAdditions: visualAsset('ai-work-additions'),
+  workIci: visualAsset('ai-work-ici'),
+  workFullInteriors: visualAsset('ai-work-full-interiors'),
+  workCondos: visualAsset('ai-work-condos-apartments'),
+  workLofts: visualAsset('ai-work-lofts-open-concept'),
+  workOlderHomes: visualAsset('ai-work-older-toronto-homes'),
+  workTownhouses: visualAsset('ai-work-townhouses'),
   blogRenovationCosts: visualAsset('blog-renovation-costs'),
   blogRenovationLaws: visualAsset('blog-renovation-laws'),
   blogGardenSuiteIdeas: visualAsset('blog-garden-suite-ideas'),
@@ -363,6 +382,126 @@ const visuals = {
   servicesOverviewProperty: visualAsset('services-overview-property-no-drawings'),
   servicesOverviewPermits: visualAsset('services-overview-permits-engineering'),
   servicesOverviewCompare: visualAsset('services-overview-compare-builders'),
+  seoGtaServiceAreas: visualAsset('seo-gta-service-area-pages'),
+  seoNeighbourhoodCommunities: visualAsset('seo-neighbourhood-community-pages'),
+  homeHeroDesignBuild: visualAsset('home-hero-design-build'),
+  homeHeroCustomHome: visualAsset('home-hero-custom-home'),
+  homeHeroMultiUnit: visualAsset('home-hero-multi-unit'),
+  homeIntegratedPermitPlanning: visualAsset('home-integrated-permit-planning'),
+  homeIntegratedCustomHomeExterior: visualAsset('home-integrated-custom-home-exterior'),
+  homeIntegratedManagementMeeting: visualAsset('home-integrated-management-meeting'),
+  homeExpertiseCustomHome: visualAsset('home-expertise-custom-home'),
+  homeExpertiseMultiplex: visualAsset('home-expertise-multiplex'),
+  homeExpertiseGardenSuite: visualAsset('home-expertise-garden-suite'),
+  homeExpertiseAddition: visualAsset('home-expertise-addition'),
+  homeExpertisePermits: visualAsset('home-expertise-permits'),
+  homeExpertiseManagement: visualAsset('home-expertise-management'),
+  homeExpertiseIci: visualAsset('home-expertise-ici'),
+  homeMarketCustomHomes: visualAsset('home-market-custom-homes'),
+  homeMarketMultiplex: visualAsset('home-market-multiplex'),
+  homeMarketGardenSuite: visualAsset('home-market-garden-suite'),
+  homeMarketAdditions: visualAsset('home-market-additions'),
+  homeMarketPermitsEngineering: visualAsset('home-market-permits-engineering'),
+  homeMarketConstructionManagement: visualAsset('home-market-construction-management'),
+  homeMarketIci: visualAsset('home-market-ici'),
+  homeProcessConsultEvaluate: visualAsset('home-process-consult-evaluate'),
+  homeProcessDesignPriceContract: visualAsset('home-process-design-price-contract'),
+  homeProcessReviewEngineerPermit: visualAsset('home-process-review-engineer-permit'),
+  homeProcessBuildInspectSupport: visualAsset('home-process-build-inspect-support'),
+};
+
+const detailSectionImages: Record<string, Record<string, string>> = {
+  'why-about-us': {
+    'Who We Work With': visualAsset('section-why-about-clients'),
+    'How We Approach a Project': visualAsset('section-why-about-approach'),
+    'Why the Structure Matters': visualAsset('section-why-about-structure'),
+    'GTA Realities We Work Around Every Week': visualAsset('section-why-about-gta-realities'),
+  },
+  'why-the-vitalite-way': {
+    'Consultation — Define What You Actually Need': visualAsset('section-why-way-consultation'),
+    'Site and Existing-Condition Review': visualAsset('section-why-way-existing-conditions'),
+    'Concept Design, Budget and Delivery Model': visualAsset('section-why-way-concept-budget'),
+    'Zoning, Permits and Engineering': visualAsset('section-why-way-permits-engineering'),
+    'Construction, PDI and Closeout': visualAsset('section-why-way-closeout'),
+  },
+  'why-design-build': {
+    'The Problem Design-Build Solves': visualAsset('section-why-designbuild-problem'),
+    'When It Is Most Useful': visualAsset('section-why-designbuild-useful'),
+    'What Owners Still Control': visualAsset('section-why-designbuild-owner-control'),
+    'When Traditional Delivery Still Works': visualAsset('section-why-designbuild-traditional'),
+  },
+  'why-testimonials': {
+    'Relevant Project Context': visualAsset('section-why-proof-project-context'),
+    'Documentation That Matters': visualAsset('section-why-proof-documentation'),
+    'References By Project Type': visualAsset('section-why-proof-references'),
+    'Closeout And Warranty-Oriented Support': visualAsset('section-why-proof-closeout'),
+  },
+  'why-in-the-news': {
+    '2025 Active Projects': visualAsset('section-news-active-2025'),
+    '2026 Project Pipeline': visualAsset('section-news-pipeline-2026'),
+    'GTA Construction Market Context': visualAsset('section-news-market-context'),
+    'Media and Industry Recognition': visualAsset('section-news-recognition'),
+  },
+  'work-custom-homes': {
+    'Willowdale, North York': visualAsset('section-work-custom-willowdale'),
+    'Markham': visualAsset('section-work-custom-markham'),
+    'Toronto Infill and Lot Severance': visualAsset('section-work-custom-infill-severance'),
+    'One Contract, Full Delivery': visualAsset('section-work-custom-one-contract'),
+  },
+  'work-multiplex': {
+    'Lansdowne Toronto — Multi-Unit with Laneway Suite': visualAsset('section-work-multiplex-lansdowne'),
+    'Bedford Park 2026 — Vertical Addition Over an Occupied Building': visualAsset('section-work-multiplex-bedford-park'),
+    'Zoning and Permit Path': visualAsset('section-work-multiplex-zoning-permit'),
+    'Investment Planning Before Design': visualAsset('section-work-multiplex-investment'),
+  },
+  'work-garden-suites': {
+    'Zoning and Permit Path': visualAsset('section-work-garden-zoning-permit'),
+    'What Drives the Cost': visualAsset('section-work-garden-cost-drivers'),
+    'Rental Income and Long-Term Value': visualAsset('section-work-garden-rental-value'),
+    'Who the Projects Are For': visualAsset('section-work-garden-client-types'),
+  },
+  'work-additions': {
+    'Stouffville — Single-Storey Addition': visualAsset('section-work-additions-stouffville'),
+    'Willowdale — 1,500 sq ft Expansion': visualAsset('section-work-additions-willowdale'),
+    'Erindale Mississauga — Vertical Side-Split Addition': visualAsset('section-work-additions-erindale'),
+    'Stouffville Retrofit — Multi-Space Expansion': visualAsset('section-work-additions-retrofit'),
+  },
+  'work-ici': {
+    'Warehouse and Light Industrial': visualAsset('section-work-ici-warehouse'),
+    'Office and Retail Construction': visualAsset('section-work-ici-office-retail'),
+    'Institutional and Specialized Facilities': visualAsset('section-work-ici-institutional'),
+    'Early Design-Build Engagement': visualAsset('section-work-ici-early-engagement'),
+  },
+  'work-condos': {
+    'Board Package Preparation': visualAsset('section-work-condos-board-package'),
+    'Material Selection and Procurement': visualAsset('section-work-condos-materials'),
+    'Kitchen and Bathroom Sequencing': visualAsset('section-work-condos-kitchen-bath'),
+    'Scope Examples': visualAsset('section-work-condos-scope-examples'),
+  },
+  'work-lofts': {
+    'Structural and Mechanical Coordination': visualAsset('section-work-lofts-structural-mechanical'),
+    'Lighting and Material Decisions': visualAsset('section-work-lofts-lighting-materials'),
+    'Live-Work Space Planning': visualAsset('section-work-lofts-live-work'),
+    'Building Approval': visualAsset('section-work-lofts-building-approval'),
+  },
+  'work-older-homes': {
+    'Existing Conditions Assessment': visualAsset('section-work-older-existing-conditions'),
+    'Structural Alterations and Code Compliance': visualAsset('section-work-older-structural-code'),
+    'Preserving Character While Improving Performance': visualAsset('section-work-older-character-performance'),
+    'Hazardous Material Management': visualAsset('section-work-older-hazardous-materials'),
+  },
+  'work-townhouses': {
+    'Party Wall and Structural Coordination': visualAsset('section-work-townhouses-party-wall'),
+    'Narrow-Lot Site Logistics': visualAsset('section-work-townhouses-narrow-lot'),
+    'Additions and Vertical Expansions': visualAsset('section-work-townhouses-vertical-expansion'),
+    'Basement Alterations and Suite Creation': visualAsset('section-work-townhouses-basement-suite'),
+  },
+  'work-full-interiors': {
+    'Kitchen Renovations': visualAsset('section-work-interiors-kitchen'),
+    'Bathroom Renovations': visualAsset('section-work-interiors-bathroom'),
+    'Material Procurement and Lead Times': visualAsset('section-work-interiors-procurement'),
+    'Full Scope Projects': visualAsset('section-work-interiors-full-scope'),
+  },
 };
 
 const translateVisibleText = (language: Language) => {
@@ -694,7 +833,7 @@ const heroSlides = [
     link: 'Explore design-build services',
     video: publicAsset('vitalite-hero-design-build.mp4'),
     displayDurationMs: 16000,
-    image: visuals.designBuild,
+    image: visuals.homeHeroDesignBuild,
   },
   {
     category: 'CUSTOM HOMES',
@@ -702,7 +841,7 @@ const heroSlides = [
     desc: 'We connect lifestyle goals, lot constraints, architectural direction, budgets and site execution before construction starts, so each custom home has a clear path from concept to handover.',
     link: 'Custom home design & build',
     displayDurationMs: 6500,
-    image: visuals.customHome,
+    image: visuals.homeHeroCustomHome,
   },
   {
     category: 'MULTI-UNIT HOUSING',
@@ -710,7 +849,7 @@ const heroSlides = [
     desc: 'For investors and homeowners adding density or space, Vitalite coordinates feasibility, zoning, drawings, permits, trades and inspections around one managed construction plan.',
     link: 'Plan residential investment work',
     displayDurationMs: 6500,
-    image: visuals.multiplex,
+    image: visuals.homeHeroMultiUnit,
   },
 ];
 
@@ -890,9 +1029,9 @@ const IntegratedSolutions = () => {
           </a>
         </div>
         <div className="relative h-[600px] hidden lg:block">
-          <img src={visuals.permits} alt="Construction planning" loading="lazy" decoding="async" className="absolute top-4 right-0 w-[45%] h-[200px] object-cover rounded-2xl z-0 shadow-xl" />
-          <img src={visuals.customHome} alt="Custom home exterior" loading="lazy" decoding="async" className="absolute left-0 top-1/2 -translate-y-1/2 w-[75%] h-[420px] object-cover rounded-2xl z-10 shadow-2xl" />
-          <img src={visuals.management} alt="Project management meeting" loading="lazy" decoding="async" className="absolute bottom-4 right-8 w-[40%] h-[220px] object-cover rounded-2xl z-20 shadow-xl" />
+          <img src={visuals.homeIntegratedPermitPlanning} alt="Construction planning" loading="lazy" decoding="async" className="absolute top-4 right-0 w-[45%] h-[200px] object-cover rounded-2xl z-0 shadow-xl" />
+          <img src={visuals.homeIntegratedCustomHomeExterior} alt="Custom home exterior" loading="lazy" decoding="async" className="absolute left-0 top-1/2 -translate-y-1/2 w-[75%] h-[420px] object-cover rounded-2xl z-10 shadow-2xl" />
+          <img src={visuals.homeIntegratedManagementMeeting} alt="Project management meeting" loading="lazy" decoding="async" className="absolute bottom-4 right-8 w-[40%] h-[220px] object-cover rounded-2xl z-20 shadow-xl" />
         </div>
       </motion.div>
     </section>
@@ -946,49 +1085,49 @@ const expertiseItems = [
     title: 'Custom Home Design & Build',
     desc: 'We help owners turn a custom-home idea into a buildable plan by aligning lifestyle goals, lot constraints, architectural drawings, budgets, permits, material choices and site delivery before construction begins.',
     link: 'Custom home approach',
-    image: visuals.customHome,
+    image: visuals.homeExpertiseCustomHome,
   },
   {
     tab: 'Multiplex Housing',
     title: 'Multi-Unit & Multiplex Residential Construction',
     desc: 'We help investors and property owners evaluate unit strategy, zoning fit, code requirements, systems upgrades, rental potential and construction sequencing for compliant multi-unit residential projects.',
     link: 'Multiplex construction',
-    image: visuals.multiplex,
+    image: visuals.homeExpertiseMultiplex,
   },
   {
     tab: 'Garden Suites',
     title: 'Garden Suites, Laneway Houses & Coach Houses',
     desc: 'We coordinate garden suites, laneway houses and coach houses from early feasibility through drawings, permits, servicing, access planning and managed construction.',
     link: 'Secondary dwelling units',
-    image: visuals.gardenSuite,
+    image: visuals.homeExpertiseGardenSuite,
   },
   {
     tab: 'Additions',
     title: 'Home Additions & Major Renovations',
     desc: 'We plan additions and major renovations around structure, code, permit path, existing-home conditions and finish continuity, so added space feels intentional rather than patched on.',
     link: 'Addition and renovation work',
-    image: visuals.addition,
+    image: visuals.homeExpertiseAddition,
   },
   {
     tab: 'Permits & Engineering',
     title: 'Drawings, Permits & Engineering Coordination',
     desc: 'We organize architectural drawings, structural inputs, HVAC or mechanical coordination, zoning review and permit applications so construction pricing is based on a clearer scope.',
     link: 'Permit-ready documentation',
-    image: visuals.permits,
+    image: visuals.homeExpertisePermits,
   },
   {
     tab: 'Project Management',
     title: 'Project Management & Construction Management',
     desc: 'We manage schedules, budgets, trades, procurement, inspections, site meetings, quality control and client communication so complex projects have visible accountability.',
     link: 'Construction management',
-    image: visuals.management,
+    image: visuals.homeExpertiseManagement,
   },
   {
     tab: 'ICI Construction',
     title: 'Industrial, Commercial & Institutional Construction',
     desc: 'We support warehouses, offices, retail spaces and institutional facilities with practical design-build and construction management focused on compliance, durability and operating needs.',
     link: 'ICI construction services',
-    image: visuals.ici,
+    image: visuals.homeExpertiseIci,
   },
 ];
 
@@ -1060,37 +1199,37 @@ const Markets = () => {
     {
       name: 'Custom Homes',
       summary: 'Custom homes, rebuilds and owner-focused residences planned around lot conditions, approvals, budget and finish quality.',
-      img: visuals.customHome,
+      img: visuals.homeMarketCustomHomes,
     },
     {
       name: 'Multi-Unit / Multiplex',
       summary: 'Multi-unit housing, separate suites and investment residential projects planned for code compliance and rental potential.',
-      img: visuals.multiplex,
+      img: visuals.homeMarketMultiplex,
     },
     {
       name: 'Garden Suite / Laneway House',
       summary: 'Secondary dwelling units that add family flexibility, rental income potential and long-term property value.',
-      img: visuals.gardenSuite,
+      img: visuals.homeMarketGardenSuite,
     },
     {
       name: 'Home Additions & Alterations',
       summary: 'Additions, extensions, structural changes and whole-house renovations coordinated with permits and existing conditions.',
-      img: visuals.addition,
+      img: visuals.homeMarketAdditions,
     },
     {
       name: 'Drawings, Permits & Engineering',
       summary: 'Permit-ready drawings, structural coordination, HVAC inputs, zoning review and municipal submission support.',
-      img: visuals.permits,
+      img: visuals.homeMarketPermitsEngineering,
     },
     {
       name: 'Project / Construction Management',
       summary: 'Budget, schedule, trades, procurement, quality control, inspections and client communication managed together.',
-      img: visuals.management,
+      img: visuals.homeMarketConstructionManagement,
     },
     {
       name: 'ICI Construction',
       summary: 'Warehouse, office, retail, industrial and institutional projects planned around compliance, durability and operations.',
-      img: visuals.ici,
+      img: visuals.homeMarketIci,
     },
   ];
 
@@ -1146,22 +1285,22 @@ const ProjectProcess = () => {
     {
       title: 'Consult & Evaluate',
       detail: 'Initial consultation, project goals, budget direction, site measurement and existing-condition review.',
-      img: visuals.siteEvaluation,
+      img: visuals.homeProcessConsultEvaluate,
     },
     {
       title: 'Design, Price & Contract',
       detail: 'Concept design, 2D or 3D planning, budgetary quotation and the right contracting model for the project.',
-      img: visuals.designBuild,
+      img: visuals.homeProcessDesignPriceContract,
     },
     {
       title: 'Review, Engineer & Permit',
       detail: 'Zoning review, building code review, structural, HVAC and mechanical coordination, then permit submission.',
-      img: visuals.permits,
+      img: visuals.homeProcessReviewEngineerPermit,
     },
     {
       title: 'Build, Inspect & Support',
       detail: 'Pre-construction preparation, site management, quality control, PDI, move-in support and aftercare warranty.',
-      img: visuals.management,
+      img: visuals.homeProcessBuildInspectSupport,
     },
   ];
 
@@ -1378,25 +1517,25 @@ const workPageCards: ImageCard[] = [
   {
     title: 'Full Interiors',
     summary: 'Kitchen, bathroom and full-suite interior renovations where the trade sequencing is as important as the finish selection.',
-    image: visuals.interiorDesign,
+    image: visuals.workFullInteriors,
     href: '#work-full-interiors',
   },
   {
     title: 'Condos & Apartments',
     summary: 'Toronto condo renovations with board approval coordination, elevator scheduling and building-rule compliance built into the project plan.',
-    image: visuals.condo,
+    image: visuals.workCondos,
     href: '#work-condos',
   },
   {
     title: 'Lofts & Open-Concept',
     summary: 'Open-plan renovations where structural exposure means every trade decision is a design decision — coordinated before demolition begins.',
-    image: visuals.loft,
+    image: visuals.workLofts,
     href: '#work-lofts',
   },
   {
     title: 'Older Toronto Homes',
     summary: 'Pre-war and mid-century homes renovated after a condition assessment — so knob-and-tube wiring and balloon framing are in the budget before drawings start.',
-    image: visuals.heritage,
+    image: visuals.workOlderHomes,
     href: '#work-older-homes',
   },
   {
@@ -1451,6 +1590,13 @@ const blogPageCards: ImageCard[] = [
     href: '#blog-fixer-upper-vs-new',
   },
 ];
+
+const torontoOfficialLinks = {
+  buildingPermits: { label: 'Building Permits — City of Toronto', url: 'https://www.toronto.ca/services-payments/building-construction/apply-for-a-building-permit/', note: 'Official permit application portal' },
+  gardenSuites: { label: 'Garden Suites — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/garden-suites/', note: 'Zoning rules, eligibility and application guidance' },
+  lanewaySuites: { label: 'Laneway Suites — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/laneway-suites/', note: 'By-law requirements, fire access and servicing rules' },
+  multiplex: { label: 'Multiplex Considerations — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/multiplexes/', note: 'As-of-right permissions and design considerations' },
+};
 
 const detailPages: Record<DetailPageKey, DetailPageContent> = {
   'service-architectural-services': {
@@ -1828,6 +1974,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { question: "Is a Committee of Adjustment required for a multiplex?", answer: "Not always. Many multiplex configurations now comply as of right under updated zoning. If the proposed building requires variances — setbacks, height, lot coverage — a CoA application is necessary. Vitalite assesses the zoning position at the start of the project." },
       { question: "What is the construction timeline for a Toronto multiplex?", answer: "Permits for a four-unit multiplex typically take six to twelve months to obtain depending on complexity. Construction adds another eight to fourteen months. Total from feasibility to occupancy is commonly eighteen to thirty months." },
     ],
+    officialResources: [torontoOfficialLinks.multiplex, torontoOfficialLinks.buildingPermits],
     relatedLinks: [
       { label: 'Multiplex projects portfolio', key: 'work-multiplex' },
       { label: 'Garden suites and laneway houses', key: 'service-garden-suites' },
@@ -1855,6 +2002,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { question: "How much does a garden suite cost to build in the GTA?", answer: "A finished garden suite typically costs between $350,000 and $600,000 depending on size, specification and site conditions. Servicing connections, grading and engineering are project-specific. Vitalite provides a budget range at first consultation before design costs are committed." },
       { question: "How long does the permit and construction process take?", answer: "From first consultation to occupancy, most garden suite projects take fourteen to twenty-two months. Permit approval typically takes four to eight months depending on site complexity and municipality. Construction adds another four to eight months." },
     ],
+    officialResources: [torontoOfficialLinks.gardenSuites, torontoOfficialLinks.lanewaySuites, torontoOfficialLinks.buildingPermits],
     relatedLinks: [
       { label: 'Garden suite projects portfolio', key: 'work-garden-suites' },
       { label: 'Multi-unit and multiplex construction', key: 'service-multiplex' },
@@ -1911,6 +2059,7 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { question: "What if the permit application is rejected?", answer: "Rejected applications receive a letter identifying the deficiency. Vitalite prepares a corrected submission and resubmits. The goal is to prevent rejection through complete first submissions — but when comments come, we respond quickly." },
       { question: "Can Vitalite coordinate permits for a project where someone else did the drawings?", answer: "Yes. Vitalite can review existing drawings for permit readiness, identify missing items, coordinate engineering sign-off and manage the submission and comment process." },
     ],
+    officialResources: [torontoOfficialLinks.buildingPermits],
     relatedLinks: [
       { label: 'Architectural services', key: 'service-architectural-services' },
       { label: 'Building and board approvals', key: 'service-building-board-approvals' },
@@ -2108,9 +2257,9 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { heading: 'Media and Industry Recognition', text: 'Vitalite project announcements, completed project features and recognition in the GTA design-build space will be shared here as they occur.' },
     ],
     faqs: [
-      { question: 'What should Vitalite publish in the news section?', answer: 'Publish verified company updates, completed project features, media mentions, awards, local construction commentary and announcements that build trust.' },
-      { question: 'Should every blog post also appear here?', answer: 'No. Keep practical SEO guides in the blog. Use In The News for company credibility, brand authority and project or media updates.' },
-      { question: 'Can this page help local SEO?', answer: 'Yes, if updates are specific, local and connected to real service areas, project types, expertise and internal links.' },
+      { question: 'Is Vitalite currently taking on new projects in the GTA?', answer: 'Yes. Vitalite is actively scheduling projects for 2026 across Toronto, North York, Markham, Mississauga and Stouffville. Current capacity includes custom homes, multiplex conversions, home additions and major renovations. Contact us to discuss your timeline and scope.' },
+      { question: 'Where has Vitalite built in the GTA?', answer: 'Completed projects span Willowdale, Cachet Markham, Bullock Markham, Richvale Richmond Hill, Don Valley, Bayview Village, Lansdowne Toronto and Erindale Mississauga. Active builds are currently underway in Willowdale, Lansdowne Toronto, Preston Lake Stouffville and Erindale Mississauga.' },
+      { question: 'How do I find out if Vitalite is the right fit for my project?', answer: 'The best starting point is a direct conversation. Vitalite reviews scope, site, zoning and budget at the first meeting — no cost, no obligation. Use the contact page to get in touch and describe what you have in mind.' },
     ],
     relatedLinks: [
       { label: 'Blog', key: 'blog' },
@@ -2215,11 +2364,16 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { question: "How much does a garden suite cost in the GTA?", answer: "Most GTA garden suites range from $275,000 to $450,000 depending on size, foundation type, site servicing requirements and finish level. Laneway houses tend to cost more when they involve a new second-storey structure over an existing garage. Vitalite provides a project-specific estimate after the site and zoning review." },
       { question: "Can a garden suite be rented out legally?", answer: "Yes. A garden suite or laneway house built with a building permit and to current building code can be rented legally. Vitalite builds to the standards required for legal occupancy and assists clients in understanding the landlord-tenant obligations that apply." },
     ],
+    officialResources: [torontoOfficialLinks.gardenSuites, torontoOfficialLinks.lanewaySuites, torontoOfficialLinks.buildingPermits],
     relatedLinks: [
       { label: 'Garden suites and laneway houses service', key: 'service-garden-suites' },
       { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
       { label: 'The Vitalite Way', key: 'why-the-vitalite-way' },
       { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+    projectKeys: [
+      'project-toronto-laneway-suite-over-garage',
+      'project-stouffville-backyard-garden-suite',
     ],
   },
   'work-additions': {
@@ -2281,13 +2435,17 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'The Vitalite Way', key: 'why-the-vitalite-way' },
       { label: 'Contact Vitalite', key: 'contact-us' },
     ],
+    projectKeys: [
+      'project-gta-warehouse-office-fitout',
+      'project-toronto-retail-tenant-improvement',
+    ],
   },
   'work-condos': {
     parent: 'our-work',
     category: 'OUR WORK',
     title: 'Condos & Apartments',
     subtitle: 'Condo renovations that get board approval and stay within the building rules — from the first meeting.',
-    image: visuals.condo,
+    image: visuals.workCondos,
     intro: "Condo renovations in Toronto carry a layer of constraints that detached-home renovations do not. Building management needs to approve the scope, the contractor, the insurance, the schedule and the noise plan before a single tool enters the suite. Elevator windows are limited and booked weeks in advance. The suite below cares about your plumbing work. Vitalite treats these constraints as project planning, not administrative overhead.",
     answer: "Vitalite delivers Toronto condo and apartment renovations under a managed process: board package preparation, design, material selection, trade sequencing and construction within the building's rules and access windows.",
     bullets: ['Full interior renovations', 'Kitchen and bathroom rebuilds', 'Board approval package preparation', 'Material procurement and site sequencing'],
@@ -2308,13 +2466,17 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'Building and board approvals', key: 'service-building-board-approvals' },
       { label: 'Contact Vitalite', key: 'contact-us' },
     ],
+    projectKeys: [
+      'project-downtown-toronto-condo-renovation',
+      'project-north-york-apartment-suite-renovation',
+    ],
   },
   'work-lofts': {
     parent: 'our-work',
     category: 'OUR WORK',
     title: 'Lofts & Open-Concept',
     subtitle: 'Open-plan renovations where every trade decision is also a design decision.',
-    image: visuals.loft,
+    image: visuals.workLofts,
     intro: "In a conventional apartment renovation, walls and ceilings conceal the wiring, the ductwork and the plumbing. Trades can work independently without their decisions being visible. In a loft renovation, nothing is concealed. The electrical conduit, HVAC ductwork, sprinkler heads and structural beams all sit in plain view. Vitalite routes these elements as part of the design intent — not after finishes are selected.",
     answer: "Vitalite coordinates Toronto loft renovations from structural review and mechanical rerouting through interior design, material selection and finish-trade installation — managing all trades under one project schedule.",
     bullets: ['Open-concept layout planning', 'Exposed structural feature finishing', 'Integrated kitchen and living areas', 'Mechanical, electrical and HVAC planning in open plan'],
@@ -2335,13 +2497,17 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'The Vitalite Way', key: 'why-the-vitalite-way' },
       { label: 'Contact Vitalite', key: 'contact-us' },
     ],
+    projectKeys: [
+      'project-toronto-hard-loft-open-plan',
+      'project-open-concept-penthouse-renovation',
+    ],
   },
   'work-older-homes': {
     parent: 'our-work',
     category: 'OUR WORK',
     title: 'Older Toronto Homes',
     subtitle: 'Older home renovations where the condition assessment happens before the drawings — not during demolition.',
-    image: visuals.heritage,
+    image: visuals.workOlderHomes,
     intro: "Every older Toronto home carries unknowns that do not show up on a listing sheet: knob-and-tube electrical still feeding the top floor, balloon framing that makes air sealing impossible without gutting, a foundation that was never designed for vertical load. Vitalite's pre-construction condition assessment finds these before drawings are commissioned — so the budget and scope reflect what is actually there.",
     answer: "Vitalite renovates pre-war and mid-century Toronto homes — managing structural assessment, hazardous material abatement coordination, code upgrade requirements and character-sensitive finish planning as part of one organized project.",
     bullets: ['Pre-war and mid-century detached homes', 'Structural assessment and alteration', 'Electrical, plumbing and HVAC upgrades', 'Character-sensitive finish planning'],
@@ -2361,6 +2527,10 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'Full-gut renovations', key: 'service-gut-renovations' },
       { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
       { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+    projectKeys: [
+      'project-cabbagetown-older-home-renovation',
+      'project-high-park-mid-century-renovation',
     ],
   },
   'work-townhouses': {
@@ -2389,13 +2559,17 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
       { label: 'Contact Vitalite', key: 'contact-us' },
     ],
+    projectKeys: [
+      'project-toronto-semi-detached-rear-addition',
+      'project-gta-townhouse-basement-walkout',
+    ],
   },
   'work-full-interiors': {
     parent: 'our-work',
     category: 'OUR WORK',
     title: 'Full Interiors',
     subtitle: 'Interior renovations where the finish is only as good as the sequencing that set it up.',
-    image: visuals.interiorDesign,
+    image: visuals.workFullInteriors,
     intro: "A full interior renovation looks like a finish project — new tile, new cabinetry, new floors. But the quality of those finishes depends entirely on what happened before they were installed: whether the plumbing rough-in was placed correctly, whether the substrate was waterproofed and cured, whether the cabinetry arrived before the countertop template was taken. Vitalite manages interiors from material procurement through finish installation so the sequencing problems that cause most renovation failures are resolved before they hit the schedule.",
     answer: "Vitalite delivers full interior renovations across GTA residential and condo properties — managing design direction, material procurement, trade scheduling and quality control from rough-in through final finish.",
     bullets: ['Kitchen and bathroom gut renovations', 'Millwork, cabinetry and built-ins', 'Flooring, tile and surface finishes', 'Lighting design and fixture procurement'],
@@ -2415,6 +2589,10 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
       { label: 'Material selection and procurement', key: 'service-material-selection' },
       { label: 'The Vitalite Way', key: 'why-the-vitalite-way' },
       { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+    projectKeys: [
+      'project-gta-full-interior-renovation',
+      'project-toronto-kitchen-bath-millwork-renovation',
     ],
   },
   'blog-buyers-renovation-guide': {
@@ -2725,13 +2903,47 @@ const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntr
     .map((page) => [page.key, createGeneratedLandingPage(page)]),
 );
 
+const projectVisuals: Partial<Record<string, string>> = {
+  'project-willowdale-custom-home-4700': visualAsset('ai-project-willowdale-custom-home-4700'),
+  'project-preston-lake-stouffville-addition': visualAsset('ai-project-preston-lake-stouffville-addition'),
+  'project-lansdowne-toronto-multiplex-laneway': visualAsset('ai-project-lansdowne-toronto-multiplex-laneway'),
+  'project-erindale-mississauga-side-split-addition': visualAsset('ai-project-erindale-mississauga-side-split-addition'),
+  'project-york-toronto-lot-severance-semi': visualAsset('ai-project-york-toronto-lot-severance-semi'),
+  'project-bedford-park-mixed-use-rental': visualAsset('ai-project-bedford-park-mixed-use-rental'),
+  'project-avondale-custom-home-3200': visualAsset('ai-project-avondale-custom-home-3200'),
+  'project-stouffville-retrofit-cathedral-walkup': visualAsset('ai-project-stouffville-retrofit-cathedral-walkup'),
+  'project-rural-stouffville-american-country': visualAsset('ai-project-rural-stouffville-american-country'),
+  'project-willowdale-expansion-5200': visualAsset('ai-project-willowdale-expansion-5200'),
+  'project-past-willowdale-1': visualAsset('ai-project-past-willowdale-1'),
+  'project-past-cachet-markham-1': visualAsset('ai-project-past-cachet-markham-1'),
+  'project-past-cachet-markham-2': visualAsset('ai-project-past-cachet-markham-2'),
+  'project-past-richvale-richmond-hill': visualAsset('ai-project-past-richvale-richmond-hill'),
+  'project-past-willowdale-2': visualAsset('ai-project-past-willowdale-2'),
+  'project-past-bullock-markham-1': visualAsset('ai-project-past-bullock-markham-1'),
+  'project-past-cachet-markham-3': visualAsset('ai-project-past-cachet-markham-3'),
+  'project-past-bullock-markham-2': visualAsset('ai-project-past-bullock-markham-2'),
+  'project-past-don-valley-north-york': visualAsset('ai-project-past-don-valley-north-york'),
+  'project-past-willowdale-3': visualAsset('ai-project-past-willowdale-3'),
+  'project-past-bullock-markham-3': visualAsset('ai-project-past-bullock-markham-3'),
+  'project-past-bayview-village-north-york': visualAsset('ai-project-past-bayview-village-north-york'),
+  'project-toronto-laneway-suite-over-garage': visualAsset('ai-project-toronto-laneway-suite-over-garage'),
+  'project-stouffville-backyard-garden-suite': visualAsset('ai-project-stouffville-backyard-garden-suite'),
+  'project-gta-warehouse-office-fitout': visualAsset('ai-project-gta-warehouse-office-fitout'),
+  'project-toronto-retail-tenant-improvement': visualAsset('ai-project-toronto-retail-tenant-improvement'),
+  'project-downtown-toronto-condo-renovation': visualAsset('ai-project-downtown-toronto-condo-renovation'),
+  'project-north-york-apartment-suite-renovation': visualAsset('ai-project-north-york-apartment-suite-renovation'),
+  'project-toronto-hard-loft-open-plan': visualAsset('ai-project-toronto-hard-loft-open-plan'),
+  'project-open-concept-penthouse-renovation': visualAsset('ai-project-open-concept-penthouse-renovation'),
+  'project-cabbagetown-older-home-renovation': visualAsset('ai-project-cabbagetown-older-home-renovation'),
+  'project-high-park-mid-century-renovation': visualAsset('ai-project-high-park-mid-century-renovation'),
+  'project-toronto-semi-detached-rear-addition': visualAsset('ai-project-toronto-semi-detached-rear-addition'),
+  'project-gta-townhouse-basement-walkout': visualAsset('ai-project-gta-townhouse-basement-walkout'),
+  'project-gta-full-interior-renovation': visualAsset('ai-project-gta-full-interior-renovation'),
+  'project-toronto-kitchen-bath-millwork-renovation': visualAsset('ai-project-toronto-kitchen-bath-millwork-renovation'),
+};
+
 function imageForProject(project: ProjectEntry) {
-  if (project.key === 'project-willowdale-custom-home-4700') return visuals.willowdale;
-  if (project.category === 'custom-homes') return visuals.customHome;
-  if (project.category === 'multiplex') return visuals.multiplex;
-  if (project.category === 'garden-suites') return visuals.gardenSuite;
-  if (project.category === 'additions') return visuals.addition;
-  return visuals.designBuild;
+  return projectVisuals[project.key] ?? visuals.workOverview;
 }
 
 function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
@@ -2761,6 +2973,9 @@ function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
       size: project.size,
       headline: project.headline,
       narrative: project.narrative,
+      duration: project.duration,
+      approvalPath: project.approvalPath,
+      projectType: project.projectType,
     },
     relatedLinks: [
       { label: categoryLabel, key: categoryParentKey },
@@ -3226,9 +3441,36 @@ function getServicePlanningFocus(page: SeoPage): ServicePlanningFocus {
   };
 }
 
+function getOfficialResources(pageKey: string): Array<{ label: string; url: string; note?: string }> {
+  const k = pageKey.toLowerCase();
+  if (k.includes('garden-suite') || k.includes('garden_suite') || k.includes('laneway')) {
+    return [torontoOfficialLinks.gardenSuites, torontoOfficialLinks.lanewaySuites, torontoOfficialLinks.buildingPermits];
+  }
+  if (k.includes('multiplex')) {
+    return [torontoOfficialLinks.multiplex, torontoOfficialLinks.buildingPermits];
+  }
+  if (k.includes('permit') || k.includes('drawing')) {
+    return [torontoOfficialLinks.buildingPermits];
+  }
+  return [];
+}
+
+function getServiceKey(pageKey: string): string {
+  const k = pageKey.toLowerCase();
+  if (k.includes('custom-homes')) return 'custom-homes';
+  if (k.includes('garden-suites')) return 'garden-suites';
+  if (k.includes('multiplex')) return 'multiplex';
+  if (k.includes('home-additions')) return 'home-additions';
+  if (k.includes('luxury-renovations')) return 'luxury-renovations';
+  if (k.includes('permit-drawings')) return 'permit-drawings';
+  return '';
+}
+
 function buildLocalServiceSections(page: SeoPage, local: LocalSeoMatch | undefined, serviceName: string) {
   const focus = getServicePlanningFocus(page);
   const label = local?.label ?? 'the GTA';
+  const serviceKey = getServiceKey(page.key);
+  const notes = serviceKey ? local?.context?.serviceNotes?.[serviceKey] : undefined;
   const contextSections = local?.context
     ? [
         {
@@ -3255,21 +3497,24 @@ function buildLocalServiceSections(page: SeoPage, local: LocalSeoMatch | undefin
     ...contextSections,
     {
       heading: 'Service Scope',
-      text: `${serviceName} planning in ${label} can include ${focus.projectType}, with early attention to ${focus.searchIntent}.`,
+      text: notes?.serviceScope ?? `${serviceName} planning in ${label} can include ${focus.projectType}, with early attention to ${focus.searchIntent}.`,
     },
     {
       heading: 'Project Readiness',
-      text: `Before pricing or construction, owners should gather ${focus.readiness}. Vitalite uses that information to connect design direction, approvals, trade input and schedule planning.`,
+      text: notes?.readinessNote ?? `Before pricing or construction, owners should gather ${focus.readiness}. Vitalite uses that information to connect design direction, approvals, trade input and schedule planning.`,
     },
     {
       heading: 'How Vitalite Helps',
-      text: `Vitalite coordinates ${focus.approvals}, then carries the project into procurement, site management, inspections, quality control and closeout through one accountable GTA design-build process.`,
+      text: notes?.helpNote ?? `Vitalite coordinates ${focus.approvals}, then carries the project into procurement, site management, inspections, quality control and closeout through one accountable GTA design-build process.`,
     },
   ];
 }
 
 function buildServiceAreaAnswer(page: SeoPage, local: LocalSeoMatch | undefined, serviceName: string) {
   const label = local?.label ?? 'the GTA';
+  const serviceKey = getServiceKey(page.key);
+  const notes = serviceKey ? local?.context?.serviceNotes?.[serviceKey] : undefined;
+  if (notes?.shortAnswer) return notes.shortAnswer;
   return `Vitalite provides ${page.primaryKeyword} support for ${label}, combining ${serviceName.toLowerCase()} feasibility, zoning and code review, permit drawings, engineering coordination, budget planning, construction management, inspections and closeout under one GTA design-build team.`;
 }
 
@@ -3428,6 +3673,448 @@ function getGuideProfile(page: SeoPage) {
         },
       ],
       steps: ['Collect survey, photos and existing drawings where available', 'Confirm project scope and zoning constraints', 'Prepare architectural drawings and code notes', 'Coordinate structural, HVAC or mechanical inputs', 'Submit, respond to comments and hand off to construction'],
+    };
+  }
+
+  if (page.key === 'guide-laneway-house-permit-toronto') {
+    return {
+      answer: 'A Toronto laneway house permit is more involved than a typical accessory structure because the city checks fire truck access, water and sewer servicing, tree protection, TRCA review where applicable, and runs the file through a two-stage permit process. The earliest cost and schedule risk sits in feasibility, not in finishes.',
+      bullets: ['Lane access and fire truck routing', 'Water, sanitary and electrical servicing', 'TRCA, tree and grading review', 'Two-stage permit submission'],
+      sections: [
+        {
+          heading: 'Zoning Eligibility',
+          text: 'Most Toronto residential zones allow laneway suites as-of-right, but each lot must still pass tests for lane width, lot depth, separation distance, height and angular plane. A short feasibility check identifies any zoning relief before drawings are commissioned.',
+        },
+        {
+          heading: 'Fire Access Requirements',
+          text: 'The laneway must give a fire truck a clear route within a defined distance from the suite. If the lane is narrow, blocked or unimproved, the design has to add fire-rated assemblies, sprinklers, or both. These items affect cost more than most owners expect.',
+        },
+        {
+          heading: 'Servicing Connection',
+          text: 'Water, sanitary and electrical services usually run from the main house through the rear yard to the suite. Trenching across the yard, upgrading the existing service, and protecting trees and grading along the route all need to be coordinated before pricing is final.',
+        },
+        {
+          heading: 'TRCA and Tree Review',
+          text: 'Lots near ravines or regulated areas trigger TRCA review, which adds drawings, fees and time. Mature trees in the rear yard or along the lane require an arborist report and a tree protection plan that the city signs off on before excavation.',
+        },
+        {
+          heading: 'Two-Stage Permit',
+          text: 'Toronto reviews laneway projects in two stages: zoning and planning first, then building code and construction details. The two stages can be sequenced or run in parallel, but each stage has its own comment cycle and revision rounds.',
+        },
+        {
+          heading: 'After Permit Approval',
+          text: 'Once the permit is issued, the project still needs trade procurement, site protection, hand-dig allowances where machinery cannot reach, an inspection schedule and a closeout plan. The handoff from permit to construction is where projects gain or lose weeks.',
+        },
+      ],
+      steps: ['Check lot, lane and servicing feasibility', 'Confirm zoning, fire access and TRCA conditions', 'Prepare architectural and structural permit drawings', 'Submit two-stage permit and respond to comments', 'Hand off approved drawings to construction with logistics plan'],
+    };
+  }
+
+  if (page.key === 'guide-home-addition-permit-toronto') {
+    return {
+      answer: 'A Toronto home addition permit needs a zoning check on setbacks, height and lot coverage, structural input on the existing house, mechanical and HVAC coordination, and a permit package that survives a two-stage municipal review without repeated revisions.',
+      bullets: ['Zoning, setback and coverage review', 'Structural assessment of existing house', 'HVAC and mechanical coordination', 'Permit submission and comment response'],
+      sections: [
+        {
+          heading: 'Zoning Checks First',
+          text: 'Before drawings move forward, confirm front, side and rear setbacks, lot coverage, height, angular plane and any overlay rules in the neighbourhood. Catching a zoning issue at concept stage avoids expensive redesigns later.',
+        },
+        {
+          heading: 'Structural Coordination',
+          text: 'Additions usually open new structural connections to the existing house. Foundations, beams, load paths and tie-ins should be reviewed by an engineer early so that the architectural plan and the structural plan stay aligned.',
+        },
+        {
+          heading: 'Mechanical and HVAC',
+          text: 'New square footage often outgrows the existing furnace, ductwork, electrical panel and plumbing. Mechanical scope should be sized against the addition and the rest of the house at the same time, not after construction starts.',
+        },
+        {
+          heading: 'Permit Package Contents',
+          text: 'A clean permit package shows existing and proposed plans, elevations, sections, zoning data, code notes, structural details and any HVAC or grading items needed. Missing references to lot coverage, fire separation or structural openings drive most comment rounds.',
+        },
+        {
+          heading: 'Comment Response',
+          text: 'Toronto permit examiners typically issue comments after the first review. The package should be set up so comments can be answered with targeted revisions instead of redesigning core parts of the addition.',
+        },
+        {
+          heading: 'Construction Handoff',
+          text: 'Approved drawings need to be turned into a construction plan with trade scheduling, inspections, owner decisions on finishes, temporary protection of the existing house, and a closeout list. Vitalite manages that handoff so the schedule does not stall after approval.',
+        },
+      ],
+      steps: ['Confirm zoning, lot coverage and setback constraints', 'Coordinate structural and mechanical inputs early', 'Prepare a complete permit package with code notes', 'Submit permit and respond to comments efficiently', 'Plan trades, inspections and owner decisions before site work'],
+    };
+  }
+
+  if (page.key === 'guide-second-storey-addition-toronto') {
+    return {
+      answer: 'A Toronto second-storey addition needs a structural assessment of the existing foundation and walls, a complete permit package, mechanical and HVAC integration with the rest of the house, and a realistic plan for living during construction or moving out for the duration.',
+      bullets: ['Foundation and wall assessment', 'Permit drawings and code notes', 'HVAC and electrical capacity', 'Living arrangement during construction'],
+      sections: [
+        {
+          heading: 'Structural Starting Point',
+          text: 'A second storey loads the existing foundation, walls and footings in ways the original design may not have planned for. An engineer should review the foundation, framing and load paths before drawings are finalized so any reinforcement is built into the scope.',
+        },
+        {
+          heading: 'Permit Package',
+          text: 'The permit package should include existing and proposed plans, elevations, sections, structural details, mechanical changes, energy and code notes and any zoning relief items. Toronto pays particular attention to height, angular plane and rear-yard projections on second-storey work.',
+        },
+        {
+          heading: 'Mechanical Integration',
+          text: 'Adding a full second floor usually pushes the furnace, ductwork, hot water and electrical panel beyond their original sizing. Mechanical and electrical capacity should be sized for the whole house, not just the new floor, before pricing is finalized.',
+        },
+        {
+          heading: 'Living Through Construction',
+          text: 'Owners need to decide early whether to stay in the home with temporary protection or move out during the structural and roof work. The decision affects schedule, cost, dust control, security and how trades are sequenced.',
+        },
+        {
+          heading: 'Schedule and Inspections',
+          text: 'Second storey additions move through framing, roof tie-in, mechanical rough-ins, insulation, drywall and finishes with several inspection points along the way. A realistic schedule plans for weather, inspection waits and material lead times.',
+        },
+        {
+          heading: 'Closeout',
+          text: 'Closeout includes final inspections, deficiency walks, mechanical balancing, paint touch-ups, hardware adjustments and warranty documentation. A clear closeout list keeps the last two weeks of the project from stretching into months.',
+        },
+      ],
+      steps: ['Assess foundation, walls and load paths with an engineer', 'Prepare a complete second-storey permit package', 'Confirm mechanical and electrical capacity for the full house', 'Choose a living arrangement and plan site protection', 'Sequence framing, inspections and finish trades to closeout'],
+    };
+  }
+
+  if (page.key === 'guide-basement-walkout-permit-toronto') {
+    return {
+      answer: 'A Toronto basement walkout almost always needs a building permit because it changes the foundation, drainage and egress. The scope sits at the intersection of excavation, structural work, waterproofing, grading and code-compliant egress, which is more involved than most owners expect.',
+      bullets: ['Excavation and structural opening', 'Waterproofing and drainage rework', 'Egress and code compliance', 'Site logistics and access'],
+      sections: [
+        {
+          heading: 'When a Permit Is Required',
+          text: 'A walkout almost always triggers a permit because the work involves cutting a foundation wall, modifying drainage and creating a new egress. Some lots also need zoning input where the walkout affects rear-yard grading or projection rules.',
+        },
+        {
+          heading: 'Structural and Excavation Scope',
+          text: 'The work usually requires excavation along the foundation, shoring, a new lintel above the opening and underpinning where the new floor level drops below existing footings. The excavation plan should consider tree roots, services and neighbour fences before digging starts.',
+        },
+        {
+          heading: 'Drainage and Waterproofing',
+          text: 'Once the wall is cut and grading changes, weeping tile, waterproofing membranes, sump connection and grading slope away from the wall all need to be reviewed. Walkouts that skip drainage rework leak within a few seasons.',
+        },
+        {
+          heading: 'Egress Requirements',
+          text: 'A code-compliant egress door, stair, guardrail and landing are required, along with safe sightlines for the user and clear separation from grade water. If the walkout serves a separate suite, additional fire and life-safety rules apply.',
+        },
+        {
+          heading: 'Permit Package',
+          text: 'The permit package should show existing and proposed grading, structural details for the wall opening and any underpinning, waterproofing assemblies, drainage details and the egress configuration. A clean package answers most reviewer comments before they are written.',
+        },
+        {
+          heading: 'Site Logistics',
+          text: 'Basement walkouts are tight construction zones with excavated soil, exposed foundations, weather risk and limited access. Site protection, soil management, inspection coordination and weather contingency belong in the construction plan from day one.',
+        },
+      ],
+      steps: ['Confirm whether the walkout creates a separate suite', 'Coordinate structural, excavation and waterproofing details', 'Prepare grading, drainage and egress drawings', 'Submit permit and respond to municipal comments', 'Sequence excavation, structural work and waterproofing on site'],
+    };
+  }
+
+  if (page.key === 'guide-legal-basement-suite-toronto') {
+    return {
+      answer: 'A legal basement suite in Toronto requires minimum ceiling height, code-compliant egress windows, fire separation between units, a separate entrance and a building permit. Renting a suite without these items creates serious liability and can block insurance claims, sales and refinancing.',
+      bullets: ['Ceiling height and layout', 'Egress windows and exit', 'Fire separation between units', 'Permit and registration'],
+      sections: [
+        {
+          heading: 'What Makes a Suite Legal',
+          text: 'A legal second suite meets the Ontario Building Code and Toronto zoning rules at the same time. The suite must be a self-contained dwelling with its own kitchen, bathroom, living and sleeping space, and it must satisfy life-safety requirements that protect both units.',
+        },
+        {
+          heading: 'Ceiling Height and Egress',
+          text: 'Ceiling height must meet the code minimum across the required living area. Each bedroom needs an egress window sized and located for emergency exit. Older basements often fail one or both of these tests before any other work begins.',
+        },
+        {
+          heading: 'Fire Separation Requirements',
+          text: 'Fire separation between the suites includes rated assemblies at floors and shared walls, self-closing doors, smoke alarms wired together across both units and continuous separation around mechanical penetrations. This is where most informal basement suites fail to qualify.',
+        },
+        {
+          heading: 'Separate Entrance',
+          text: 'A legal suite generally needs its own exterior entrance. That can be a side entrance with a stair down, a rear walkout or a shared vestibule that is fire-separated. The entrance details affect cost, grading, drainage and zoning compliance.',
+        },
+        {
+          heading: 'Permit Process',
+          text: 'The legal suite is created through a building permit that shows the layout, separations, egress, mechanical changes and life-safety items. After construction, the suite is inspected and registered, which is the document owners need for insurance, financing and rental compliance.',
+        },
+        {
+          heading: 'Renting After Registration',
+          text: 'Once registered, the suite can be rented under standard residential tenancy rules. Owners should keep the permit, inspection records and registration on file because lenders, insurers and buyers will ask for them.',
+        },
+      ],
+      steps: ['Measure ceiling height, window sizes and existing layout', 'Plan fire separation, egress and entrance strategy', 'Prepare permit drawings and mechanical changes', 'Submit permit and complete inspections', 'Register the suite and document for insurance and rental use'],
+    };
+  }
+
+  if (page.key === 'guide-custom-home-build-cost-gta') {
+    return {
+      answer: 'GTA custom home build cost typically ranges from about $350 per square foot for a basic build to over $700 per square foot for a high-end home. The real drivers are the lot, structure, envelope, mechanical and electrical scope, finish level, soft costs and site access, not square footage alone.',
+      bullets: ['Lot conditions and site access', 'Structure, envelope and mechanical', 'Finishes, fixtures and appliances', 'Soft costs and contingency'],
+      sections: [
+        {
+          heading: 'Lot and Site Costs',
+          text: 'Demolition, site grading, retaining walls, driveway access, tree protection and servicing connections vary widely by lot. A flat lot with utilities at the curb prices very differently from a sloped lot near a ravine with TRCA review.',
+        },
+        {
+          heading: 'Soft Costs',
+          text: 'Soft costs include survey, architectural and structural drawings, mechanical and energy consultants, permit fees, deposits, insurance, financing carrying cost and project management. Together they typically account for 10 to 15 percent of the total budget on a custom home.',
+        },
+        {
+          heading: 'Structural and Envelope',
+          text: 'Foundation type, framing system, window and door package, exterior cladding, roofing and insulation drive a large share of the build cost. Higher-performance envelope choices add cost upfront but reduce long-term operating cost.',
+        },
+        {
+          heading: 'Mechanical and Electrical',
+          text: 'Heating, cooling, ventilation, plumbing fixtures, electrical capacity, lighting, automation, networking and backup power all scale with the home. A modest mechanical package and a fully integrated smart-home package can differ by a factor of three.',
+        },
+        {
+          heading: 'Finishes and Fixtures',
+          text: 'Kitchens, bathrooms, millwork, flooring, tile, lighting, hardware and appliances are the most visible budget items. Finish level decisions made at design stage protect the budget far better than cuts made during construction.',
+        },
+        {
+          heading: 'Contingency and Management',
+          text: 'A realistic budget includes a contingency for unknown site conditions and design changes, plus a clear construction management fee. Skipping contingency does not lower cost; it only moves the cost into change orders later.',
+        },
+      ],
+      steps: ['Confirm lot, zoning and site access conditions', 'Set design intent and target finish level', 'Coordinate architectural, structural and mechanical drawings', 'Build a budget with allowances, soft costs and contingency', 'Sequence construction, procurement and inspections to occupancy'],
+    };
+  }
+
+  if (page.key === 'guide-toronto-neighbourhood-custom-home-rebuilds') {
+    return {
+      answer: 'Teardown-rebuild projects in Toronto neighbourhoods involve zoning review, neighbour notice, tree permits, two-stage permit review and 16 to 22 months of design and construction. The right lot and a clean approval path matter as much as the design itself.',
+      bullets: ['Lot acquisition and feasibility', 'Zoning, tree and neighbour notices', 'Two-stage permit review', 'Construction sequence and timeline'],
+      sections: [
+        {
+          heading: 'Buying the Right Lot',
+          text: 'Lot width, depth, frontage, services, trees, easements and zoning overlay rules all affect what can be built. A short feasibility review before the offer closes helps avoid lots that cannot deliver the home the buyer wants.',
+        },
+        {
+          heading: 'Zoning and Design Constraints',
+          text: 'Toronto zoning controls height, gross floor area, lot coverage, side yards, angular plane and front yard character. Some neighbourhoods add character or heritage overlays that further shape massing and material choices.',
+        },
+        {
+          heading: 'Tree and Neighbour Notices',
+          text: 'Mature trees on the lot or near the property line trigger arborist reports and tree protection plans. Larger projects also require posted neighbour notices, and unresolved objections can delay the file at Committee of Adjustment.',
+        },
+        {
+          heading: 'Permit Timeline',
+          text: 'Toronto reviews custom home permits in two stages: zoning and planning first, then building code and construction details. From application to permit issuance, expect 4 to 8 months on a clean file, longer where variances or heritage are involved.',
+        },
+        {
+          heading: 'Construction Sequence',
+          text: 'Construction usually runs demolition, excavation, foundation, framing, envelope, mechanical rough-in, drywall, finishes, exterior and landscape over 12 to 16 months. Long-lead windows, doors and millwork should be ordered well before they are needed on site.',
+        },
+        {
+          heading: 'Neighbourhood-Specific Factors',
+          text: 'Each established neighbourhood has its own character expectations, tree canopy, narrow streets and parking constraints. A construction plan that respects the street keeps neighbours, the city and the schedule on the same side.',
+        },
+      ],
+      steps: ['Check feasibility before closing on the lot', 'Coordinate design with zoning and tree review', 'Prepare a complete permit package and notices', 'Run the two-stage permit through to issuance', 'Sequence demolition, structure, envelope and finishes to occupancy'],
+    };
+  }
+
+  if (page.key === 'guide-rosedale-forest-hill-renovation') {
+    return {
+      answer: 'Rosedale and Forest Hill renovations combine heritage or tree approvals with premium finishes and 12 to 18 month construction schedules. The right team manages the approval side and the finish side at the same time so neither one stalls the other.',
+      bullets: ['Heritage and tree approvals', 'Structural and systems modernization', 'Premium finishes and millwork', 'Construction logistics on quiet streets'],
+      sections: [
+        {
+          heading: 'Heritage and Character Context',
+          text: 'Many homes in Rosedale and Forest Hill sit within heritage districts or character overlays. Exterior changes, additions and rear extensions need to respect the streetscape, and approvals can include heritage permits in addition to standard building permits.',
+        },
+        {
+          heading: 'What Owners Typically Tackle',
+          text: 'Common scopes include kitchen and bath rebuilds, full main floor reconfiguration, primary suite expansion, basement underpinning, third floor finishing and rear extensions. Many projects combine several of these into a coordinated 12 to 18 month build.',
+        },
+        {
+          heading: 'Structural and Systems Work',
+          text: 'Older homes here usually need structural reinforcement at openings, new mechanical and electrical capacity, updated plumbing, and envelope upgrades to support modern comfort. These items belong in the design phase, not in change orders.',
+        },
+        {
+          heading: 'Finish Expectations',
+          text: 'Owners in these neighbourhoods expect custom millwork, integrated appliances, stone, hardwood, custom lighting and detailed trim. Finish decisions should be made early to keep procurement aligned with the construction schedule.',
+        },
+        {
+          heading: 'Approval and Pre-Construction',
+          text: 'Pre-construction includes survey, architectural and structural drawings, mechanical input, heritage or tree review where applicable, permit submission and a comment response plan. A clean package at submission shortens the path to a building permit.',
+        },
+        {
+          heading: 'Schedule and Coordination',
+          text: 'Quiet streets, narrow driveways and tight setbacks make site logistics part of the project plan from the beginning. Neighbour communication, parking, hoarding, dust control and daily site management protect both the schedule and the relationship with the street.',
+        },
+      ],
+      steps: ['Confirm heritage, tree and zoning conditions for the property', 'Define the renovation scope and finish level', 'Coordinate architectural, structural and mechanical drawings', 'Submit permits and any heritage or tree approvals', 'Sequence construction with site logistics and finish procurement'],
+    };
+  }
+
+  if (page.key === 'guide-lawrence-park-leaside-additions') {
+    return {
+      answer: 'Lawrence Park and Leaside additions need to respect existing streetscape character while delivering the space families need. Both second-storey additions and rear extensions have strong precedent here, and the right choice depends on the lot, the existing house and the family plan.',
+      bullets: ['Second-storey vs rear extension', 'Character and streetscape rules', 'Structural and mechanical scope', 'School zone value and stay-or-move decision'],
+      sections: [
+        {
+          heading: 'Why Owners Add Rather Than Move',
+          text: 'Families in Lawrence Park and Leaside often choose to add rather than move because of school catchments, established trees and walkable streets. An addition can deliver the bedrooms, primary suite or family room the home is missing without leaving the neighbourhood.',
+        },
+        {
+          heading: 'Second-Storey vs Rear Extension',
+          text: 'Second-storey additions add bedrooms and a primary suite while keeping the footprint. Rear extensions open up the kitchen and family area and connect to the garden. Many projects combine the two when the budget and zoning allow.',
+        },
+        {
+          heading: 'Character and Streetscape Rules',
+          text: 'Both neighbourhoods have streetscape and character expectations around roof form, materials, window proportions and front yard treatment. Designs that respect the street usually move through approvals faster and resell better.',
+        },
+        {
+          heading: 'Structural and Mechanical Scope',
+          text: 'Second storey work loads the existing foundation and walls, while rear extensions tie into existing structure and mechanical systems. Both require engineering input, and both usually trigger furnace, electrical panel and plumbing upgrades.',
+        },
+        {
+          heading: 'School Zone Value',
+          text: 'Investments in well-designed additions tend to hold value strongly here because the school catchment supports family demand. Owners should still test their plan against comparable sales before committing to the largest scope.',
+        },
+        {
+          heading: 'Permit and Schedule',
+          text: 'A typical addition runs 4 to 7 months on permits and 8 to 14 months on construction, depending on scope. A realistic plan accounts for living arrangements during construction, weather windows for roof tie-ins and long-lead window and door deliveries.',
+        },
+      ],
+      steps: ['Confirm zoning, setback and character constraints', 'Choose between second-storey, rear extension or both', 'Coordinate structural, mechanical and architectural drawings', 'Submit permits and respond to municipal comments', 'Sequence construction around living arrangements and procurement'],
+    };
+  }
+
+  if (page.key === 'guide-willowdale-multiplex') {
+    return {
+      answer: 'Willowdale lots, often around 50 feet wide, qualify for multiplex builds under Toronto as-of-right zoning. The key decisions are unit count, rental strategy, FSI, life-safety scope and a budget that supports the rental pro forma rather than fighting it.',
+      bullets: ['As-of-right multiplex eligibility', 'Unit count and rental strategy', 'Life-safety and fire separation', 'FSI, parking and zoning constraints'],
+      sections: [
+        {
+          heading: 'As-Of-Right Multiplex Eligibility',
+          text: 'Toronto allows up to four units as-of-right on most residential lots, including many Willowdale properties. The owner still has to satisfy zoning on FSI, height, setbacks and parking, and the building has to meet code for life safety across the units.',
+        },
+        {
+          heading: 'Unit Count and Layout Strategy',
+          text: 'Three two-bedroom units rent differently than four one-bedroom units. A multiplex pro forma should test layout options against rental demand, parking, storage, outdoor space and the owners long-term plan before drawings are finalized.',
+        },
+        {
+          heading: 'Life Safety Requirements',
+          text: 'Multiplex projects must resolve fire separation between units, interconnected smoke alarms, exit routes, stair widths, guards and sometimes sprinklers. These items are not finish upgrades; they decide whether the building can legally operate as multiple suites.',
+        },
+        {
+          heading: 'FSI and Zoning Constraints',
+          text: 'FSI, height, angular plane and rear-yard rules cap the achievable building envelope. A feasibility review before drawings tells the owner how much building can actually fit on the lot, which protects the pro forma from a design that does not meet zoning.',
+        },
+        {
+          heading: 'Budget and Pro Forma',
+          text: 'The investment case depends on construction cost, financing, rental income, vacancy assumptions and operating expenses. A multiplex budget should support the pro forma at realistic rents, not at the optimistic top of the market.',
+        },
+        {
+          heading: 'Permit and Construction Timeline',
+          text: 'A typical Willowdale multiplex runs 6 to 9 months on design and permits and 12 to 18 months on construction, depending on scope and whether the project is a conversion or a new build. Procurement and inspections drive the back half of the schedule.',
+        },
+      ],
+      steps: ['Test as-of-right eligibility for the specific lot', 'Choose unit count and layout against rental demand', 'Coordinate architectural, structural and life-safety drawings', 'Submit permits and confirm FSI, parking and life-safety items', 'Sequence construction, inspections and lease-up to occupancy'],
+    };
+  }
+
+  if (page.key === 'guide-unionville-angus-glen-custom-homes') {
+    return {
+      answer: 'Custom home projects in Unionville and Angus Glen run through Markham detailed design review, subdivision design controls and long-lead procurement. From design start to occupancy, owners should plan for 20 to 26 months on a typical project.',
+      bullets: ['Markham design review process', 'Subdivision design controls', 'Heritage near Unionville', 'Long-lead procurement and timeline'],
+      sections: [
+        {
+          heading: 'Markham Design Review Process',
+          text: 'Markham reviews custom homes more closely than many GTA municipalities, with attention to massing, materials, roof form and street character. Submitting a design that already aligns with the city expectations shortens the review cycle and reduces revisions.',
+        },
+        {
+          heading: 'Subdivision Design Controls',
+          text: 'Many Angus Glen and newer Unionville pockets sit inside subdivision design control areas. The architectural control consultant reviews material selections, exterior elevations and front yard treatment alongside the city building permit process.',
+        },
+        {
+          heading: 'Lot and Site Conditions',
+          text: 'Lot grading, Berczy Creek proximity, mature trees and existing services all affect the build. A site review before the design moves forward identifies cost drivers around foundations, drainage, retaining walls and tree protection.',
+        },
+        {
+          heading: 'Heritage Near Unionville',
+          text: 'Properties near Main Street Unionville may sit within or beside heritage districts. Exterior work, additions and rebuilds in those zones need heritage review in addition to standard permits, and material choices are scrutinized more carefully.',
+        },
+        {
+          heading: 'Material Procurement',
+          text: 'Custom homes here usually specify long-lead windows, doors, stone, custom millwork and high-end appliances. Procurement should start during design so trades have what they need when they reach each stage of the build.',
+        },
+        {
+          heading: 'Construction Timeline',
+          text: 'A typical schedule runs 8 to 12 months on design and approvals and 14 to 18 months on construction. Weather, inspection waits and material lead times all sit inside that window, so a realistic plan builds in float.',
+        },
+      ],
+      steps: ['Confirm subdivision design control and heritage status', 'Coordinate design with Markham review expectations', 'Prepare permit drawings and engineering inputs', 'Submit permits and architectural control review in parallel', 'Sequence procurement, construction and inspections to occupancy'],
+    };
+  }
+
+  if (page.key === 'guide-port-credit-lorne-park-renovations') {
+    return {
+      answer: 'Port Credit and Lorne Park renovation and rebuild projects involve Credit Valley Conservation review, the Mississauga private tree bylaw and high finish expectations suited to lakefront-adjacent living. The approval path and the finish path both need management from the start.',
+      bullets: ['Credit Valley Conservation review', 'Mississauga private tree bylaw', 'Renovation vs custom rebuild decision', 'Finish level and procurement'],
+      sections: [
+        {
+          heading: 'Conservation Authority Review',
+          text: 'Many Port Credit and Lorne Park properties fall inside Credit Valley Conservation regulated areas. Work that affects grading, drainage or proximity to the Credit River or Lake Ontario triggers CVC review on top of the city building permit.',
+        },
+        {
+          heading: 'Mississauga Tree Bylaw',
+          text: 'The Mississauga private tree bylaw protects mature trees on private property. Removals or work near protected trees require permits, arborist reports and tree protection plans, and the bylaw also affects where additions and pools can sit on the lot.',
+        },
+        {
+          heading: 'What Owners Are Doing Here',
+          text: 'Common scopes include kitchen and primary suite rebuilds, rear extensions to open the home to the garden, full second-storey additions, basement walkouts and full custom rebuilds on lakefront-adjacent lots. Several of these often combine into a single project.',
+        },
+        {
+          heading: 'Custom vs Renovation Decision',
+          text: 'On many lots, a deep renovation and a full rebuild end up within striking distance on cost. The right answer depends on the existing house, the lot, the heritage of the home and how long the owners plan to stay. A feasibility study can answer that question quickly.',
+        },
+        {
+          heading: 'Permit and Schedule',
+          text: 'Permit timelines run longer where CVC or tree approvals are involved. A clean package, early consultant coordination and a willingness to engage the conservation authority early all keep the file moving.',
+        },
+        {
+          heading: 'Finish Level and Procurement',
+          text: 'Owners here typically specify custom millwork, stone, hardwood, integrated appliances and lakeview-oriented glazing. These items have long lead times and should be ordered during design so the schedule does not stall waiting on materials.',
+        },
+      ],
+      steps: ['Check CVC and tree bylaw conditions for the property', 'Decide between deep renovation and full rebuild', 'Coordinate architectural, structural and conservation inputs', 'Submit permits and tree or CVC approvals in parallel', 'Sequence procurement, construction and finishes to closeout'],
+    };
+  }
+
+  if (page.key === 'guide-toronto-neighbourhood-garden-suite') {
+    return {
+      answer: 'Garden suites are as-of-right in most Toronto residential zones, but each property still needs an individual feasibility review. Lane or side access, fire requirements, servicing from the main house, tree protection and rear-yard depth determine whether a garden suite is actually viable.',
+      bullets: ['As-of-right zoning eligibility', 'Lane access and fire requirements', 'Servicing from the main house', 'Tree protection and rear-yard depth'],
+      sections: [
+        {
+          heading: 'As-Of-Right Eligibility',
+          text: 'Toronto allows garden suites as-of-right in most residential zones, subject to size, height, separation and lot coverage rules. Each lot still needs a feasibility check against those numbers before drawings are commissioned.',
+        },
+        {
+          heading: 'Lane Access and Fire Requirements',
+          text: 'Garden suites need a clear path for emergency access from the street or lane to the suite door within a defined distance. Where the path is longer or constrained, the design has to add fire-rated assemblies or sprinklers, which affects cost.',
+        },
+        {
+          heading: 'Servicing from the Main House',
+          text: 'Water, sanitary and electrical services usually run from the main house through the rear yard to the suite. The route, the upgrade scope at the panel and meter, and the impact on existing landscaping all need to be planned before pricing is final.',
+        },
+        {
+          heading: 'Tree Protection',
+          text: 'Mature trees in the rear yard or along the route to the suite trigger arborist reports and tree protection zones. The protection zones can shift the suite footprint, the access path or the servicing route, so trees should be reviewed early in design.',
+        },
+        {
+          heading: 'Design and Permit Process',
+          text: 'A garden suite permit package shows the suite, the access path, fire and servicing details, tree protection and grading. Toronto reviews garden suites through the standard permit process, with a focus on fire access and servicing details that often drive comments.',
+        },
+        {
+          heading: 'Construction and Rental',
+          text: 'Construction usually runs 6 to 10 months once permits are issued, depending on access and scope. Once finished, the suite can be rented under standard residential rules, which makes it a long-term income asset for many owners.',
+        },
+      ],
+      steps: ['Run a property-specific feasibility review', 'Confirm fire access, servicing and tree conditions', 'Prepare permit drawings and engineering inputs', 'Submit permit and respond to municipal comments', 'Sequence construction, inspections and rental setup'],
     };
   }
 
@@ -3747,7 +4434,13 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
     subtitle: page.description,
     image: imageForSeoPage(page),
     intro: isServiceArea
-      ? `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.${local?.context ? ` ${local.context.planningContext}` : ''}`
+      ? (() => {
+          const sk = getServiceKey(page.key);
+          const introNote = sk ? local?.context?.serviceNotes?.[sk]?.introNote : undefined;
+          return introNote
+            ? introNote
+            : `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.${local?.context ? ` ${local.context.planningContext}` : ''}`;
+        })()
       : `Use this guide to understand ${page.primaryKeyword} before committing to drawings, pricing or a contractor. It explains the decisions, documents, approvals, budget assumptions and construction-management details that shape a stronger GTA project plan.`,
     bullets: isServiceArea
       ? [
@@ -3772,12 +4465,14 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
     answer: isServiceArea ? buildServiceAreaAnswer(page, local, serviceName) : guideProfile?.answer,
     steps: guideProfile?.steps,
     faqs: buildPageFaq(page),
+    officialResources: getOfficialResources(page.key),
     relatedLinks: getGeneratedRelatedLinks(page),
   };
 }
 
 function imageForSeoPage(page: SeoPage) {
   const keyword = `${page.key} ${page.primaryKeyword}`.toLowerCase();
+  if (page.key.startsWith('location-') || page.key.startsWith('community-')) return visualAsset(`seo-${page.key}`);
   if (page.key === 'guide-garden-suite-cost-toronto') return visuals.gardenSuite;
   if (page.key === 'guide-multiplex-conversion-cost-toronto') return visuals.multiplexCost;
   if (page.key === 'guide-toronto-permit-drawings') return visuals.permitGuide;
@@ -3850,16 +4545,70 @@ function imageForDetailBullet(item: string, page: DetailPageContent) {
   return page.image;
 }
 
-function imageForDetailSection(section: { heading: string; text: string }, page: DetailPageContent) {
-  const text = `${section.heading} ${section.text} ${page.title}`.toLowerCase();
+function imageForDetailSection(section: { heading: string; text: string }, page: DetailPageContent, pageKey?: string) {
+  const explicitImage = pageKey ? detailSectionImages[pageKey]?.[section.heading] : undefined;
+  if (explicitImage) return explicitImage;
+
+  const text = `${section.heading} ${section.text}`.toLowerCase();
   const has = (...terms: string[]) => terms.some((term) => text.includes(term));
+
+  if (has('when you need this')) return visuals.architectural;
+  if (has('what makes gta drawing coordination difficult')) return visuals.bulletZoningReview;
+  if (has('what vitalite coordinates')) return visuals.bulletScopeCoordination;
+  if (has('connection to construction')) return visuals.serviceSiteManagement;
+  if (has('where interior decisions affect construction')) return visuals.bulletMepCoordination;
+  if (has('design-build advantage')) return visuals.designBuildVsArchitect;
+  if (has('lead time is a construction variable')) return visuals.bulletBudgetPlanning;
+  if (has('selection connected to budget')) return visuals.materialSelection;
+  if (has('supplier coordination')) return visuals.serviceProjectManagement;
+  if (has('owner experience')) return visuals.bulletClientCommunication;
+  if (has('condo board and property manager requirements')) return visuals.boardApprovals;
+  if (has('municipal permit applications')) return visuals.servicePermitsEngineering;
+  if (has('stacking multiple approvals')) return visuals.bulletScopeCoordination;
+  if (has('committee of adjustment')) return visuals.bulletZoningReview;
+  if (has('what makes a gta custom home difficult')) return visuals.bulletZoningReview;
+  if (has('how vitalite approaches a custom home')) return visuals.serviceCustomHome;
+  if (has('gta portfolio')) return visuals.workCustomHomes;
+  if (has('what changed in gta zoning')) return visuals.bulletZoningReview;
+  if (has('building code complexity')) return visuals.bulletFireEgress;
+  if (has('investor value')) return visuals.multiplexCost;
+  if (has('active projects')) return visuals.workMultiplex;
+  if (has('what makes a good garden suite site')) return visuals.bulletSiteFeasibility;
+  if (has('what these projects add')) return visuals.serviceGardenLaneway;
+  if (has('approval and permit coordination')) return visuals.bulletPermitPackages;
+  if (has('construction and site logistics')) return visuals.serviceSiteManagement;
+  if (has('what to confirm before designing')) return visuals.bulletSiteFeasibility;
+  if (has('structural coordination')) return visuals.bulletMepCoordination;
+  if (has('active examples')) return visuals.workAdditions;
+  if (has('living through construction')) return visuals.bulletClientCommunication;
+  if (has('what a complete permit package includes')) return visuals.bulletPermitPackages;
+  if (has('common reasons permits get returned')) return visuals.bulletQualityInspection;
+  if (has('engineering coordination')) return visuals.bulletMepCoordination;
+  if (has('municipal comment response')) return visuals.servicePermitsEngineering;
+  if (has('budget control')) return visuals.bulletBudgetPlanning;
+  if (has('owner communication')) return visuals.bulletClientCommunication;
+  if (has('municipal inspections')) return visuals.bulletPermitPackages;
+  if (has('quality control')) return visuals.bulletQualityInspection;
+  if (has('trade accountability', 'what active site management prevents', 'standing trade')) return visuals.bulletTradeScheduling;
+  if (has('define what you actually need')) return visuals.bulletClientCommunication;
+  if (has('project management is separate', 'separate project manager', 'general contractor', 'delivery model')) return visuals.designBuildVsArchitect;
+  if (has('what gets managed', 'scope change', 'scope changes', 'managed decisions')) return visuals.bulletScopeCoordination;
+  if (has('who we work with')) return visuals.whyAboutUs;
+  if (has('how we approach a project')) return visuals.whyVitaliteWay;
+  if (has('why the structure matters')) return visuals.designBuildVsArchitect;
+  if (has('gta realities')) return visuals.siteEvaluation;
+  if (has('consultation')) return visuals.bulletClientCommunication;
+  if (has('site and existing-condition review')) return visuals.bulletSiteFeasibility;
+  if (has('concept design, budget')) return visuals.bulletBudgetPlanning;
+  if (has('zoning, permits and engineering')) return visuals.bulletPermitPackages;
+  if (has('construction, pdi and closeout')) return visuals.bulletCloseoutWarranty;
 
   if (has('proof', 'reference', 'documentation', 'trust', 'closeout and warranty')) return visuals.proofReferences;
   if (has('news', 'media', 'market context', 'project pipeline', 'company milestone', 'recognition')) return visuals.news;
   if (has('about', 'who we work with', 'how we approach', 'why the structure matters', 'gta realities')) {
     return visuals.whyAboutUs;
   }
-  if (has('vitalite way', 'consultation', 'site and existing-condition', 'sequence', 'pdi', 'aftercare')) {
+  if (has('vitalite way', 'site and existing-condition', 'pdi', 'aftercare')) {
     return visuals.whyVitaliteWay;
   }
   if (has('custom home', 'teardown', 'willowdale', 'markham', 'infill', 'lot severance')) {
@@ -3870,25 +4619,21 @@ function imageForDetailSection(section: { heading: string; text: string }, page:
   }
   if (has('garden suite', 'laneway', 'coach house', 'backyard dwelling')) return visuals.workGardenSuites;
   if (has('addition', 'vertical expansion', 'rear addition', 'side addition', 'second-storey')) return visuals.workAdditions;
-  if (has('warehouse', 'office', 'retail', 'institutional', 'tenant', 'commercial', 'ici')) return visuals.workIci;
+  if (has('warehouse', 'office', 'retail', 'institutional', 'tenant', 'commercial', 'ici construction')) return visuals.workIci;
   if (has('townhouse', 'semi-detached', 'party wall', 'narrow lot')) return visuals.workTownhouses;
-  if (has('cost per square foot', 'cost driver', 'budget', 'pricing', 'carrying cost')) return visuals.blogRenovationCosts;
+  if (has('cost per square foot', 'cost driver', 'carrying cost')) return visuals.blogRenovationCosts;
   if (has('renovation law', 'permit', 'zoning', 'building code', 'board approval')) return visuals.blogRenovationLaws;
   if (has('garden suite ideas', 'rental income', 'secondary suite')) return visuals.blogGardenSuiteIdeas;
 
   if (has('portfolio', 'active examples', 'scope examples', 'project types', 'examples')) return page.image;
-  if (has('construction', 'site logistics', 'site sequencing', 'living through construction', 'occupied', 'operational')) {
-    return visuals.serviceSiteManagement;
-  }
-  if (has('condo board', 'property manager', 'committee of adjustment', 'municipal permit', 'approval')) {
-    return visuals.boardApprovals;
-  }
-  if (has('drawing', 'permit package', 'submission', 'engineering coordination', 'comment response')) {
-    return visuals.servicePermitsEngineering;
-  }
-  if (has('budget', 'pricing', 'cost', 'lead time', 'procurement')) {
-    return visuals.bulletBudgetPlanning;
-  }
+  if (has('pdi', 'warranty', 'closeout', 'handover', 'aftercare', 'deficiency', 'move-in')) return visuals.bulletCloseoutWarranty;
+  if (has('municipal inspection', 'municipal inspections', 'permit office', 'permit reviewer')) return visuals.bulletPermitPackages;
+  if (has('trade', 'schedule', 'sequencing', 'standing time', 'standing trade', 'sub-trade', 'sub-trades')) return visuals.bulletTradeScheduling;
+  if (has('communication', 'reporting', 'client', 'owner', 'progress', 'reference')) return visuals.bulletClientCommunication;
+  if (has('inspection', 'quality', 'building code', 'code review', 'code-compliant')) return visuals.bulletQualityInspection;
+  if (has('budget', 'pricing', 'cost', 'lead time', 'procurement')) return visuals.bulletBudgetPlanning;
+  if (has('condo board', 'property manager', 'committee of adjustment', 'municipal permit', 'approval')) return visuals.boardApprovals;
+  if (has('drawing', 'permit package', 'submission', 'engineering coordination', 'comment response')) return visuals.servicePermitsEngineering;
   if (has('zoning', 'setback', 'lot coverage', 'height', 'lot', 'bylaw', 'site feasibility')) {
     return visuals.bulletZoningReview;
   }
@@ -3897,6 +4642,9 @@ function imageForDetailSection(section: { heading: string; text: string }, page:
   }
   if (has('interior', 'finish', 'material', 'kitchen', 'bath', 'millwork', 'cabinetry')) {
     return visuals.interiorDesign;
+  }
+  if (has('site logistics', 'site sequencing', 'living through construction', 'occupied', 'operational', 'active site management')) {
+    return visuals.serviceSiteManagement;
   }
 
   return imageForDetailBullet(`${section.heading} ${section.text}`, page);
@@ -3919,7 +4667,7 @@ const subPageHeroes: Record<MainPageKey, { category: string; title: string; desc
     category: 'OUR WORK',
     title: 'Projects that moved from drawings to permit to site — under one team',
     desc: 'Custom homes, multiplex housing, garden suites, additions, ICI construction and full interiors across the GTA. Every project went through the same managed delivery path.',
-    image: visuals.workCustomHomes,
+    image: visuals.workOverview,
   },
   blog: {
     category: 'BLOG',
@@ -4110,7 +4858,7 @@ const SeoHubPage = ({ pageKey }: { pageKey: 'locations-hub' | 'communities-hub' 
     <>
       <div className="relative h-[62vh] min-h-[520px] bg-kiewit-dark overflow-hidden">
         <img
-          src={isLocations ? visuals.designBuild : visuals.permitGuide}
+          src={isLocations ? visuals.seoGtaServiceAreas : visuals.seoNeighbourhoodCommunities}
           alt={title}
           loading="eager"
           decoding="async"
@@ -4225,10 +4973,28 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       </div>
 
       <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-16">
-          <div>
-            <SubPageHeading title={page.title} dark />
-            <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+          <SubPageHeading title={page.title} dark />
+          {page.isProject && page.projectMeta ? (
+            <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-gray-200 border border-gray-200 rounded-xl overflow-hidden mb-12">
+              {[
+                { label: 'Project Type', value: page.projectMeta.projectType },
+                { label: 'Location', value: page.projectMeta.location },
+                { label: 'Size', value: page.projectMeta.size },
+                { label: 'Duration', value: page.projectMeta.duration },
+                { label: 'Status', value: page.projectMeta.statusLabel },
+                { label: 'Approval Path', value: page.projectMeta.approvalPath },
+              ].filter((f) => f.value).map((fact) => (
+                <div key={fact.label} className="bg-white px-4 py-4">
+                  <dt className="text-[10px] font-bold tracking-[0.16em] uppercase text-gray-400 mb-1">{fact.label}</dt>
+                  <dd className="text-sm font-medium text-gray-900 leading-snug">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+          <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-16">
+            <div>
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-10">
               {page.intro}
             </p>
             {page.answer ? (
@@ -4242,18 +5008,23 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {page.bullets.map((item) => {
-              const bulletImage = imageForDetailBullet(item, page);
-
+          <div className="flex flex-col border-t border-gray-200 mt-6 lg:mt-0">
+            {page.bullets.map((item, index) => {
               return (
-                <div key={`${pageKey}-${item}`} className="overflow-hidden border border-gray-200 bg-gray-50 rounded-lg text-black font-medium">
-                  <img src={bulletImage} alt={`${page.title}: ${item}`} loading="lazy" decoding="async" className="h-32 w-full object-cover" />
-                  <div className="p-5">{item}</div>
+                <div key={`${pageKey}-${item}`} className="group flex flex-col sm:flex-row sm:items-center py-6 sm:py-8 border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-default">
+                  <div className="flex items-center gap-6 sm:w-1/4 mb-3 sm:mb-0">
+                    <span className="text-sm font-bold text-gray-400 tracking-widest">{String(index + 1).padStart(2, '0')}</span>
+                    <div className="hidden sm:block w-12 h-px bg-gray-300 group-hover:bg-kiewit-yellow transition-colors"></div>
+                  </div>
+                  <div className="flex-1 flex justify-between items-center sm:pl-6">
+                    <h3 className="text-xl sm:text-2xl font-medium text-black group-hover:text-kiewit-yellow transition-colors">{item}</h3>
+                    <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-kiewit-yellow group-hover:translate-x-1 transition-all" />
+                  </div>
                 </div>
               );
             })}
           </div>
+        </div>
         </motion.div>
       </section>
 
@@ -4261,7 +5032,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
         <section className="bg-kiewit-dark py-20 md:py-32 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {page.sections.map((section) => {
-              const sectionImage = ['SERVICES', 'WHY VITALITE', 'OUR WORK', 'BLOG'].includes(page.category) ? imageForDetailSection(section, page) : null;
+              const sectionImage = ['SERVICES', 'WHY VITALITE', 'OUR WORK', 'BLOG'].includes(page.category) ? imageForDetailSection(section, page, pageKey) : null;
 
               return (
                 <article key={section.heading} className={`border border-white/10 bg-white/5 rounded-2xl ${sectionImage ? 'overflow-hidden' : 'p-6 sm:p-8'}`}>
@@ -4332,6 +5103,22 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
                   <h2 className="text-xl sm:text-2xl font-semibold text-black mb-3">{faq.question}</h2>
                   <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{faq.answer}</p>
                 </article>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+      ) : null}
+
+      {page.officialResources?.length ? (
+        <section className="bg-gray-50 text-black py-12 md:py-16 px-5 sm:px-8 md:px-24 border-t border-gray-200">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+            <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-5">Official Reference</p>
+            <div className="flex flex-wrap gap-3">
+              {page.officialResources.map((res) => (
+                <a key={res.url} href={res.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-800 hover:border-kiewit-yellow hover:bg-white transition-colors">
+                  <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  {res.label}
+                </a>
               ))}
             </div>
           </motion.div>
@@ -4816,6 +5603,16 @@ const renderPage = (activePage: PageKey) => {
       return <BlogPage />;
     case 'contact-us':
       return <ContactPage />;
+    case 'tools-hub':
+      return <Suspense fallback={<div className="min-h-screen bg-white" />}><ToolsHub /></Suspense>;
+    case 'tool-addition-cost':
+      return <Suspense fallback={<div className="min-h-screen bg-white" />}><AdditionCostCalculator /></Suspense>;
+    case 'tool-laneway-cost':
+      return <Suspense fallback={<div className="min-h-screen bg-white" />}><LanewayCostCalculator /></Suspense>;
+    case 'tool-teardown-decision':
+      return <Suspense fallback={<div className="min-h-screen bg-white" />}><TeardownDecisionTool /></Suspense>;
+    case 'tool-permit-timeline':
+      return <Suspense fallback={<div className="min-h-screen bg-white" />}><PermitTimelineEstimator /></Suspense>;
     case 'home':
     default:
       return <HomePage />;

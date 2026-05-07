@@ -12,8 +12,18 @@ export type SeoPage = {
   primaryKeyword: string;
 };
 
-export type ProjectStatus = 'ongoing-2025' | 'coming-2026' | 'completed';
-export type ProjectCategory = 'custom-homes' | 'multiplex' | 'additions' | 'garden-suites';
+export type ProjectStatus = 'ongoing-2025' | 'coming-2026' | 'completed' | 'representative';
+export type ProjectCategory =
+  | 'custom-homes'
+  | 'multiplex'
+  | 'additions'
+  | 'garden-suites'
+  | 'ici'
+  | 'condos'
+  | 'lofts'
+  | 'older-homes'
+  | 'townhouses'
+  | 'full-interiors';
 export type ProjectEntry = {
   key: string;
   path: string;
@@ -28,6 +38,9 @@ export type ProjectEntry = {
   headline: string;
   scope: string[];
   narrative: string[];
+  duration?: string;
+  approvalPath?: string;
+  projectType?: string;
 };
 
 export const projects: ProjectEntry[] = (projectsData.projects as ProjectEntry[]) ?? [];

@@ -38,7 +38,7 @@ function injectSeo(html, page) {
     `<meta name="author" content="${escapeHtml(seoData.business.name)}" />`,
     `<link rel="canonical" href="${canonical}" />`,
     `<meta property="og:site_name" content="${escapeHtml(seoData.siteName)}" />`,
-    `<meta property="og:type" content="${page.kind === 'article' ? 'article' : 'website'}" />`,
+    `<meta property="og:type" content="${page.kind === 'article' || page.kind === 'project' ? 'article' : 'website'}" />`,
     `<meta property="og:title" content="${escapeHtml(page.title)}" />`,
     `<meta property="og:description" content="${escapeHtml(page.description)}" />`,
     `<meta property="og:url" content="${canonical}" />`,
@@ -859,6 +859,13 @@ function buildLlmsTxt() {
 
   const services = pages.filter((page) => page.key.startsWith('service-')).slice(0, 18);
   const guides = pages.filter((page) => page.kind === 'article').slice(0, 40);
+  const serviceAreas = pages
+    .filter((page) => page.key.startsWith('location-') && ['toronto', 'north-york', 'markham', 'richmond-hill', 'vaughan', 'mississauga'].some((slug) => page.key.endsWith(`-${slug}`)))
+    .slice(0, 24);
+  const projectProof = (projectsData.projects ?? [])
+    .slice(0, 18)
+    .map((project) => pages.find((page) => page.key === project.key))
+    .filter(Boolean);
 
   return [
     '# Vitalite Construction Corp.',
@@ -873,6 +880,18 @@ function buildLlmsTxt() {
     '',
     '## Planning Guides',
     ...guides.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
+    '',
+    '## Toronto and GTA Service Area Pages',
+    ...serviceAreas.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
+    '',
+    '## Project Proof',
+    ...projectProof.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
+    '',
+    '## Official Planning References',
+    '- City of Toronto building permits: https://www.toronto.ca/services-payments/building-construction/apply-for-a-building-permit/',
+    '- City of Toronto garden suites: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/garden-suites/',
+    '- City of Toronto laneway suites: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/changing-lanes-laneway-suites-in-toronto/',
+    '- City of Toronto multiplex considerations: https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/multiplex-housing/considerations-when-building-multiplexes/',
     '',
     '## Service Area',
     `Vitalite serves ${seoData.business.areaServed.join(', ')}.`,

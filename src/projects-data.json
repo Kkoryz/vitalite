@@ -3,18 +3,31 @@
     "custom-homes": "Custom Homes",
     "multiplex": "Multiplex / Multi-Unit",
     "additions": "Additions & Renovations",
-    "garden-suites": "Garden Suites & Laneway"
+    "garden-suites": "Garden Suites & Laneway",
+    "ici": "Industrial / Commercial / Institutional",
+    "condos": "Condos & Apartments",
+    "lofts": "Lofts & Open-Concept",
+    "older-homes": "Older Toronto Homes",
+    "townhouses": "Townhouses & Semi-Detached",
+    "full-interiors": "Full Interiors"
   },
   "categoryParents": {
     "custom-homes": "work-custom-homes",
     "multiplex": "work-multiplex",
     "additions": "work-additions",
-    "garden-suites": "work-garden-suites"
+    "garden-suites": "work-garden-suites",
+    "ici": "work-ici",
+    "condos": "work-condos",
+    "lofts": "work-lofts",
+    "older-homes": "work-older-homes",
+    "townhouses": "work-townhouses",
+    "full-interiors": "work-full-interiors"
   },
   "statusLabels": {
     "ongoing-2025": "2025 Ongoing",
     "coming-2026": "Coming 2026",
-    "completed": "Completed"
+    "completed": "Completed",
+    "representative": "Project Type"
   },
   "projects": [
     {
@@ -39,7 +52,10 @@
         "This ongoing Willowdale project is a 4,700 sq ft modern detached rebuild in one of North York's most active custom home markets. The project replaces older housing stock with a higher-performing family residence planned around long-term property value, open-concept living and a luxury exterior presence.",
         "Vitalite manages the project as a connected design-build scope: zoning review, architectural and engineering coordination, building permit drawings, structural framing, mechanical systems, finish-trade coordination, municipal inspections and final closeout. The owner has one accountable team instead of separate parties handing off risk.",
         "Willowdale custom home work depends on early control of lot coverage, setbacks, structural spans, HVAC routing, glazing, drainage and inspection sequencing. Vitalite addressed those items before the build moved to site so construction decisions support the approved drawings and budget direction."
-      ]
+      ],
+      "duration": "Ongoing",
+      "approvalPath": "City of Toronto two-stage building permit (zoning review + building code)",
+      "projectType": "Teardown Rebuild"
     },
     {
       "key": "project-preston-lake-stouffville-addition",
@@ -63,7 +79,10 @@
         "This Preston Lake project adds 200 sq ft to an existing house, extending the dining area and family room into one connected space. The addition uses a vaulted cathedral-style roof and a heated crawl space below, finished in a classic American country style that ties cleanly back into the existing home.",
         "Single-storey additions at this scale need precise foundation work, properly insulated heated crawl spaces, structural tie-ins to the existing house, and roof framing that transitions cleanly between old and new. Vitalite coordinates architectural drawings, structural engineering, building permit, foundation, framing, mechanical and finishing trades on one schedule.",
         "Stouffville additions are reviewed under Whitchurch-Stouffville zoning rules, so setbacks, lot coverage, and exterior design continuity all get resolved at the permit drawing stage before site work begins."
-      ]
+      ],
+      "duration": "Ongoing",
+      "approvalPath": "Town of Whitchurch-Stouffville building permit (zoning review + building code)",
+      "projectType": "Home Addition"
     },
     {
       "key": "project-lansdowne-toronto-multiplex-laneway",
@@ -87,7 +106,10 @@
         "This Lansdowne project is a ground-up multi-unit residential build where every floor functions as a separate, self-contained living unit with its own access. A garage with a laneway suite at the rear adds another rentable unit on the same lot, maximizing investment return without overshadowing the streetscape.",
         "Multi-unit projects in Toronto require careful work on zoning permissions, fire separation between units, egress, parking, servicing, and HVAC layout. Vitalite handles zoning review, permit drawings, structural and mechanical engineering coordination, and the construction sequence so each unit is delivered code-compliant and rent-ready.",
         "Lansdowne sits in an area where Toronto's multiplex zoning reforms and laneway suite by-laws can stack into significant rental income. Property owners who plan early for fire separation, parking, and laneway access typically move faster through Committee of Adjustment."
-      ]
+      ],
+      "duration": "Ongoing",
+      "approvalPath": "City of Toronto building permit (as-of-right multiplex zoning) + laneway suite permit with utility connections",
+      "projectType": "Multiplex New Build + Laneway Suite"
     },
     {
       "key": "project-erindale-mississauga-side-split-addition",
@@ -112,7 +134,10 @@
         "This Erindale project is a major expansion of an existing four-storey side-split — adding two more levels and a backyard extension to bring the home to six storeys total. A new trussed roof, a vaulted foyer, and aluminum alloy doors and windows reset the home's exterior presence on the street.",
         "Vertical additions on side-split houses are structurally complex. Existing foundations, walls and floor systems must be analyzed before adding floors, and the roof system has to be redesigned around new load paths. Vitalite coordinates the structural engineering, architectural drawings, permit submission, demolition, framing, mechanical upgrades and finishes so every stage stays in sync.",
         "Mississauga building permit reviews typically focus on lot coverage, height, grading, and structural sufficiency — all factors that get resolved during pre-construction, before any framing begins."
-      ]
+      ],
+      "duration": "Ongoing",
+      "approvalPath": "City of Mississauga building permit (zoning compliance + structural review for vertical addition)",
+      "projectType": "Second-Storey Addition"
     },
     {
       "key": "project-york-toronto-lot-severance-semi",
@@ -136,7 +161,10 @@
         "This 2026 project takes a single 38'x120' lot in York, Toronto and severs it into two equal parcels, each with a new semi-detached home of 2,100 sq ft gross floor area. It's a typical pattern of Toronto infill: turning one underutilized lot into two homes that fit the existing streetscape.",
         "Severance projects move through the Committee of Adjustment first, then proceed to zoning compliance, architectural drawings, structural and mechanical coordination, and building permits for both new homes. Vitalite prepares the application package, handles drawings and engineering, and runs the construction schedule for both halves in parallel.",
         "Lot severance work in Toronto often hinges on minimum lot frontage, parking, and fit with the surrounding character. Owners who run zoning review early have a much smoother path to approvals."
-      ]
+      ],
+      "duration": "18–24 months",
+      "approvalPath": "Committee of Adjustment severance + City of Toronto two building permits (zoning + building code) for each semi",
+      "projectType": "Lot Severance + Two Semi-Detached Builds"
     },
     {
       "key": "project-bedford-park-mixed-use-rental",
@@ -160,7 +188,10 @@
         "This Bedford Park project builds on an existing two-storey mixed-use property — commercial at grade and residential above — adding two more storeys and five rental apartments. It's one of the more complex types of construction we handle: live commercial below, occupied residential, and significant new vertical construction above.",
         "Vertical additions over occupied buildings require detailed structural assessment, careful staging, and thorough coordination with tenants and the City of Toronto. Vitalite plans the engineering, fire separation between uses, mechanical and electrical risers, building permit drawings, and the construction sequence so the existing tenants can stay in place during most of the work.",
         "Bedford Park sits along Yonge Street north of Lawrence — a corridor where mixed-use density is increasingly viable. Owners who add rental units the right way can build long-term value while keeping commercial cash flow."
-      ]
+      ],
+      "duration": "16–20 months",
+      "approvalPath": "City of Toronto building permit (mixed-use zoning + structural review for vertical addition over occupied building)",
+      "projectType": "Mixed-Use Vertical Addition"
     },
     {
       "key": "project-avondale-custom-home-3200",
@@ -184,7 +215,10 @@
         "This 2026 Avondale build is a 3,200 sq ft detached home with transitional styling — a deliberate blend of traditional warmth and contemporary clean lines. The exterior and interior are designed to be simple yet polished, with material details carrying most of the design weight.",
         "Transitional builds depend heavily on detail execution: trim profiles, window proportions, finish transitions, and the way materials meet at corners. Vitalite coordinates the architectural drawings, finish selections, structural and mechanical engineering, building permit, and on-site quality control so the design intent survives construction.",
         "Avondale is a North York area where buyers expect family-sized homes with strong long-term resale. A 3,200 sq ft detached on a well-planned lot fits that demand directly."
-      ]
+      ],
+      "duration": "12–14 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning review + building code)",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-stouffville-retrofit-cathedral-walkup",
@@ -208,7 +242,10 @@
         "This Stouffville project is a major retrofit on an existing home — adding a front foyer, a dedicated study, a sunroom, and a backyard basement walk-up staircase. The existing roof structure is also being transformed into a cathedral-style ceiling, opening the upper floor entirely.",
         "Retrofits at this scope sit between a renovation and a custom home build. Vitalite handles structural analysis of the existing house, demolition planning, foundation extensions for the additions, basement walkout structural work, roof reframing for the cathedral ceiling, mechanical and electrical upgrades, and full interior finishes.",
         "Stouffville projects fall under Whitchurch-Stouffville municipal building permit review. Lot grading, drainage, setbacks, and structural permits all need to be coordinated before the first wall comes down."
-      ]
+      ],
+      "duration": "10–14 months",
+      "approvalPath": "Town of Whitchurch-Stouffville building permit (zoning review + structural for additions and basement walk-up)",
+      "projectType": "Home Addition + Basement Walkout"
     },
     {
       "key": "project-rural-stouffville-american-country",
@@ -233,7 +270,10 @@
         "This Stouffville rural custom home is built around an American country-style aesthetic, executed with modern building materials. Wood-grain siding, fluted panels, Hardie board, and stucco are layered together to give the exterior a deliberate, fresh take on the country style without the maintenance burden of traditional cladding.",
         "Rural builds in Whitchurch-Stouffville come with their own constraints — septic and well coordination, larger setbacks, road access, drainage, and occasionally conservation authority review. Vitalite plans these inputs into the design and permit drawings before the foundation is poured.",
         "American country style works on a rural lot when the materials are chosen carefully and the proportions are honest. The cladding combination on this build is the design hinge — it's what carries the whole exterior."
-      ]
+      ],
+      "duration": "14–16 months",
+      "approvalPath": "Town of Whitchurch-Stouffville building permit + septic/well approval and conservation authority review where applicable",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-willowdale-expansion-5200",
@@ -257,7 +297,10 @@
         "This Willowdale project takes a 3,700 sq ft home and expands it by 1,500 sq ft — keeping the original foundation intact while adding new framed area. The result is 5,200 sq ft of finished home with an 11-ft main-floor ceiling height and 9.5-ft on the second floor.",
         "Expansions that retain the original foundation are a careful balance between cost savings and structural integrity. Vitalite assesses the existing foundation capacity, designs the new framing to load it correctly, raises the ceiling heights through structural beam upgrades, and re-coordinates the mechanical, electrical, and finishing trades around the larger volume.",
         "Willowdale buyers often weigh expansion against full rebuild. Keeping the foundation can shorten the project timeline and reduce demolition and grading costs, but only when the existing structure can carry the new program."
-      ]
+      ],
+      "duration": "12–16 months",
+      "approvalPath": "City of Toronto building permit (zoning review + structural review for foundation reuse and ceiling-height upgrade)",
+      "projectType": "Home Addition + Expansion"
     },
     {
       "key": "project-past-willowdale-1",
@@ -280,7 +323,10 @@
       "narrative": [
         "This Willowdale project was completed by Vitalite as part of our earlier custom home and rebuild work in North York. Willowdale is one of Toronto's most active rebuild markets — older bungalows and split-levels regularly being replaced with modern, family-scale custom homes.",
         "Past projects in this neighbourhood have helped shape how Vitalite approaches zoning, design fit, and construction logistics on Willowdale lots. The interior is no longer accessible for visits, but the experience — its planning, structural work, permit coordination, and finish-stage management — informs how we deliver Willowdale projects today."
-      ]
+      ],
+      "duration": "14 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning + building code)",
+      "projectType": "Teardown Rebuild"
     },
     {
       "key": "project-past-cachet-markham-1",
@@ -303,7 +349,10 @@
       "narrative": [
         "This Cachet project was part of Vitalite's earlier custom home work in Markham. Cachet is known for its larger lots, mature streets, and strong demand for high-spec detached homes — buyers and owners in the area expect serious finish quality and disciplined construction management.",
         "Interior visits are no longer available, but the project sits within a portfolio of Markham builds that shape how Vitalite handles design, zoning, and trade coordination in similar neighbourhoods today."
-      ]
+      ],
+      "duration": "16 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-cachet-markham-2",
@@ -326,7 +375,10 @@
       "narrative": [
         "Vitalite has completed multiple custom home projects in Cachet, Markham. Each one informs the next — site logistics, municipal permit timing, finish-trade coordination and quality control improve with repeat work in the same neighbourhood.",
         "Interior tours are no longer available for this project, but the experience continues to shape how Vitalite handles new Cachet inquiries from initial feasibility through closeout."
-      ]
+      ],
+      "duration": "15 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-richvale-richmond-hill",
@@ -349,7 +401,10 @@
       "narrative": [
         "This Richvale project was completed as part of Vitalite's earlier Richmond Hill residential work. Richmond Hill projects often involve grading, servicing, and structural coordination tied to suburban lot conditions, and finish expectations on higher-value homes are typically high.",
         "Interior visits are no longer available, but the project sits within a portfolio of Richmond Hill work that informs how Vitalite plans zoning, structure, and finish quality on similar lots today."
-      ]
+      ],
+      "duration": "14 months",
+      "approvalPath": "City of Richmond Hill building permit (zoning compliance + grading and servicing review)",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-willowdale-2",
@@ -372,7 +427,10 @@
       "narrative": [
         "Willowdale is a rebuild market — older homes regularly come down and are replaced with modern, family-scale custom homes. This second Willowdale project added to Vitalite's experience working with the area's typical lot widths, setbacks, and design expectations.",
         "Interior tours are no longer available, but project experience continues to inform how Vitalite handles Willowdale custom home inquiries today, from zoning review through closeout."
-      ]
+      ],
+      "duration": "13 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning + building code)",
+      "projectType": "Teardown Rebuild"
     },
     {
       "key": "project-past-bullock-markham-1",
@@ -395,7 +453,10 @@
       "narrative": [
         "This Bullock project was completed as part of Vitalite's earlier Markham custom home work. Bullock has a mix of established detached homes and rebuild activity, and projects in the area typically need careful design fit with neighbouring properties.",
         "Interior visits are no longer available. The project sits within Vitalite's broader Markham portfolio and continues to inform how new Bullock inquiries are scoped today."
-      ]
+      ],
+      "duration": "14 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-cachet-markham-3",
@@ -418,7 +479,10 @@
       "narrative": [
         "Repeat work in the same Markham neighbourhood compounds: site logistics, municipal permit timing, and trade coordination all become more efficient. This third Cachet project is part of that pattern — each one builds on the last.",
         "Interior tours are no longer available, but the project history shapes how Vitalite handles Cachet inquiries today, from feasibility review through finish-trade coordination."
-      ]
+      ],
+      "duration": "16 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-bullock-markham-2",
@@ -441,7 +505,10 @@
       "narrative": [
         "Bullock projects often involve sensitivity to neighbouring homes and the established streetscape. This second Bullock build is part of Vitalite's growing experience on these specific design and zoning conditions.",
         "Interior tours are no longer available. The work continues to inform how Vitalite scopes new Bullock and surrounding-Markham inquiries today."
-      ]
+      ],
+      "duration": "13 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-don-valley-north-york",
@@ -464,7 +531,10 @@
       "narrative": [
         "Don Valley projects often involve grading, ravine-adjacent considerations, and detailed site logistics. This North York custom home was completed under those conditions and contributed to Vitalite's experience with similar lot types.",
         "Interior tours are no longer available, but the project's planning, drawing coordination, and construction work continue to shape how Vitalite handles new Don Valley inquiries today."
-      ]
+      ],
+      "duration": "15 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning + building code) + TRCA ravine review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-willowdale-3",
@@ -487,7 +557,10 @@
       "narrative": [
         "Willowdale's rebuild activity has produced repeat opportunities for Vitalite. This third Willowdale project added more local experience with typical lot widths, glazing rules, and finish expectations on the area's high-value homes.",
         "Interior tours are no longer available. The project continues to inform Vitalite's Willowdale custom home work today."
-      ]
+      ],
+      "duration": "14 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning + building code)",
+      "projectType": "Teardown Rebuild"
     },
     {
       "key": "project-past-bullock-markham-3",
@@ -510,7 +583,10 @@
       "narrative": [
         "Three Bullock projects represent a meaningful body of local work. Each one reinforced the planning, zoning, and construction lessons that apply to similar Markham residential streets.",
         "Interior tours are no longer available. Vitalite's Bullock experience continues to shape new Markham inquiries today."
-      ]
+      ],
+      "duration": "15 months",
+      "approvalPath": "City of Markham building permit + design review",
+      "projectType": "Custom Home Build"
     },
     {
       "key": "project-past-bayview-village-north-york",
@@ -533,7 +609,374 @@
       "narrative": [
         "Bayview Village owners typically expect mature suburban lots, premium finishes, and careful coordination across structural, mechanical and finish trades. This North York custom home was completed under those conditions.",
         "Interior tours are no longer available. The project continues to inform how Vitalite handles new Bayview Village inquiries today, from feasibility through closeout."
-      ]
+      ],
+      "duration": "16 months",
+      "approvalPath": "City of Toronto two-stage building permit (zoning + building code)",
+      "projectType": "Custom Home Build"
+    },
+    {
+      "key": "project-toronto-laneway-suite-over-garage",
+      "path": "/our-work/toronto-laneway-suite-over-garage",
+      "title": "Toronto Laneway Suite Over Garage | Vitalite",
+      "description": "Representative Toronto laneway suite project type: a compact dwelling over a rear garage with zoning, servicing, access and construction logistics coordinated by Vitalite.",
+      "primaryKeyword": "Toronto laneway suite builder",
+      "status": "representative",
+      "category": "garden-suites",
+      "communitySlug": "toronto-laneway",
+      "locationLabel": "Toronto Laneway",
+      "size": "Laneway suite over garage",
+      "headline": "A compact rental dwelling over a rear garage, planned around access, privacy, servicing and permit approval.",
+      "scope": [
+        "Laneway suite above garage",
+        "Independent dwelling layout",
+        "Privacy-focused windows",
+        "Permit and site-access coordination"
+      ],
+      "narrative": [
+        "This representative laneway suite scope shows how a rear garage can support a compact dwelling without subdividing the lot. The design has to resolve height, access, overlook, servicing, fire access and construction staging before drawings move to permit.",
+        "Vitalite coordinates zoning review, architectural drawings, structural engineering, servicing, garage integration and site sequencing so the laneway suite can be built as part of one managed process."
+      ],
+      "duration": "8–10 months",
+      "approvalPath": "City of Toronto building permit + utility connections (separate electrical meter, water service) and laneway suite by-law review",
+      "projectType": "Laneway Suite"
+    },
+    {
+      "key": "project-stouffville-backyard-garden-suite",
+      "path": "/our-work/stouffville-backyard-garden-suite",
+      "title": "Stouffville Backyard Garden Suite | Vitalite",
+      "description": "Representative Stouffville garden suite project type with detached backyard dwelling design, permit review, servicing and construction sequencing.",
+      "primaryKeyword": "Stouffville garden suite builder",
+      "status": "representative",
+      "category": "garden-suites",
+      "communitySlug": "stouffville-central",
+      "locationLabel": "Stouffville",
+      "size": "Detached backyard suite",
+      "headline": "A detached backyard dwelling planned around lot fit, drainage, servicing and long-term rental use.",
+      "scope": [
+        "Detached backyard suite",
+        "Accessory dwelling layout",
+        "Garden path and entry planning",
+        "Municipal permit coordination"
+      ],
+      "narrative": [
+        "This representative garden suite scope reflects the questions owners need answered early: whether the lot can support a detached dwelling, how servicing reaches it, and how drainage, setbacks and access affect the design.",
+        "Vitalite turns those inputs into a coordinated design-build process from feasibility and permit drawings through foundation, framing, services and final finishes."
+      ],
+      "duration": "8–10 months",
+      "approvalPath": "Town of Whitchurch-Stouffville building permit + servicing and drainage review for accessory dwelling",
+      "projectType": "Garden Suite"
+    },
+    {
+      "key": "project-gta-warehouse-office-fitout",
+      "path": "/our-work/gta-warehouse-office-fitout",
+      "title": "GTA Warehouse + Office Fit-Out | Vitalite",
+      "description": "Representative ICI project type: warehouse and office fit-out with trade sequencing, fire safety, egress, inspections and occupancy coordination.",
+      "primaryKeyword": "GTA warehouse office fit out contractor",
+      "status": "representative",
+      "category": "ici",
+      "communitySlug": "gta",
+      "locationLabel": "GTA",
+      "size": "Warehouse + office fit-out",
+      "headline": "A light-industrial fit-out where office partitions, services, fire safety and occupancy are coordinated together.",
+      "scope": [
+        "Warehouse interior fit-out",
+        "Office partitions and mezzanine planning",
+        "Fire and egress coordination",
+        "Inspection and occupancy support"
+      ],
+      "narrative": [
+        "Warehouse and office fit-outs need a practical construction sequence: rough-in before partitions, fire and egress compliance before occupancy, and trade work staged so the building can move toward opening without avoidable rework.",
+        "Vitalite coordinates drawings, permits, trades, inspections and closeout for commercial and light-industrial projects where schedule certainty matters."
+      ],
+      "duration": "6–9 months",
+      "approvalPath": "Municipal commercial building permit (interior alteration + fire and egress review)",
+      "projectType": "Warehouse Fitout"
+    },
+    {
+      "key": "project-toronto-retail-tenant-improvement",
+      "path": "/our-work/toronto-retail-tenant-improvement",
+      "title": "Toronto Retail Tenant Improvement | Vitalite",
+      "description": "Representative retail tenant improvement project type with storefront interior fit-out, finish sequencing, inspections and occupancy preparation.",
+      "primaryKeyword": "Toronto retail tenant improvement contractor",
+      "status": "representative",
+      "category": "ici",
+      "communitySlug": "toronto",
+      "locationLabel": "Toronto",
+      "size": "Retail tenant improvement",
+      "headline": "A storefront fit-out where millwork, lighting, surfaces and code items need to land before the opening date.",
+      "scope": [
+        "Retail interior build-out",
+        "Millwork and finish sequencing",
+        "Lighting and exposed ceiling coordination",
+        "Occupancy readiness"
+      ],
+      "narrative": [
+        "Retail tenant improvements are schedule-sensitive because every delay pushes back opening. The work has to sequence base-building rules, trades, inspections, millwork, lighting and final finishes into a reliable path.",
+        "Vitalite manages tenant improvement scopes from construction planning through closeout so the space is ready for occupancy and business use."
+      ],
+      "duration": "3–5 months",
+      "approvalPath": "City of Toronto commercial building permit (tenant improvement + sign permit where applicable)",
+      "projectType": "Retail Renovation"
+    },
+    {
+      "key": "project-downtown-toronto-condo-renovation",
+      "path": "/our-work/downtown-toronto-condo-renovation",
+      "title": "Downtown Toronto Condo Renovation | Vitalite",
+      "description": "Representative downtown Toronto condo renovation project type with board approvals, elevator scheduling, kitchen renovation and suite finish coordination.",
+      "primaryKeyword": "downtown Toronto condo renovation contractor",
+      "status": "representative",
+      "category": "condos",
+      "communitySlug": "downtown-toronto",
+      "locationLabel": "Downtown Toronto",
+      "size": "Condo suite renovation",
+      "headline": "A high-rise suite renovation planned around board approval, elevator windows, protected access and finish sequencing.",
+      "scope": [
+        "Kitchen and living area renovation",
+        "Board package coordination",
+        "Elevator and access scheduling",
+        "Suite finish installation"
+      ],
+      "narrative": [
+        "Condo renovations carry building rules that shape the construction schedule. Approval packages, insurance, noise windows, elevator bookings and material handling all need to be coordinated before site work starts.",
+        "Vitalite manages condo renovations as a controlled process so the design, procurement, access and trade sequence fit within the building's requirements."
+      ],
+      "duration": "3–5 months",
+      "approvalPath": "Condo board approval + City of Toronto building permit (interior alteration scope)",
+      "projectType": "Condo Renovation"
+    },
+    {
+      "key": "project-north-york-apartment-suite-renovation",
+      "path": "/our-work/north-york-apartment-suite-renovation",
+      "title": "North York Apartment Suite Renovation | Vitalite",
+      "description": "Representative North York apartment renovation project type with suite updates, protected access, material staging and property-management coordination.",
+      "primaryKeyword": "North York apartment renovation contractor",
+      "status": "representative",
+      "category": "condos",
+      "communitySlug": "north-york",
+      "locationLabel": "North York",
+      "size": "Apartment suite renovation",
+      "headline": "An apartment-suite renovation where compact layouts, building rules and material staging drive the schedule.",
+      "scope": [
+        "Apartment kitchen update",
+        "Bathroom finish coordination",
+        "Protected corridor access",
+        "Property management coordination"
+      ],
+      "narrative": [
+        "Apartment suite renovations require tight control of access, delivery windows, protection, waste removal and noise. Compact layouts also make trade overlap harder, so the sequence matters.",
+        "Vitalite coordinates building communication, material staging, trades and finish installation so the suite can be renovated with less disruption."
+      ],
+      "duration": "2–4 months",
+      "approvalPath": "Property management approval + City of Toronto building permit where structural or plumbing changes apply",
+      "projectType": "Apartment Suite Renovation"
+    },
+    {
+      "key": "project-toronto-hard-loft-open-plan",
+      "path": "/our-work/toronto-hard-loft-open-plan-renovation",
+      "title": "Toronto Hard Loft Open-Plan Renovation | Vitalite",
+      "description": "Representative Toronto hard loft renovation project type with exposed brick, ductwork, sprinkler coordination, kitchen planning and open-concept finishing.",
+      "primaryKeyword": "Toronto loft renovation contractor",
+      "status": "representative",
+      "category": "lofts",
+      "communitySlug": "toronto",
+      "locationLabel": "Toronto",
+      "size": "Hard loft renovation",
+      "headline": "A hard loft renovation where exposed systems become part of the design, not an afterthought.",
+      "scope": [
+        "Open-plan loft layout",
+        "Exposed brick and beam coordination",
+        "Visible ductwork and sprinkler planning",
+        "Kitchen and living area finishes"
+      ],
+      "narrative": [
+        "Loft renovations expose every coordination decision: conduit, ductwork, sprinklers, beams and lighting all remain visible. The trade sequence has to support the design intent.",
+        "Vitalite coordinates structural, mechanical, electrical and finish work before demolition so the open-plan result looks intentional."
+      ],
+      "duration": "4–6 months",
+      "approvalPath": "Condo board approval + City of Toronto building permit (interior alteration with sprinkler and structural review)",
+      "projectType": "Loft Renovation"
+    },
+    {
+      "key": "project-open-concept-penthouse-renovation",
+      "path": "/our-work/open-concept-penthouse-renovation",
+      "title": "Open-Concept Penthouse Renovation | Vitalite",
+      "description": "Representative open-concept penthouse renovation project type with structural beam integration, kitchen planning, millwork and finish sequencing.",
+      "primaryKeyword": "open concept condo renovation Toronto",
+      "status": "representative",
+      "category": "lofts",
+      "communitySlug": "toronto",
+      "locationLabel": "Toronto",
+      "size": "Open-concept renovation",
+      "headline": "A large open-plan renovation where structure, lighting, millwork and kitchen design have to align early.",
+      "scope": [
+        "Open living and dining layout",
+        "Structural beam integration",
+        "Kitchen and millwork planning",
+        "Lighting and finish coordination"
+      ],
+      "narrative": [
+        "Open-concept renovations look simple after completion, but they depend on early structural and mechanical decisions. Beams, lighting, HVAC and cabinetry all compete for the same ceiling and wall space.",
+        "Vitalite plans those decisions before rough-in so the finished space reads as one continuous design."
+      ],
+      "duration": "4–6 months",
+      "approvalPath": "Condo board approval + City of Toronto building permit (interior alteration with structural beam review)",
+      "projectType": "Penthouse Renovation"
+    },
+    {
+      "key": "project-cabbagetown-older-home-renovation",
+      "path": "/our-work/cabbagetown-older-home-renovation",
+      "title": "Cabbagetown Older Home Renovation | Vitalite",
+      "description": "Representative older Toronto home renovation project type with character-sensitive upgrades, condition assessment, structural review and finish planning.",
+      "primaryKeyword": "older Toronto home renovation contractor",
+      "status": "representative",
+      "category": "older-homes",
+      "communitySlug": "cabbagetown",
+      "locationLabel": "Cabbagetown, Toronto",
+      "size": "Older brick home renovation",
+      "headline": "A character-sensitive older home renovation where existing conditions shape the budget before demolition.",
+      "scope": [
+        "Pre-war brick home renovation",
+        "Existing-condition assessment",
+        "Structural and systems upgrades",
+        "Character-sensitive finishes"
+      ],
+      "narrative": [
+        "Older Toronto homes need assessment before design decisions lock in. Electrical, framing, masonry, waterproofing and hazardous-material considerations can all affect scope and budget.",
+        "Vitalite starts older-home renovations with condition review, then coordinates drawings, permits, trades and finishes around what the house can actually support."
+      ],
+      "duration": "6–9 months",
+      "approvalPath": "City of Toronto building permit (zoning review + building code) with heritage review where applicable",
+      "projectType": "Older Home Renovation"
+    },
+    {
+      "key": "project-high-park-mid-century-renovation",
+      "path": "/our-work/high-park-mid-century-renovation",
+      "title": "High Park Mid-Century Renovation | Vitalite",
+      "description": "Representative west Toronto mid-century home renovation project type with envelope updates, structural planning, rear glazing and interior modernization.",
+      "primaryKeyword": "High Park home renovation contractor",
+      "status": "representative",
+      "category": "older-homes",
+      "communitySlug": "high-park",
+      "locationLabel": "High Park, Toronto",
+      "size": "Mid-century home renovation",
+      "headline": "A mid-century home renovation that keeps the original structure readable while upgrading performance and layout.",
+      "scope": [
+        "Mid-century home modernization",
+        "Envelope and glazing updates",
+        "Kitchen and living area renovation",
+        "Grading and exterior coordination"
+      ],
+      "narrative": [
+        "Mid-century homes often have practical layouts and strong structure, but they still need coordinated upgrades to insulation, windows, mechanical systems and interior finishes.",
+        "Vitalite manages these renovations so modernization does not erase the useful proportions and character that made the home worth renovating."
+      ],
+      "duration": "5–8 months",
+      "approvalPath": "City of Toronto building permit (zoning review + building code for envelope and glazing changes)",
+      "projectType": "Mid-Century Home Renovation"
+    },
+    {
+      "key": "project-toronto-semi-detached-rear-addition",
+      "path": "/our-work/toronto-semi-detached-rear-addition",
+      "title": "Toronto Semi-Detached Rear Addition | Vitalite",
+      "description": "Representative Toronto semi-detached rear addition project type with party wall protection, foundation work, framing, permits and narrow-site logistics.",
+      "primaryKeyword": "Toronto semi detached rear addition contractor",
+      "status": "representative",
+      "category": "townhouses",
+      "communitySlug": "toronto",
+      "locationLabel": "Toronto",
+      "size": "Semi-detached rear addition",
+      "headline": "A narrow-lot rear addition where party wall protection and site logistics shape the build sequence.",
+      "scope": [
+        "Rear addition on semi-detached home",
+        "Party wall coordination",
+        "Foundation and framing work",
+        "Narrow-site material access"
+      ],
+      "narrative": [
+        "Semi-detached additions concentrate several risks into a tight footprint: shared walls, neighbour protection, narrow access, foundation work and permit-sensitive structural changes.",
+        "Vitalite coordinates engineering, permits, site protection, framing and finishes so the addition can move forward without avoidable neighbour or inspection issues."
+      ],
+      "duration": "6–9 months",
+      "approvalPath": "City of Toronto building permit (zoning review + party wall and structural review)",
+      "projectType": "Rear Addition"
+    },
+    {
+      "key": "project-gta-townhouse-basement-walkout",
+      "path": "/our-work/gta-townhouse-basement-walkout",
+      "title": "GTA Townhouse Basement Walkout | Vitalite",
+      "description": "Representative townhouse basement walkout project type with excavation, retaining walls, waterproofing, guardrails, permits and neighbour protection.",
+      "primaryKeyword": "GTA townhouse basement walkout contractor",
+      "status": "representative",
+      "category": "townhouses",
+      "communitySlug": "gta",
+      "locationLabel": "GTA",
+      "size": "Basement walkout",
+      "headline": "A basement walkout where excavation, waterproofing, drainage and neighbour protection need one coordinated plan.",
+      "scope": [
+        "Basement walkout excavation",
+        "Retaining wall and drainage work",
+        "Waterproofing coordination",
+        "Permit and neighbour protection"
+      ],
+      "narrative": [
+        "Townhouse basement walkouts require careful excavation and waterproofing because the work happens close to neighbours and shared property lines. Drainage, guards and structure are all permit-sensitive.",
+        "Vitalite sequences the excavation, concrete, waterproofing and closeout work so the new access point performs correctly after construction."
+      ],
+      "duration": "3–5 months",
+      "approvalPath": "Municipal building permit (excavation + structural underpinning + waterproofing review)",
+      "projectType": "Basement Walkout"
+    },
+    {
+      "key": "project-gta-full-interior-renovation",
+      "path": "/our-work/gta-full-interior-renovation",
+      "title": "GTA Full Interior Renovation | Vitalite",
+      "description": "Representative full interior renovation project type with kitchen, living, staircase, flooring, lighting and finish-trade sequencing.",
+      "primaryKeyword": "GTA full interior renovation contractor",
+      "status": "representative",
+      "category": "full-interiors",
+      "communitySlug": "gta",
+      "locationLabel": "GTA",
+      "size": "Whole-home interior",
+      "headline": "A whole-home interior renovation where the finish quality depends on rough-in, procurement and trade sequencing.",
+      "scope": [
+        "Whole-home interior renovation",
+        "Kitchen, living and stair coordination",
+        "Flooring and lighting installation",
+        "Finish-trade sequencing"
+      ],
+      "narrative": [
+        "Full interior renovations depend on decisions made long before finishes arrive. Rough-ins, substrates, cabinet lead times, flooring transitions and lighting layouts all shape the final result.",
+        "Vitalite coordinates design direction, procurement, trades and site quality control so the finished interior reflects the planned scope."
+      ],
+      "duration": "5–8 months",
+      "approvalPath": "Municipal building permit for any structural, plumbing or electrical changes; permit-exempt scope for purely cosmetic work",
+      "projectType": "Full Interior Renovation"
+    },
+    {
+      "key": "project-toronto-kitchen-bath-millwork-renovation",
+      "path": "/our-work/toronto-kitchen-bath-millwork-renovation",
+      "title": "Toronto Kitchen, Bath + Millwork Renovation | Vitalite",
+      "description": "Representative kitchen, bathroom and millwork renovation project type with cabinetry, tile, waterproofing, countertop templating and finish coordination.",
+      "primaryKeyword": "Toronto kitchen bathroom millwork renovation",
+      "status": "representative",
+      "category": "full-interiors",
+      "communitySlug": "toronto",
+      "locationLabel": "Toronto",
+      "size": "Kitchen, bath + millwork",
+      "headline": "A finish-heavy interior renovation where cabinetry, tile, waterproofing and countertops must be sequenced precisely.",
+      "scope": [
+        "Kitchen renovation",
+        "Bathroom tile and waterproofing",
+        "Custom millwork installation",
+        "Countertop and finish coordination"
+      ],
+      "narrative": [
+        "Kitchen, bath and millwork renovations fail when the order is wrong: waterproofing before tile, cabinet installation before templating, and fixture coordination before final closeout.",
+        "Vitalite manages these details as one connected schedule so the finishes land cleanly and the client is not coordinating trades directly."
+      ],
+      "duration": "3–5 months",
+      "approvalPath": "City of Toronto building permit for plumbing/structural scope; permit-exempt for purely cosmetic millwork and finishes",
+      "projectType": "Kitchen, Bath + Millwork Renovation"
     }
   ]
 }
