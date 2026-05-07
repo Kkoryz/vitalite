@@ -12,12 +12,21 @@ import {
   Instagram,
   Linkedin,
   Menu,
+  MessageCircle,
   Pause,
+  PhoneCall,
   Play,
   Plus,
   Search,
   X,
 } from 'lucide-react';
+import {
+  LEAD_CTA_ENTRY_PLACEMENT,
+  LEAD_CTA_POPUP_DELAY_MS,
+  getLeadDisqualification,
+  shouldShowLeadCtaEntry,
+  type LeadInquiryType,
+} from './leadQualification';
 import {
   applySeo,
   getPageKeyFromLocation,
@@ -5470,13 +5479,61 @@ const BlogPage = () => (
   </>
 );
 
-const ContactForm = () => {
+const leadInquiryTypeOptions: Array<{ value: LeadInquiryType; label: string }> = [
+  { value: 'project-owner', label: 'Property owner with an active project' },
+  { value: 'owner-representative', label: 'Owner representative / realtor / designer' },
+  { value: 'developer-business', label: 'Developer / business / property manager' },
+  { value: 'small-repair', label: 'Small repair / handyman request' },
+  { value: 'career', label: 'Job or career inquiry' },
+  { value: 'vendor', label: 'Vendor / subcontractor / agency pitch' },
+];
+
+const getFormString = (data: FormData, key: string) => {
+  const value = data.get(key);
+  return typeof value === 'string' ? value : '';
+};
+
+type ContactFormProps = {
+  variant?: 'full' | 'compact';
+  source?: string;
+  onSuccess?: () => void;
+};
+
+const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: ContactFormProps) => {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [filterMessage, setFilterMessage] = useState<string | null>(null);
+  const isCompact = variant === 'compact';
+  const labelClass = isCompact
+    ? 'block text-[12px] font-semibold uppercase mb-1.5 text-white/80'
+    : 'block text-sm font-semibold tracking-[0.12em] uppercase mb-2';
+  const fieldClass = isCompact
+    ? 'w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-kiewit-yellow'
+    : 'w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const disqualification = getLeadDisqualification({
+      inquiryType: getFormString(data, 'inquiry_type'),
+      message: getFormString(data, 'message'),
+      projectType: getFormString(data, 'project_type'),
+      name: getFormString(data, 'name'),
+      email: getFormString(data, 'email'),
+    });
+
+    if (disqualification) {
+      setStatus('idle');
+      setFilterMessage(disqualification.message);
+      return;
+    }
+
+    setFilterMessage(null);
     setStatus('sending');
-    const data = new FormData(e.currentTarget);
+    data.set('lead_source', source);
+    data.set('lead_filter', 'qualified-project-inquiry');
+    data.set('_subject', source === '60-second-popup' ? 'Vitalite popup project inquiry' : 'Vitalite project inquiry');
+
     try {
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
@@ -5485,7 +5542,8 @@ const ContactForm = () => {
       });
       if (res.ok) {
         setStatus('success');
-        (e.target as HTMLFormElement).reset();
+        form.reset();
+        onSuccess?.();
       } else {
         setStatus('error');
       }
@@ -5496,7 +5554,7 @@ const ContactForm = () => {
 
   if (status === 'success') {
     return (
-      <div className="bg-kiewit-dark text-white rounded-2xl p-10 text-center space-y-4">
+      <div className={isCompact ? 'border border-white/10 bg-white/5 rounded-lg p-5 text-center space-y-3' : 'bg-kiewit-dark text-white rounded-2xl p-10 text-center space-y-4'}>
         <div className="text-kiewit-yellow text-5xl font-bold">&#10003;</div>
         <h3 className="text-2xl font-bold">Message Received</h3>
         <p className="text-gray-300">We typically respond within one business day.</p>
@@ -5511,23 +5569,43 @@ const ContactForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5">
+    <form onSubmit={handleSubmit} className={isCompact ? 'space-y-4' : 'bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5'}>
       <div>
-        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Name</label>
-        <input name="name" required className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Your name" />
+        <label className={labelClass}>Name</label>
+        <input name="name" required className={fieldClass} placeholder="Your name" />
       </div>
       <div>
-        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Email</label>
-        <input name="email" type="email" required className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="you@example.com" />
+        <label className={labelClass}>Email</label>
+        <input name="email" type="email" required className={fieldClass} placeholder="you@example.com" />
       </div>
       <div>
-        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Type</label>
-        <input name="project_type" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Custom home, addition, permit, multiplex..." />
+        <label className={labelClass}>Inquiry Type</label>
+        <select name="inquiry_type" required defaultValue="" className={fieldClass}>
+          <option value="" disabled>Select project fit</option>
+          {leadInquiryTypeOptions.map((option) => (
+            <option key={option.value} value={option.value} className="text-black">
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
-        <label className="block text-sm font-semibold tracking-[0.12em] uppercase mb-2">Project Details</label>
-        <textarea name="message" className="w-full min-h-[150px] bg-white/10 border border-white/20 rounded-lg px-4 py-3 outline-none focus:border-kiewit-yellow" placeholder="Tell us the property location, project stage, budget direction and timeline." />
+        <label className={labelClass}>Project Type</label>
+        <input name="project_type" className={fieldClass} placeholder="Custom home, addition, permit, multiplex..." />
       </div>
+      <div>
+        <label className={labelClass}>Project Details</label>
+        <textarea name="message" className={isCompact ? `${fieldClass} min-h-[104px]` : `${fieldClass} min-h-[150px]`} placeholder="Tell us the property location, project stage, budget direction and timeline." />
+      </div>
+      {filterMessage && (
+        <div role="alert" className="border border-kiewit-yellow/40 bg-kiewit-yellow/10 rounded-lg p-4 text-sm text-white">
+          <p>{filterMessage}</p>
+          <a href={`tel:${CONTACT_PHONE_TEL}`} className="mt-3 inline-flex items-center gap-2 text-kiewit-yellow font-bold hover:text-white transition-colors">
+            <PhoneCall className="w-4 h-4" />
+            Active project? Call {CONTACT_PHONE_DISPLAY}
+          </a>
+        </div>
+      )}
       {status === 'error' && (
         <p className="text-red-400 text-sm">
           Something went wrong. Please email us directly at{' '}
@@ -5537,7 +5615,7 @@ const ContactForm = () => {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="w-full bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase py-4 rounded-lg hover:bg-white transition-colors disabled:opacity-60"
+        className={isCompact ? 'w-full bg-kiewit-yellow text-black font-bold uppercase py-3 rounded-lg hover:bg-white transition-colors disabled:opacity-60' : 'w-full bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase py-4 rounded-lg hover:bg-white transition-colors disabled:opacity-60'}
       >
         {status === 'sending' ? 'Sending...' : 'Start Consultation'}
       </button>
@@ -5635,6 +5713,149 @@ const ContactPage = () => (
     </section>
   </>
 );
+
+const LEAD_CTA_DISMISSED_KEY = 'vitalite-lead-cta-dismissed';
+const LEAD_CTA_ENGAGED_KEY = 'vitalite-lead-cta-engaged';
+
+const LeadCtaPopup = ({ activePage }: { activePage: PageKey }) => {
+  const [open, setOpen] = useState(false);
+  const [formSource, setFormSource] = useState<'floating-cta' | '60-second-popup'>('floating-cta');
+  const showEntry = shouldShowLeadCtaEntry(activePage);
+  const entryPositionClass = LEAD_CTA_ENTRY_PLACEMENT === 'bottom-right' ? 'bottom-4 right-4 sm:bottom-6 sm:right-6' : '';
+
+  const rememberEngagement = () => {
+    window.localStorage.setItem(LEAD_CTA_ENGAGED_KEY, Date.now().toString());
+  };
+
+  const closePopup = () => {
+    window.localStorage.setItem(LEAD_CTA_DISMISSED_KEY, Date.now().toString());
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (!showEntry) {
+      setOpen(false);
+      return;
+    }
+
+    const alreadyHandled =
+      window.localStorage.getItem(LEAD_CTA_DISMISSED_KEY) ||
+      window.localStorage.getItem(LEAD_CTA_ENGAGED_KEY);
+
+    if (alreadyHandled) return;
+
+    const timer = window.setTimeout(() => {
+      setFormSource('60-second-popup');
+      setOpen(true);
+    }, LEAD_CTA_POPUP_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [showEntry]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closePopup();
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <>
+      {showEntry && !open && (
+        <button
+          type="button"
+          onClick={() => {
+            setFormSource('floating-cta');
+            setOpen(true);
+          }}
+          aria-label="Open project review form"
+          className={`fixed ${entryPositionClass} z-[70] max-w-[calc(100vw-2rem)] bg-kiewit-yellow text-black shadow-2xl rounded-lg border border-black/10 px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 hover:bg-white hover:-translate-y-0.5 transition-all`}
+        >
+          <span className="w-9 h-9 rounded-full bg-black text-kiewit-yellow flex items-center justify-center shrink-0">
+            <MessageCircle className="w-5 h-5" />
+          </span>
+          <span className="text-sm sm:text-base font-extrabold leading-tight whitespace-nowrap">Project Form</span>
+        </button>
+      )}
+      <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[90] bg-black/72 backdrop-blur-sm px-4 py-6 sm:py-8 flex items-end sm:items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Start a Vitalite project review"
+        >
+          <motion.div
+            initial={{ y: 28, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 28, opacity: 0 }}
+            className="w-full max-w-[620px] max-h-[calc(100vh-2rem)] overflow-y-auto bg-kiewit-dark text-white border border-white/15 rounded-lg shadow-2xl"
+          >
+            <div className="p-5 sm:p-7">
+              <div className="flex items-start justify-between gap-5 mb-5">
+                <div>
+                  <div className="text-kiewit-yellow text-[12px] font-bold uppercase mb-2">Project Review</div>
+                  <h2 className="text-2xl sm:text-3xl font-bold leading-tight">Planning a GTA build or renovation?</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={closePopup}
+                  aria-label="Close project review popup"
+                  className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors shrink-0"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed mb-5">
+                Share an active design-build, permit, addition, multiplex, garden suite, renovation or ICI project. You can send details here or call Vitalite directly.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-5">
+                <a
+                  href={`tel:${CONTACT_PHONE_TEL}`}
+                  onClick={() => {
+                    rememberEngagement();
+                    setOpen(false);
+                  }}
+                  className="inline-flex items-center justify-center gap-2 bg-kiewit-yellow text-black font-bold rounded-lg px-4 py-3 hover:bg-white transition-colors"
+                >
+                  <PhoneCall className="w-5 h-5" />
+                  Call {CONTACT_PHONE_DISPLAY}
+                </a>
+                <a
+                  href={routeHref('contact-us')}
+                  onClick={rememberEngagement}
+                  className="inline-flex items-center justify-center gap-2 border border-white/20 rounded-lg px-4 py-3 font-bold hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
+                >
+                  Full form
+                  <ChevronRight className="w-4 h-4" />
+                </a>
+              </div>
+
+              <div className="border-t border-white/10 pt-5">
+                <ContactForm variant="compact" source={formSource} onSuccess={rememberEngagement} />
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+      </AnimatePresence>
+    </>
+  );
+};
 
 const Footer = ({ language }: { language: Language }) => {
   return (
@@ -5797,6 +6018,7 @@ export default function App() {
       <Navbar activePage={activePage} language={language} onLanguageChange={setLanguage} onSearchOpen={() => setSearchOpen(true)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} />
       {renderPage(activePage)}
+      <LeadCtaPopup activePage={activePage} />
       <Footer language={language} />
     </div>
   );
