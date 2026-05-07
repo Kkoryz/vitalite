@@ -114,7 +114,7 @@ function injectSeo(html, page) {
     .replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(page.title)}</title>`)
     .replace(/\n\s*<meta name="description" content="[^"]*" \/>/g, '')
     .replace(/\n\s*<!-- Vitalite SEO -->[\s\S]*?<!-- \/Vitalite SEO -->/g, '')
-    .replace('<div id="root"></div>', `<div id="root">${buildPrerenderedRoot(page)}</div>`)
+    .replace('<div id="root"></div>', `<div id="root"></div><noscript>${buildPrerenderedRoot(page)}</noscript>`)
     .replace('</head>', `    ${managedHead}\n  </head>`);
 }
 
