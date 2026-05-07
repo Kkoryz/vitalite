@@ -36,6 +36,7 @@ import {
   type ProjectCategory,
 } from './seo';
 import seoData from './seo-data.json';
+import seoContexts from './seo-contexts.json';
 
 const CONTACT_PHONE_DISPLAY = '+1 (647) 718-0972';
 const CONTACT_PHONE_TEL = '+16477180972';
@@ -132,6 +133,9 @@ type DetailPageContent = {
     duration?: string;
     approvalPath?: string;
     projectType?: string;
+    permitRoute?: string;
+    scope: string[];
+    outcome?: string;
   };
 };
 
@@ -150,6 +154,7 @@ type SeoDataWithLocalContext = typeof seoData & {
   locationContexts?: Record<string, LocalSeoContext>;
   communityContexts?: Record<string, LocalSeoContext>;
 };
+type SeoContextData = Pick<SeoDataWithLocalContext, 'locationContexts' | 'communityContexts'>;
 type LocalSeoMatch = {
   label: string;
   kind: 'location' | 'community';
@@ -188,7 +193,19 @@ const pageKeys = navItems.map((item) => item.key);
 
 const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
 const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
-const localSeoData = seoData as SeoDataWithLocalContext;
+const mergeSeoContextData = <T extends SeoDataWithLocalContext>(base: T, contexts: SeoContextData): T => ({
+  ...base,
+  locationContexts: {
+    ...(base.locationContexts ?? {}),
+    ...(contexts.locationContexts ?? {}),
+  },
+  communityContexts: {
+    ...(base.communityContexts ?? {}),
+    ...(contexts.communityContexts ?? {}),
+  },
+});
+
+const localSeoData = mergeSeoContextData(seoData as SeoDataWithLocalContext, seoContexts as SeoContextData);
 const staticSeoPageKeys = [
   'locations-hub', 'communities-hub', 'faq', 'ai-gta-design-build-guide',
   'tools-hub', 'tool-addition-cost', 'tool-laneway-cost', 'tool-teardown-decision', 'tool-permit-timeline',
@@ -408,6 +425,32 @@ const visuals = {
   homeProcessDesignPriceContract: visualAsset('home-process-design-price-contract'),
   homeProcessReviewEngineerPermit: visualAsset('home-process-review-engineer-permit'),
   homeProcessBuildInspectSupport: visualAsset('home-process-build-inspect-support'),
+};
+
+const longTailGuideImages: Record<string, string> = {
+  'guide-garden-suite-cost-toronto': visualAsset('section-work-garden-cost-drivers'),
+  'guide-laneway-house-permit-toronto': visuals.serviceGardenLaneway,
+  'guide-multiplex-conversion-cost-toronto': visuals.multiplexCost,
+  'guide-home-addition-permit-toronto': visuals.serviceHomeAdditions,
+  'guide-second-storey-addition-toronto': visualAsset('section-work-additions-willowdale'),
+  'guide-basement-walkout-permit-toronto': visualAsset('section-work-townhouses-basement-suite'),
+  'guide-legal-basement-suite-toronto': visuals.bulletFireEgress,
+  'guide-custom-home-build-cost-gta': visuals.customHome,
+  'guide-design-build-construction-manager-toronto': visuals.management,
+  'guide-toronto-permit-drawings': visuals.permitGuide,
+  'guide-toronto-neighbourhood-custom-home-rebuilds': visuals.workCustomHomes,
+  'guide-rosedale-forest-hill-renovation': visuals.heritage,
+  'guide-lawrence-park-leaside-additions': visuals.addition,
+  'guide-willowdale-multiplex': visualAsset('section-work-multiplex-bedford-park'),
+  'guide-unionville-angus-glen-custom-homes': visualAsset('section-work-custom-markham'),
+  'guide-port-credit-lorne-park-renovations': visuals.workFullInteriors,
+  'guide-toronto-neighbourhood-garden-suite': visualAsset('section-work-garden-client-types'),
+  'guide-gta-design-build-faq': visuals.designBuild,
+  'guide-gta-construction-proposals-differ': visuals.servicesOverviewCompare,
+  'guide-gta-pre-construction-checklist': visuals.siteEvaluation,
+  'guide-design-build-vs-general-contractor-gta': visuals.designBuildVsArchitect,
+  'guide-gta-construction-management': visuals.serviceProjectManagement,
+  'guide-toronto-permit-ready-drawings-checklist': visuals.bulletPermitPackages,
 };
 
 const detailSectionImages: Record<string, Record<string, string>> = {
@@ -2899,7 +2942,7 @@ const staticDetailPages: Record<string, DetailPageContent> = {
 
 const generatedLandingPages: Record<string, DetailPageContent> = Object.fromEntries(
   seoPages
-    .filter((page) => page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('guide-'))
+    .filter((page) => page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('guide-') || page.key === 'faq' || page.key === 'ai-gta-design-build-guide')
     .map((page) => [page.key, createGeneratedLandingPage(page)]),
 );
 
@@ -2946,15 +2989,61 @@ function imageForProject(project: ProjectEntry) {
   return projectVisuals[project.key] ?? visuals.workOverview;
 }
 
+function buildProjectPermitRoute(project: ProjectEntry) {
+  if (project.permitRoute) return project.permitRoute;
+
+  const approvalPath = project.approvalPath?.toLowerCase() ?? '';
+  const projectType = `${project.projectType ?? ''} ${project.primaryKeyword} ${project.category}`.toLowerCase();
+
+  if (approvalPath.includes('committee') || approvalPath.includes('severance')) {
+    return 'Feasibility review, Committee of Adjustment application, zoning clearance, permit drawings, building permit review, inspections and closeout.';
+  }
+  if (projectType.includes('laneway') || projectType.includes('garden suite')) {
+    return 'Lot feasibility, fire access and servicing review, zoning check, permit drawings, building permit submission, inspections and rental-ready handover.';
+  }
+  if (projectType.includes('multiplex') || projectType.includes('multi-unit') || projectType.includes('rental')) {
+    return 'Unit strategy, zoning review, fire separation and egress coordination, permit drawings, building permit submission, inspections and tenant-ready turnover.';
+  }
+  if (projectType.includes('addition') || projectType.includes('walkout') || projectType.includes('vertical')) {
+    return 'Existing-condition review, structural feasibility, zoning check, architectural and engineering drawings, building permit submission, inspections and closeout.';
+  }
+  if (project.category === 'ici') {
+    return 'Operational scope review, code and permit coordination, trade sequencing, municipal inspections and occupancy-oriented closeout.';
+  }
+
+  return 'Survey and feasibility review, zoning check, permit-ready drawings, engineering coordination, building permit submission, inspections and occupancy closeout.';
+}
+
+function buildProjectOutcome(project: ProjectEntry, categoryLabel: string) {
+  if (project.outcome) return project.outcome;
+
+  const scopeSummary = project.scope.slice(0, 2).join(' and ').toLowerCase();
+  if (project.status === 'completed') {
+    return `Completed ${categoryLabel.toLowerCase()} reference in ${project.locationLabel}, with ${scopeSummary} delivered as part of a managed design-build scope.`;
+  }
+  if (project.status === 'ongoing-2025') {
+    return `Active 2025 delivery with scope, approvals, trades, inspections and closeout managed under one Vitalite project path.`;
+  }
+  if (project.status === 'coming-2026') {
+    return `2026 pipeline project with feasibility, approval route and construction sequencing defined before site work begins.`;
+  }
+
+  return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
+}
+
 function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
   const categoryParentKey = projectCategoryParents[project.category];
   const categoryLabel = projectCategoryLabels[project.category];
   const statusLabel = projectStatusLabels[project.status];
   const title = project.title.replace(/ \| Vitalite$/, '');
+  const permitRoute = buildProjectPermitRoute(project);
+  const outcome = buildProjectOutcome(project, categoryLabel);
 
   const narrativeSections: Array<{ heading: string; text: string }> = [];
   if (project.narrative.length > 1) narrativeSections.push({ heading: 'Project Overview', text: project.narrative[1] });
   if (project.narrative.length > 2) narrativeSections.push({ heading: 'Planning Context', text: project.narrative[2] });
+  narrativeSections.push({ heading: 'Permit Route', text: permitRoute });
+  narrativeSections.push({ heading: 'Outcome', text: outcome });
 
   return {
     parent: 'our-work',
@@ -2976,6 +3065,9 @@ function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
       duration: project.duration,
       approvalPath: project.approvalPath,
       projectType: project.projectType,
+      permitRoute,
+      scope: project.scope,
+      outcome,
     },
     relatedLinks: [
       { label: categoryLabel, key: categoryParentKey },
@@ -4422,14 +4514,15 @@ function getGuideProfile(page: SeoPage) {
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isServiceArea = page.key.startsWith('location-') || page.key.startsWith('community-');
   const isCommunity = page.key.startsWith('community-');
-  const parent: MainPageKey = isServiceArea ? 'services' : 'blog';
+  const isFaqStylePage = page.key === 'faq' || page.key === 'ai-gta-design-build-guide';
+  const parent: MainPageKey = isServiceArea ? 'services' : isFaqStylePage ? 'why-vitalite' : 'blog';
   const local = getLocalMatchForSeoPage(page);
   const serviceName = getGeneratedServiceName(page);
   const guideProfile = isServiceArea ? undefined : getGuideProfile(page);
 
   return {
     parent,
-    category: isCommunity ? 'COMMUNITY SERVICE AREA' : isServiceArea ? 'GTA SERVICE AREA' : 'TORONTO GUIDE',
+    category: isCommunity ? 'COMMUNITY SERVICE AREA' : isServiceArea ? 'GTA SERVICE AREA' : isFaqStylePage ? 'GTA DESIGN-BUILD FAQ' : 'TORONTO GUIDE',
     title: page.title.split('|')[0].trim(),
     subtitle: page.description,
     image: imageForSeoPage(page),
@@ -4441,6 +4534,8 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
             ? introNote
             : `Vitalite supports ${page.primaryKeyword} projects with design-build planning, drawings, permit coordination, engineering input, budget planning, site management, inspections and closeout support.${local?.context ? ` ${local.context.planningContext}` : ''}`;
         })()
+      : isFaqStylePage
+        ? 'Use these answers to understand how Vitalite scopes GTA design-build projects before drawings, pricing or construction commitments are treated as final.'
       : `Use this guide to understand ${page.primaryKeyword} before committing to drawings, pricing or a contractor. It explains the decisions, documents, approvals, budget assumptions and construction-management details that shape a stronger GTA project plan.`,
     bullets: isServiceArea
       ? [
@@ -4449,9 +4544,22 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
           'Drawings, permits and engineering coordination',
           'Budget, trades, inspections and closeout',
         ]
+      : isFaqStylePage
+        ? ['Project fit and minimum scope', 'Permit drawing and approval timelines', 'Budget range and change-order control', 'City comment response responsibility']
       : guideProfile?.bullets ?? ['Early feasibility and scope review', 'Permit and drawing requirements', 'Budget drivers and construction sequencing', 'Questions to ask before committing'],
     sections: isServiceArea
       ? buildLocalServiceSections(page, local, serviceName)
+      : isFaqStylePage
+        ? [
+            {
+              heading: 'How To Use This FAQ',
+              text: 'Start with project fit, then review timing, budget and permit responsibility. The strongest inquiries include an address or municipality, project type, current drawings, target scope and budget direction.',
+            },
+            {
+              heading: 'Why These Answers Matter',
+              text: 'Most preventable construction risk appears before site work starts: unclear scope, missing permit inputs, undefined allowances, unresolved municipal comments or no owner decision schedule.',
+            },
+          ]
       : guideProfile?.sections ?? [
         {
           heading: 'What Shapes The Answer',
@@ -4472,6 +4580,7 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
 
 function imageForSeoPage(page: SeoPage) {
   const keyword = `${page.key} ${page.primaryKeyword}`.toLowerCase();
+  if (longTailGuideImages[page.key]) return longTailGuideImages[page.key];
   if (page.key.startsWith('location-') || page.key.startsWith('community-')) return visualAsset(`seo-${page.key}`);
   if (page.key === 'guide-garden-suite-cost-toronto') return visuals.gardenSuite;
   if (page.key === 'guide-multiplex-conversion-cost-toronto') return visuals.multiplexCost;
@@ -4976,21 +5085,27 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
           <SubPageHeading title={page.title} dark />
           {page.isProject && page.projectMeta ? (
-            <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-gray-200 border border-gray-200 rounded-xl overflow-hidden mb-12">
+            <div className="mb-12">
+              <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-4">Project Case Study Facts</p>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-xl overflow-hidden">
               {[
                 { label: 'Project Type', value: page.projectMeta.projectType },
                 { label: 'Location', value: page.projectMeta.location },
                 { label: 'Size', value: page.projectMeta.size },
                 { label: 'Duration', value: page.projectMeta.duration },
                 { label: 'Status', value: page.projectMeta.statusLabel },
-                { label: 'Approval Path', value: page.projectMeta.approvalPath },
+                { label: 'Approval Path', value: page.projectMeta.approvalPath, wide: true },
+                { label: 'Permit Route', value: page.projectMeta.permitRoute, wide: true },
+                { label: 'Scope', value: page.projectMeta.scope.join(' / '), wide: true },
+                { label: 'Outcome', value: page.projectMeta.outcome, wide: true },
               ].filter((f) => f.value).map((fact) => (
-                <div key={fact.label} className="bg-white px-4 py-4">
+                <div key={fact.label} className={`bg-white px-4 py-4 ${fact.wide ? 'lg:col-span-2' : ''}`}>
                   <dt className="text-[10px] font-bold tracking-[0.16em] uppercase text-gray-400 mb-1">{fact.label}</dt>
                   <dd className="text-sm font-medium text-gray-900 leading-snug">{fact.value}</dd>
                 </div>
               ))}
-            </dl>
+              </dl>
+            </div>
           ) : null}
           <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-16">
             <div>

@@ -1,4 +1,5 @@
 import seoData from './seo-data.json';
+import seoContexts from './seo-contexts.json';
 import projectsData from './projects-data.json';
 
 type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact' | 'project';
@@ -41,6 +42,8 @@ export type ProjectEntry = {
   duration?: string;
   approvalPath?: string;
   projectType?: string;
+  permitRoute?: string;
+  outcome?: string;
 };
 
 export const projects: ProjectEntry[] = (projectsData.projects as ProjectEntry[]) ?? [];
@@ -51,6 +54,8 @@ export const projectCategoryParents: Record<ProjectCategory, string> = projectsD
 
 const baseUrl = import.meta.env.BASE_URL ?? '/';
 const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
+const seoPublishedDate = '2026-05-01';
+const seoFreshnessDate = __VITALITE_BUILD_DATE__;
 
 type SeoLocation = { slug: string; name: string };
 type SeoCommunity = { slug: string; name: string; municipality: string };
@@ -58,6 +63,10 @@ type LocalSeoContext = {
   planningContext: string;
   projectFit: string;
   approvalFocus: string;
+};
+type SeoContextData = {
+  locationContexts?: Record<string, LocalSeoContext>;
+  communityContexts?: Record<string, LocalSeoContext>;
 };
 type LocalSeoMatch = {
   label: string;
@@ -89,7 +98,22 @@ type LongTailPage = {
   primaryKeyword: string;
 };
 
-const rawSeoData = seoData as typeof seoData & {
+const mergeSeoContextData = <T extends { locationContexts?: Record<string, LocalSeoContext>; communityContexts?: Record<string, LocalSeoContext> }>(
+  base: T,
+  contexts: SeoContextData,
+): T => ({
+  ...base,
+  locationContexts: {
+    ...(base.locationContexts ?? {}),
+    ...(contexts.locationContexts ?? {}),
+  },
+  communityContexts: {
+    ...(base.communityContexts ?? {}),
+    ...(contexts.communityContexts ?? {}),
+  },
+});
+
+const rawSeoData = mergeSeoContextData(seoData as typeof seoData & {
   locations?: SeoLocation[];
   locationServices?: LocationService[];
   communityLocations?: SeoCommunity[];
@@ -97,7 +121,7 @@ const rawSeoData = seoData as typeof seoData & {
   locationContexts?: Record<string, LocalSeoContext>;
   communityContexts?: Record<string, LocalSeoContext>;
   longTailPages?: LongTailPage[];
-};
+}, seoContexts as SeoContextData);
 
 function fillLocationPattern(pattern: string, location: string) {
   return pattern.replaceAll('{location}', location);
@@ -170,6 +194,49 @@ export const getRouteHrefFromLegacyHash = (href?: string): string => {
 export const getCanonicalUrl = (key: string): string => {
   const page = pageByKey.get(key) ?? pageByKey.get('home')!;
   return `${seoData.siteUrl}${canonicalPathFor(page.path)}`;
+};
+
+export const buildProjectPermitRoute = (project: ProjectEntry) => {
+  if (project.permitRoute) return project.permitRoute;
+
+  const approvalPath = project.approvalPath?.toLowerCase() ?? '';
+  const projectType = `${project.projectType ?? ''} ${project.primaryKeyword} ${project.category}`.toLowerCase();
+
+  if (approvalPath.includes('committee') || approvalPath.includes('severance')) {
+    return 'Feasibility review, Committee of Adjustment application, zoning clearance, permit drawings, building permit review, inspections and closeout.';
+  }
+  if (projectType.includes('laneway') || projectType.includes('garden suite')) {
+    return 'Lot feasibility, fire access and servicing review, zoning check, permit drawings, building permit submission, inspections and rental-ready handover.';
+  }
+  if (projectType.includes('multiplex') || projectType.includes('multi-unit') || projectType.includes('rental')) {
+    return 'Unit strategy, zoning review, fire separation and egress coordination, permit drawings, building permit submission, inspections and tenant-ready turnover.';
+  }
+  if (projectType.includes('addition') || projectType.includes('walkout') || projectType.includes('vertical')) {
+    return 'Existing-condition review, structural feasibility, zoning check, architectural and engineering drawings, building permit submission, inspections and closeout.';
+  }
+  if (project.category === 'ici') {
+    return 'Operational scope review, code and permit coordination, trade sequencing, municipal inspections and occupancy-oriented closeout.';
+  }
+
+  return 'Survey and feasibility review, zoning check, permit-ready drawings, engineering coordination, building permit submission, inspections and occupancy closeout.';
+};
+
+export const buildProjectOutcome = (project: ProjectEntry) => {
+  if (project.outcome) return project.outcome;
+
+  const categoryLabel = projectCategoryLabels[project.category] ?? project.category;
+  const scopeSummary = project.scope.slice(0, 2).join(' and ').toLowerCase();
+  if (project.status === 'completed') {
+    return `Completed ${categoryLabel.toLowerCase()} reference in ${project.locationLabel}, with ${scopeSummary} delivered as part of a managed design-build scope.`;
+  }
+  if (project.status === 'ongoing-2025') {
+    return 'Active 2025 delivery with scope, approvals, trades, inspections and closeout managed under one Vitalite project path.';
+  }
+  if (project.status === 'coming-2026') {
+    return '2026 pipeline project with feasibility, approval route and construction sequencing defined before site work begins.';
+  }
+
+  return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
 };
 
 export const getPageKeyFromUrl = (url: URL): string | null => {
@@ -317,8 +384,8 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       author: { '@id': organizationId },
       publisher: { '@id': organizationId },
       mainEntityOfPage: { '@id': `${canonical}#webpage` },
-      datePublished: '2026-05-01',
-      dateModified: '2026-05-01',
+      datePublished: seoPublishedDate,
+      dateModified: seoFreshnessDate,
     });
   }
 
@@ -332,12 +399,24 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
         description: page.description,
         about: project.locationLabel,
         articleSection: projectCategoryLabels[project.category],
+        keywords: [
+          project.primaryKeyword,
+          project.projectType,
+          project.locationLabel,
+          project.size,
+          ...project.scope,
+        ].filter(Boolean),
+        articleBody: [
+          ...project.narrative,
+          buildProjectPermitRoute(project),
+          buildProjectOutcome(project),
+        ].join('\n\n'),
         image,
         author: { '@id': organizationId },
         publisher: { '@id': organizationId },
         mainEntityOfPage: { '@id': `${canonical}#webpage` },
-        datePublished: '2026-05-01',
-        dateModified: '2026-05-01',
+        datePublished: seoPublishedDate,
+        dateModified: seoFreshnessDate,
       });
       graph.push({
         '@type': 'Service',
@@ -389,6 +468,39 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     '@graph': graph,
   };
 };
+
+const galleryStylePlanningFaqs = [
+  {
+    question: 'Does Vitalite have a project minimum?',
+    answer:
+      'Vitalite is best suited for permit-driven, structural or multi-trade projects rather than small handyman repairs. A useful starting fit is a custom home, addition, garden suite, multiplex, major renovation, permit drawing package, construction management scope or ICI project where drawings, approvals and site coordination matter.',
+  },
+  {
+    question: 'How long do Toronto permit drawings take?',
+    answer:
+      'A straightforward Toronto renovation or addition drawing package often takes 4 to 8 weeks once scope, survey and existing conditions are clear. Garden suites, multiplexes, custom homes and projects requiring engineering, zoning review or revisions can take 8 to 12 weeks or longer before municipal review begins.',
+  },
+  {
+    question: 'How long does a Toronto garden suite project take?',
+    answer:
+      'A Toronto garden suite should usually be planned in two phases: feasibility, drawings and permits first, then construction. Many owners should expect roughly 3 to 6 months for pre-construction planning and approvals, followed by about 6 to 10 months of construction after permits, depending on access, servicing, trees and finish level.',
+  },
+  {
+    question: 'What budget range should owners expect for a home addition?',
+    answer:
+      'Home addition budgets depend on size, structure, foundation work, mechanical upgrades, finishes and whether the family lives through construction. Small targeted additions can still reach the hundreds of thousands, while second-storey additions, underpinning or whole-home renovation programs commonly move into mid-six-figure or seven-figure planning territory.',
+  },
+  {
+    question: 'Who responds to city permit comments?',
+    answer:
+      'Vitalite coordinates the response path with the designer, architect, engineer or required consultant. The goal is to keep municipal comments, drawing revisions, engineering updates, budget changes and construction sequencing connected instead of leaving the owner to manage each party separately.',
+  },
+  {
+    question: 'How does Vitalite control change orders?',
+    answer:
+      'Change-order control starts before construction: define the scope, document existing conditions, clarify allowances, resolve permit and engineering inputs, and make major finish decisions early. When a change is needed, it should be documented with cost, schedule impact and responsibility before work proceeds.',
+  },
+];
 
 export const buildPageFaq = (page: SeoPage) => {
   if (page.key === 'locations-hub') {
@@ -453,6 +565,7 @@ export const buildPageFaq = (page: SeoPage) => {
         answer:
           'Vitalite serves Toronto and the Greater Toronto Area, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and surrounding communities.',
       },
+      ...galleryStylePlanningFaqs,
     ];
   }
 
@@ -678,6 +791,18 @@ export const buildPageFaq = (page: SeoPage) => {
       {
         question: `What category of work does this project represent?`,
         answer: `This is a ${categoryLabel.toLowerCase()} project. ${project.headline}`,
+      },
+      {
+        question: `What was the permit route for this project?`,
+        answer: buildProjectPermitRoute(project),
+      },
+      {
+        question: `What was included in the project scope?`,
+        answer: `The visible scope includes ${project.scope.join(', ')}. Vitalite uses scope details like these to connect drawings, approvals, pricing, trade scheduling and inspections before site work begins.`,
+      },
+      {
+        question: `What outcome does this case study show?`,
+        answer: buildProjectOutcome(project),
       },
       {
         question: `Can I visit the construction site?`,

@@ -3,13 +3,72 @@ import path from 'node:path';
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, 'dist');
-const seoData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'seo-data.json'), 'utf8'));
+const baseSeoData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'seo-data.json'), 'utf8'));
+const seoContexts = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'seo-contexts.json'), 'utf8'));
+const seoData = mergeSeoContextData(baseSeoData, seoContexts);
 const projectsData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'projects-data.json'), 'utf8'));
 const baseHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
-const today = '2026-05-04';
+const today = process.env.VITALITE_BUILD_DATE || formatBuildDate(new Date());
 const pages = [...seoData.pages, ...buildGeneratedPages()];
 
 const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page]));
+
+function mergeSeoContextData(base, contexts) {
+  return {
+    ...base,
+    locationContexts: {
+      ...(base.locationContexts ?? {}),
+      ...(contexts.locationContexts ?? {}),
+    },
+    communityContexts: {
+      ...(base.communityContexts ?? {}),
+      ...(contexts.communityContexts ?? {}),
+    },
+  };
+}
+
+function formatBuildDate(date) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(date);
+  const get = (type) => parts.find((part) => part.type === type)?.value ?? '';
+  return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+const galleryStylePlanningFaqs = [
+  {
+    question: 'Does Vitalite have a project minimum?',
+    answer:
+      'Vitalite is best suited for permit-driven, structural or multi-trade projects rather than small handyman repairs. A useful starting fit is a custom home, addition, garden suite, multiplex, major renovation, permit drawing package, construction management scope or ICI project where drawings, approvals and site coordination matter.',
+  },
+  {
+    question: 'How long do Toronto permit drawings take?',
+    answer:
+      'A straightforward Toronto renovation or addition drawing package often takes 4 to 8 weeks once scope, survey and existing conditions are clear. Garden suites, multiplexes, custom homes and projects requiring engineering, zoning review or revisions can take 8 to 12 weeks or longer before municipal review begins.',
+  },
+  {
+    question: 'How long does a Toronto garden suite project take?',
+    answer:
+      'A Toronto garden suite should usually be planned in two phases: feasibility, drawings and permits first, then construction. Many owners should expect roughly 3 to 6 months for pre-construction planning and approvals, followed by about 6 to 10 months of construction after permits, depending on access, servicing, trees and finish level.',
+  },
+  {
+    question: 'What budget range should owners expect for a home addition?',
+    answer:
+      'Home addition budgets depend on size, structure, foundation work, mechanical upgrades, finishes and whether the family lives through construction. Small targeted additions can still reach the hundreds of thousands, while second-storey additions, underpinning or whole-home renovation programs commonly move into mid-six-figure or seven-figure planning territory.',
+  },
+  {
+    question: 'Who responds to city permit comments?',
+    answer:
+      'Vitalite coordinates the response path with the designer, architect, engineer or required consultant. The goal is to keep municipal comments, drawing revisions, engineering updates, budget changes and construction sequencing connected instead of leaving the owner to manage each party separately.',
+  },
+  {
+    question: 'How does Vitalite control change orders?',
+    answer:
+      'Change-order control starts before construction: define the scope, document existing conditions, clarify allowances, resolve permit and engineering inputs, and make major finish decisions early. When a change is needed, it should be documented with cost, schedule impact and responsibility before work proceeds.',
+  },
+];
 
 for (const page of pages) {
   const html = injectSeo(baseHtml, page);
@@ -107,7 +166,21 @@ function buildPrerenderedRoot(page) {
 function buildStaticSections(page) {
   if (page.kind === 'project' && page._project) {
     const p = page._project;
-    const sections = [{ heading: 'Project Scope', text: p.scope.join(', ') + '.' }];
+    const facts = [
+      `Project Type: ${p.projectType ?? projectsData.categoryLabels[p.category] ?? p.category}`,
+      `Location: ${p.locationLabel}`,
+      `Size: ${p.size}`,
+      p.duration ? `Duration: ${p.duration}` : '',
+      p.approvalPath ? `Approval Path: ${p.approvalPath}` : '',
+      `Permit Route: ${buildProjectPermitRoute(p)}`,
+      `Outcome: ${buildProjectOutcome(p)}`,
+    ].filter(Boolean);
+    const sections = [
+      { heading: 'Project Case Study Facts', text: facts.join(' ') },
+      { heading: 'Project Scope', text: p.scope.join(', ') + '.' },
+      { heading: 'Permit Route', text: buildProjectPermitRoute(p) },
+      { heading: 'Outcome', text: buildProjectOutcome(p) },
+    ];
     p.narrative.forEach((para, i) => {
       sections.push({ heading: i === 0 ? 'Project Overview' : i === 1 ? 'Construction Detail' : 'Planning Context', text: para });
     });
@@ -1015,6 +1088,19 @@ function buildJsonLd(page, canonical, image) {
       '@id': `${canonical}#article`,
       headline: page.title.replace(' | Vitalite', ''),
       description: page.description,
+      articleSection: projectsData.categoryLabels[p.category] ?? p.category,
+      keywords: [
+        p.primaryKeyword,
+        p.projectType,
+        p.locationLabel,
+        p.size,
+        ...(p.scope ?? []),
+      ].filter(Boolean),
+      articleBody: [
+        ...(p.narrative ?? []),
+        buildProjectPermitRoute(p),
+        buildProjectOutcome(p),
+      ].join('\n\n'),
       image,
       author: { '@id': organizationId },
       publisher: { '@id': organizationId },
@@ -1110,6 +1196,49 @@ function buildSitemap() {
     })
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+}
+
+function buildProjectPermitRoute(project) {
+  if (project.permitRoute) return project.permitRoute;
+
+  const approvalPath = project.approvalPath?.toLowerCase() ?? '';
+  const projectType = `${project.projectType ?? ''} ${project.primaryKeyword} ${project.category}`.toLowerCase();
+
+  if (approvalPath.includes('committee') || approvalPath.includes('severance')) {
+    return 'Feasibility review, Committee of Adjustment application, zoning clearance, permit drawings, building permit review, inspections and closeout.';
+  }
+  if (projectType.includes('laneway') || projectType.includes('garden suite')) {
+    return 'Lot feasibility, fire access and servicing review, zoning check, permit drawings, building permit submission, inspections and rental-ready handover.';
+  }
+  if (projectType.includes('multiplex') || projectType.includes('multi-unit') || projectType.includes('rental')) {
+    return 'Unit strategy, zoning review, fire separation and egress coordination, permit drawings, building permit submission, inspections and tenant-ready turnover.';
+  }
+  if (projectType.includes('addition') || projectType.includes('walkout') || projectType.includes('vertical')) {
+    return 'Existing-condition review, structural feasibility, zoning check, architectural and engineering drawings, building permit submission, inspections and closeout.';
+  }
+  if (project.category === 'ici') {
+    return 'Operational scope review, code and permit coordination, trade sequencing, municipal inspections and occupancy-oriented closeout.';
+  }
+
+  return 'Survey and feasibility review, zoning check, permit-ready drawings, engineering coordination, building permit submission, inspections and occupancy closeout.';
+}
+
+function buildProjectOutcome(project) {
+  if (project.outcome) return project.outcome;
+
+  const categoryLabel = projectsData.categoryLabels[project.category] ?? project.category;
+  const scopeSummary = (project.scope ?? []).slice(0, 2).join(' and ').toLowerCase();
+  if (project.status === 'completed') {
+    return `Completed ${categoryLabel.toLowerCase()} reference in ${project.locationLabel}, with ${scopeSummary} delivered as part of a managed design-build scope.`;
+  }
+  if (project.status === 'ongoing-2025') {
+    return 'Active 2025 delivery with scope, approvals, trades, inspections and closeout managed under one Vitalite project path.';
+  }
+  if (project.status === 'coming-2026') {
+    return '2026 pipeline project with feasibility, approval route and construction sequencing defined before site work begins.';
+  }
+
+  return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
 }
 
 function buildGeneratedPages() {
@@ -1216,6 +1345,7 @@ function buildPageFaq(page) {
         answer:
           'Vitalite serves Toronto and the Greater Toronto Area, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and surrounding communities.',
       },
+      ...galleryStylePlanningFaqs,
     ];
   }
 
@@ -1420,6 +1550,42 @@ function buildPageFaq(page) {
         question: 'Which GTA areas can contact Vitalite for a project review?',
         answer:
           'Vitalite works with owners and investors across Toronto and the GTA, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke, and nearby municipalities.',
+      },
+    ];
+  }
+
+  if (page.key.startsWith('project-') && page._project) {
+    const project = page._project;
+    const status = projectsData.statusLabels[project.status] ?? project.status;
+    const categoryLabel = projectsData.categoryLabels[project.category] ?? project.category;
+    return [
+      {
+        question: 'Where is this Vitalite project located?',
+        answer: `This project is located in ${project.locationLabel}. Vitalite serves Toronto and the Greater Toronto Area, including North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, Etobicoke and surrounding communities.`,
+      },
+      {
+        question: 'What is the current status of this project?',
+        answer: `This project is currently ${status.toLowerCase()}. Vitalite organizes projects under ongoing 2025 builds, coming-soon 2026 builds, and completed past projects.`,
+      },
+      {
+        question: 'What category of work does this project represent?',
+        answer: `This is a ${categoryLabel.toLowerCase()} project. ${project.headline}`,
+      },
+      {
+        question: 'What was the permit route for this project?',
+        answer: buildProjectPermitRoute(project),
+      },
+      {
+        question: 'What was included in the project scope?',
+        answer: `The visible scope includes ${project.scope.join(', ')}. Vitalite uses scope details like these to connect drawings, approvals, pricing, trade scheduling and inspections before site work begins.`,
+      },
+      {
+        question: 'What outcome does this case study show?',
+        answer: buildProjectOutcome(project),
+      },
+      {
+        question: 'How do I start a similar project with Vitalite?',
+        answer: 'Share the property address, project type, current stage, drawings or permit status, target budget direction, and timeline. Vitalite begins with consultation, feasibility review, and conceptual planning before construction pricing is treated as final.',
       },
     ];
   }
