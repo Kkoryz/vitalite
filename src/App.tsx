@@ -701,7 +701,7 @@ const Navbar = ({
       {/* Logo Area */}
       <a href={routeHref('home')} className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
         <img
-          src={publicAsset('vitalite-logo.svg?v=20260430-1340')}
+          src={publicAsset('logo-transparent.png?v=20260510-logosource')}
           alt="Vitalite Construction"
           className="w-[185px] md:w-[345px] h-auto max-h-[68px] lg:max-h-[84px] object-contain"
         />
@@ -1001,7 +1001,6 @@ const Hero = () => {
               poster={currentHeroSlide.image}
               className="w-full h-full object-cover"
               autoPlay
-              defaultMuted
               muted
               loop
               playsInline
