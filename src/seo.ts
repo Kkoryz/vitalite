@@ -2,6 +2,19 @@ import seoData from './seo-data.json';
 import seoContexts from './seo-contexts.json';
 import projectsData from './projects-data.json';
 import { trackPageView } from './analytics';
+import {
+  EN_CA,
+  FR_CA,
+  buildFrenchFaqs,
+  buildFrenchSteps,
+  frenchBusinessDescription,
+  getLanguageFromPath,
+  localizePage,
+  localizedPathFor,
+  localizedUrlFor,
+  stripLocalePrefix,
+  type Language,
+} from './localization';
 
 type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact' | 'project';
 
@@ -181,20 +194,25 @@ export const pageByKey = new Map(pages.map((page) => [page.key, page]));
 export const pathByKey = new Map(pages.map((page) => [page.key, page.path]));
 const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page.key]));
 
-export const getRouteHref = (key: string): string => {
+export const getRouteHref = (key: string, language: Language = 'en'): string => {
   const path = pathByKey.get(key) ?? '/';
-  return `${basePath}${canonicalPathFor(path)}`;
+  return `${basePath}${canonicalPathFor(path, language)}`;
 };
 
-export const getRouteHrefFromLegacyHash = (href?: string): string => {
-  if (!href) return getRouteHref('contact-us');
+export const getRouteHrefFromLegacyHash = (href?: string, language: Language = 'en'): string => {
+  if (!href) return getRouteHref('contact-us', language);
   if (!href.startsWith('#')) return href;
-  return getRouteHref(href.slice(1));
+  return getRouteHref(href.slice(1), language);
 };
 
-export const getCanonicalUrl = (key: string): string => {
+export const getCanonicalUrl = (key: string, language: Language = 'en'): string => {
   const page = pageByKey.get(key) ?? pageByKey.get('home')!;
-  return `${seoData.siteUrl}${canonicalPathFor(page.path)}`;
+  return localizedUrlFor(seoData.siteUrl, page.path, language);
+};
+
+export const getLocalizedSeoPage = (key: string, language: Language = 'en'): SeoPage => {
+  const page = pageByKey.get(key) ?? pageByKey.get('home')!;
+  return localizePage(page, language) as SeoPage;
 };
 
 export const buildProjectPermitRoute = (project: ProjectEntry) => {
@@ -251,17 +269,27 @@ export const getPageKeyFromUrl = (url: URL): string | null => {
     routePath = routePath.slice(basePath.length) || '/';
   }
 
-  return keyByPath.get(normalizeRoutePath(routePath)) ?? null;
+  return keyByPath.get(normalizeRoutePath(stripLocalePrefix(routePath))) ?? null;
 };
 
 export const getPageKeyFromLocation = (location: Location): string => {
   return getPageKeyFromUrl(new URL(location.href)) ?? 'home';
 };
 
-export const applySeo = (key: string) => {
-  const page = pageByKey.get(key) ?? pageByKey.get('home')!;
-  const canonical = getCanonicalUrl(page.key);
+export const getLanguageFromUrl = (url: URL): Language => {
+  let routePath = url.pathname;
+  if (basePath && routePath.startsWith(basePath)) {
+    routePath = routePath.slice(basePath.length) || '/';
+  }
+  return getLanguageFromPath(routePath);
+};
+
+export const applySeo = (key: string, language: Language = 'en') => {
+  const sourcePage = pageByKey.get(key) ?? pageByKey.get('home')!;
+  const page = localizePage(sourcePage, language) as SeoPage;
+  const canonical = getCanonicalUrl(page.key, language);
   const image = `${seoData.siteUrl}${seoData.defaultImage}`;
+  const locale = language === 'fr' ? FR_CA : EN_CA;
 
   document.title = page.title;
   setMeta('name', 'description', page.description);
@@ -280,11 +308,15 @@ export const applySeo = (key: string) => {
   setMeta('name', 'twitter:description', page.description);
   setMeta('name', 'twitter:image', image);
   setCanonical(canonical);
-  setJsonLd(buildJsonLd(page, canonical, image));
+  setHreflang(sourcePage);
+  setJsonLd(buildJsonLd(page, canonical, image, language));
+  document.documentElement.lang = locale;
   trackPageView(page.title, canonical);
 };
 
-export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => {
+export const buildJsonLd = (page: SeoPage, canonical: string, image: string, language: Language = 'en') => {
+  const locale = language === 'fr' ? FR_CA : EN_CA;
+  const businessDescription = language === 'fr' ? frenchBusinessDescription : seoData.business.description;
   const organizationId = `${seoData.siteUrl}/#organization`;
   const localBusinessId = `${seoData.siteUrl}/#localbusiness`;
   const webPageType = page.kind === 'contact' ? ['WebPage', 'ContactPage'] : 'WebPage';
@@ -295,7 +327,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       name: seoData.siteName,
       publisher: { '@id': organizationId },
-      inLanguage: 'en-CA',
+      inLanguage: locale,
     },
     {
       '@type': 'Organization',
@@ -303,7 +335,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       name: seoData.business.name,
       url: seoData.siteUrl,
       logo: image,
-      description: seoData.business.description,
+      description: businessDescription,
       sameAs: seoData.business.sameAs,
       knowsAbout: [
         'GTA design-build construction',
@@ -323,7 +355,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       name: seoData.business.name,
       url: seoData.siteUrl,
       image,
-      description: seoData.business.description,
+      description: businessDescription,
       telephone: seoData.business.telephone,
       email: seoData.business.email,
       sameAs: seoData.business.sameAs,
@@ -356,7 +388,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       description: page.description,
       isPartOf: { '@id': `${seoData.siteUrl}/#website` },
       about: { '@id': localBusinessId },
-      inLanguage: 'en-CA',
+      inLanguage: locale,
       datePublished: seoPublishedDate,
       dateModified: seoFreshnessDate,
       keywords: [
@@ -377,7 +409,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     {
       '@type': 'BreadcrumbList',
       '@id': `${canonical}#breadcrumb`,
-      itemListElement: buildBreadcrumbs(page).map((item, index) => ({
+      itemListElement: buildBreadcrumbs(page, language).map((item, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: item.name,
@@ -463,7 +495,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     }
   }
 
-  const howToSteps = buildHowToSteps(page);
+  const howToSteps = language === 'fr' ? buildFrenchSteps() : buildHowToSteps(page);
   if (howToSteps.length) {
     graph.push({
       '@type': 'HowTo',
@@ -480,7 +512,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
     });
   }
 
-  const faq = buildPageFaq(page);
+  const faq = language === 'fr' ? buildFrenchFaqs(page.title) : buildPageFaq(page);
   if (faq.length) {
     graph.push({
       '@type': 'FAQPage',
@@ -1131,41 +1163,41 @@ const buildHowToSteps = (page: SeoPage) => {
   return ['Define project goals and constraints', 'Review zoning, drawings and approvals', 'Set budget direction and scope priorities', 'Coordinate trades, procurement and schedule', 'Manage construction, inspections and closeout'];
 };
 
-const buildBreadcrumbs = (page: SeoPage) => {
-  const homeUrl = `${seoData.siteUrl}/`;
-  const items = [{ name: 'Home', url: homeUrl }];
+const buildBreadcrumbs = (page: SeoPage, language: Language = 'en') => {
+  const homeUrl = getCanonicalUrl('home', language);
+  const items = [{ name: language === 'fr' ? 'Accueil' : 'Home', url: homeUrl }];
 
   const parts = page.path.split('/').filter(Boolean);
   if (!parts.length) return items;
 
   const parentMap: Record<string, string> = {
-    services: 'Services',
-    'why-vitalite': 'Why Vitalite',
-    'our-work': 'Our Work',
-    blog: 'Blog',
-    'contact-us': 'Contact Us',
-    locations: 'GTA Service Areas',
-    communities: 'Neighbourhood Service Areas',
-    ai: 'AI Construction Guide',
+    services: language === 'fr' ? 'Services' : 'Services',
+    'why-vitalite': language === 'fr' ? 'Pourquoi Vitalite' : 'Why Vitalite',
+    'our-work': language === 'fr' ? 'Projets' : 'Our Work',
+    blog: language === 'fr' ? 'Blogue' : 'Blog',
+    'contact-us': language === 'fr' ? 'Contactez-nous' : 'Contact Us',
+    locations: language === 'fr' ? 'Secteurs de service GTA' : 'GTA Service Areas',
+    communities: language === 'fr' ? 'Secteurs par quartier' : 'Neighbourhood Service Areas',
+    ai: language === 'fr' ? 'Guide construction IA' : 'AI Construction Guide',
     faq: 'FAQ',
   };
 
   const parentPath = `/${parts[0]}`;
   const parentPage = pages.find((candidate) => candidate.path === parentPath);
   if (parentPage) {
-    items.push({ name: parentMap[parts[0]] ?? parentPage.title, url: getCanonicalUrl(parentPage.key) });
+    items.push({ name: parentMap[parts[0]] ?? getLocalizedSeoPage(parentPage.key, language).title, url: getCanonicalUrl(parentPage.key, language) });
   }
 
   if (parts.length > 1) {
-    items.push({ name: page.title.split('|')[0].trim(), url: getCanonicalUrl(page.key) });
+    items.push({ name: page.title.split('|')[0].trim(), url: getCanonicalUrl(page.key, language) });
   }
 
   return items;
 };
 
-const canonicalPathFor = (path: string) => {
+const canonicalPathFor = (path: string, language: Language = 'en') => {
   const normalized = normalizeRoutePath(path);
-  return normalized === '/' ? '/' : `${normalized}/`;
+  return localizedPathFor(normalized, language);
 };
 
 const setCanonical = (href: string) => {
@@ -1176,6 +1208,26 @@ const setCanonical = (href: string) => {
     document.head.appendChild(link);
   }
   link.href = href;
+};
+
+const setHreflang = (page: SeoPage) => {
+  const alternates = [
+    { hreflang: 'en-CA', href: getCanonicalUrl(page.key, 'en') },
+    { hreflang: 'fr-CA', href: getCanonicalUrl(page.key, 'fr') },
+    { hreflang: 'x-default', href: getCanonicalUrl(page.key, 'en') },
+  ];
+
+  document
+    .querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang], link[data-vitalite-hreflang="true"]')
+    .forEach((link) => link.remove());
+  alternates.forEach((alternate) => {
+    const link = document.createElement('link');
+    link.rel = 'alternate';
+    link.hreflang = alternate.hreflang;
+    link.href = alternate.href;
+    link.dataset.vitaliteHreflang = 'true';
+    document.head.appendChild(link);
+  });
 };
 
 const setJsonLd = (value: unknown) => {

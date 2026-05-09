@@ -33,6 +33,8 @@ import {
 } from './analytics';
 import {
   applySeo,
+  getLanguageFromUrl,
+  getLocalizedSeoPage,
   getPageKeyFromLocation,
   getPageKeyFromUrl,
   getRouteHref,
@@ -50,6 +52,20 @@ import {
 } from './seo';
 import seoData from './seo-data.json';
 import seoContexts from './seo-contexts.json';
+import {
+  EN_CA,
+  FR_CA,
+  buildFrenchAnswer,
+  buildFrenchBullets,
+  buildFrenchDetailIntro,
+  buildFrenchFaqs,
+  buildFrenchSections,
+  buildFrenchSteps,
+  getFrenchCategory,
+  getFrenchCta,
+  translateTopic,
+  type Language,
+} from './localization';
 
 const CONTACT_PHONE_DISPLAY = '+1 (647) 718-0972';
 const CONTACT_PHONE_TEL = '+16477180972';
@@ -152,7 +168,6 @@ type DetailPageContent = {
   };
 };
 
-type Language = 'en' | 'fr';
 type LocalSeoContext = {
   planningContext: string;
   projectFit: string;
@@ -204,8 +219,12 @@ const footerSeoLinks = [
 
 const pageKeys = navItems.map((item) => item.key);
 
-const routeHref = (key: PageKey | MainPageKey | DetailPageKey) => getRouteHref(key);
-const routeHrefFromLegacyHash = (href?: string) => getRouteHrefFromLegacyHash(href);
+const getCurrentRouteLanguage = (): Language => {
+  if (typeof window === 'undefined') return 'en';
+  return getLanguageFromUrl(new URL(window.location.href));
+};
+const routeHref = (key: PageKey | MainPageKey | DetailPageKey, language: Language = getCurrentRouteLanguage()) => getRouteHref(key, language);
+const routeHrefFromLegacyHash = (href?: string, language: Language = getCurrentRouteLanguage()) => getRouteHrefFromLegacyHash(href, language);
 const mergeSeoContextData = <T extends SeoDataWithLocalContext>(base: T, contexts: SeoContextData): T => ({
   ...base,
   locationContexts: {
@@ -672,6 +691,13 @@ const resolvePage = (): PageKey => {
   if (Object.prototype.hasOwnProperty.call(allDetailPages, candidate)) return candidate;
   if (candidate === 'home') return candidate;
   return 'home';
+};
+
+const resolveLanguage = (): Language => {
+  if (typeof window === 'undefined') return 'en';
+  const urlLanguage = getLanguageFromUrl(new URL(window.location.href));
+  if (urlLanguage === 'fr') return 'fr';
+  return window.localStorage.getItem('vitalite-language') === 'fr' ? 'fr' : 'en';
 };
 
 const Navbar = ({
@@ -3489,10 +3515,12 @@ const SearchOverlay = ({
               {copy('Results', language)} ({results.length})
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {results.map((item) => (
+              {results.map((item) => {
+                const localized = getLocalizedSeoPage(item.key, language);
+                return (
                 <a
                   key={item.key}
-                  href={item.href}
+                  href={routeHref(item.key, language)}
                   onClick={() => {
                     trackSiteSearchEvent('site_search_result_clicked', {
                       page_key: pageKey,
@@ -3508,15 +3536,16 @@ const SearchOverlay = ({
                   <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-kiewit-yellow mb-3">
                     {copy(item.kind, language)}
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold leading-tight mb-3">{item.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold leading-tight mb-3">{localized.title.split('|')[0].trim()}</h3>
                   <p className="text-sm sm:text-base text-gray-300 group-hover:text-gray-700 leading-relaxed mb-4">
-                    {item.description}
+                    {localized.description}
                   </p>
                   <span className="inline-flex items-center text-sm font-bold uppercase tracking-[0.12em]">
                     {copy('View page', language)} <ChevronRight className="w-4 h-4 ml-2 text-kiewit-yellow" />
                   </span>
                 </a>
-              ))}
+                );
+              })}
             </div>
             {!results.length && (
               <div className="border border-white/15 bg-white/5 p-8 text-center">
@@ -4622,7 +4651,40 @@ function getGuideProfile(page: SeoPage) {
   };
 }
 
-function buildVisibleGeoEvidenceSections(pageKey: string, page: DetailPageContent) {
+function buildVisibleGeoEvidenceSections(pageKey: string, page: DetailPageContent, language: Language = 'en') {
+  if (language === 'fr') {
+    const title = page.title.split('|')[0].trim();
+    const projectFacts = page.isProject && page.projectMeta
+      ? `Cette preuve de projet indique ${page.projectMeta.location}, ${page.projectMeta.size}, ${page.projectMeta.projectType}, ${page.projectMeta.statusLabel}, ${page.projectMeta.permitRoute}. La portee comprend ${page.projectMeta.scope.join(', ')}.`
+      : 'Cette page doit etre evaluee avec adresse, survey, plans existants, statut de permis, budget cible, calendrier et contraintes connues de structure, acces, arbres, drainage ou inspections.';
+    const proofSignals = page.isProject && page.projectMeta
+      ? 'Les signaux de preuve incluent chemin d approbation, chemin de permis, portee, taille, statut, resultat et responsabilites de cloture.'
+      : 'Les signaux de preuve incluent secteur de service, contexte de permis, etapes de planification, pages Vitalite connexes, exemples de projets et ressources officielles quand elles sont disponibles.';
+
+    return [
+      {
+        heading: 'Faits cles',
+        text: `${title} est une decision de planification avant d etre une decision de construction. Une page utile doit montrer les preuves derriere la reponse: zonage, code du batiment, plans, ingenierie, hypotheses de budget, inspections et sequence des trades. ${projectFacts} La page donne d abord une reponse directe, puis les faits, criteres, etapes et limites a verifier pour l adresse.`,
+      },
+      {
+        heading: 'Cadre de comparaison',
+        text: 'Comparez les options par responsabilite, timing et preuves. Une voie conception seulement peut clarifier les plans, mais le proprietaire doit encore relier prix, commentaires de permis, ingenierie et chantier. Une voie conception-construction convient quand faisabilite, plans, permis, budget, approvisionnement, trades, inspections et cloture doivent rester sous une meme responsabilite.',
+      },
+      {
+        heading: 'Sequence de planification',
+        text: 'Commencez par l adresse et l objectif, puis rassemblez survey, photos, plans existants et priorites. Verifiez zonage, terrain, structure, services, acces, arbres, drainage et exigences municipales ou de copropriete. Cadrez ensuite dessins, consultants, allocations, exclusions, approvisionnement, trades, inspections, PDI et cloture.',
+      },
+      {
+        heading: 'Preuves a preparer',
+        text: `Preparez photos, notes d inspection, commentaires municipaux, budget indicatif, attentes de finition, fenetre de demarrage, limites d acces et enjeux mecaniques ou structuraux connus. ${proofSignals} Ces details aident a distinguer une portee interieure simple d une maison sur mesure, d un agrandissement, d une garden suite, d un multiplex, d une suite legale, d une renovation ou d un projet ICI avec permis.`,
+      },
+      {
+        heading: 'Limites et caveats',
+        text: 'La bonne prochaine etape depend de la propriete reelle. Les pages de planification expliquent plages, risques d approbation et criteres de decision, mais elles ne remplacent pas une verification propre a l adresse. Les budgets changent si les dessins sont incomplets, les conditions cachees, les finitions indefinies, l ingenierie non cadree, les commentaires municipaux importants ou les selections changent pendant la construction.',
+      },
+    ];
+  }
+
   const focus = getServicePlanningFocus({
     key: pageKey,
     path: '',
@@ -5369,16 +5431,49 @@ const ProjectStatusBadge = ({ status, label }: { status: string; label: string }
   );
 };
 
-const DetailPage = ({ pageKey }: { pageKey: string }) => {
-  const page = allDetailPages[pageKey];
+const getDisplayDetailPage = (pageKey: string, page: DetailPageContent, language: Language): DetailPageContent => {
+  if (language !== 'fr') return page;
+  const seoPage = getLocalizedSeoPage(pageKey, 'fr');
+  const title = seoPage.title.split('|')[0].trim();
+  return {
+    ...page,
+    category: getFrenchCategory(page.category),
+    title,
+    subtitle: seoPage.description,
+    intro: buildFrenchDetailIntro(title, pageKey),
+    bullets: buildFrenchBullets(pageKey),
+    sections: buildFrenchSections(title, pageKey),
+    answer: buildFrenchAnswer(title, pageKey),
+    steps: buildFrenchSteps(),
+    faqs: buildFrenchFaqs(title),
+    relatedLinks: page.relatedLinks?.map((link) => ({
+      ...link,
+      label: getLocalizedSeoPage(link.key, 'fr').title.split('|')[0].trim(),
+    })),
+    projectMeta: page.projectMeta
+      ? {
+          ...page.projectMeta,
+          projectType: translateTopic(page.projectMeta.projectType),
+          approvalPath: translateTopic(page.projectMeta.approvalPath),
+          permitRoute: translateTopic(page.projectMeta.permitRoute),
+          scope: page.projectMeta.scope.map((item) => translateTopic(item)),
+          outcome: buildFrenchAnswer(title, pageKey),
+          statusLabel: page.projectMeta.status === 'ongoing-2025' ? 'En cours 2025' : page.projectMeta.status === 'coming-2026' ? 'A venir 2026' : page.projectMeta.status === 'completed' ? 'Termine' : 'Type de projet',
+        }
+      : page.projectMeta,
+  };
+};
+
+const DetailPage = ({ pageKey, language }: { pageKey: string; language: Language }) => {
+  const page = getDisplayDetailPage(pageKey, allDetailPages[pageKey], language);
   const projectCards: Array<{ project: ProjectEntry; content: DetailPageContent }> = (page.projectKeys ?? [])
     .map((key) => {
       const project = projectsByKey.get(key);
       const content = generatedProjectDetailPages[key];
-      return project && content ? { project, content } : null;
+      return project && content ? { project, content: getDisplayDetailPage(key, content, language) } : null;
     })
     .filter((x): x is { project: ProjectEntry; content: DetailPageContent } => x !== null);
-  const visibleGeoEvidenceSections = buildVisibleGeoEvidenceSections(pageKey, page);
+  const visibleGeoEvidenceSections = buildVisibleGeoEvidenceSections(pageKey, page, language);
 
   return (
     <>
@@ -5402,7 +5497,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
             {page.isProject && page.projectMeta ? (
               <div className="flex flex-wrap items-center gap-3 mb-5">
                 <ProjectStatusBadge status={page.projectMeta.status} label={page.projectMeta.statusLabel} />
-                <span className="text-[13px] font-medium text-gray-300">{page.projectMeta.location} · {page.projectMeta.size}</span>
+                <span className="text-[13px] font-medium text-gray-300">{page.projectMeta.location} / {page.projectMeta.size}</span>
               </div>
             ) : null}
             <h1 className="text-[2.35rem] sm:text-5xl md:text-7xl font-bold mb-6 leading-[1.08] tracking-tight text-white drop-shadow-md">
@@ -5412,7 +5507,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
               {page.subtitle}
             </p>
             <a href={routeHref('contact-us')} className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors">
-              {page.isProject ? 'Start a similar project' : 'Discuss this project type'}
+              {language === 'fr' ? getFrenchCta(page.isProject ? 'Start a similar project' : 'Discuss this project type') : page.isProject ? 'Start a similar project' : 'Discuss this project type'}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -5424,18 +5519,18 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
           <SubPageHeading title={page.title} dark />
           {page.isProject && page.projectMeta ? (
             <div className="mb-12">
-              <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-4">Project Case Study Facts</p>
+              <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-4">{language === 'fr' ? 'Faits du cas de projet' : 'Project Case Study Facts'}</p>
               <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200 rounded-xl overflow-hidden">
               {[
-                { label: 'Project Type', value: page.projectMeta.projectType },
-                { label: 'Location', value: page.projectMeta.location },
-                { label: 'Size', value: page.projectMeta.size },
-                { label: 'Duration', value: page.projectMeta.duration },
-                { label: 'Status', value: page.projectMeta.statusLabel },
-                { label: 'Approval Path', value: page.projectMeta.approvalPath, wide: true },
-                { label: 'Permit Route', value: page.projectMeta.permitRoute, wide: true },
-                { label: 'Scope', value: page.projectMeta.scope.join(' / '), wide: true },
-                { label: 'Outcome', value: page.projectMeta.outcome, wide: true },
+                { label: language === 'fr' ? 'Type de projet' : 'Project Type', value: page.projectMeta.projectType },
+                { label: language === 'fr' ? 'Lieu' : 'Location', value: page.projectMeta.location },
+                { label: language === 'fr' ? 'Taille' : 'Size', value: page.projectMeta.size },
+                { label: language === 'fr' ? 'Duree' : 'Duration', value: page.projectMeta.duration },
+                { label: language === 'fr' ? 'Statut' : 'Status', value: page.projectMeta.statusLabel },
+                { label: language === 'fr' ? 'Chemin d approbation' : 'Approval Path', value: page.projectMeta.approvalPath, wide: true },
+                { label: language === 'fr' ? 'Chemin de permis' : 'Permit Route', value: page.projectMeta.permitRoute, wide: true },
+                { label: language === 'fr' ? 'Portee' : 'Scope', value: page.projectMeta.scope.join(' / '), wide: true },
+                { label: language === 'fr' ? 'Resultat' : 'Outcome', value: page.projectMeta.outcome, wide: true },
               ].filter((f) => f.value).map((fact) => (
                 <div key={fact.label} className={`bg-white px-4 py-4 ${fact.wide ? 'lg:col-span-2' : ''}`}>
                   <dt className="text-[10px] font-bold tracking-[0.16em] uppercase text-gray-400 mb-1">{fact.label}</dt>
@@ -5452,12 +5547,12 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
             </p>
             {page.answer ? (
               <div className="border-l-4 border-kiewit-yellow bg-gray-50 p-5 sm:p-6 mb-10">
-                <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-3">Short Answer</div>
+                <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-3">{language === 'fr' ? 'Reponse courte' : 'Short Answer'}</div>
                 <p className="text-base sm:text-lg text-gray-800 leading-relaxed">{page.answer}</p>
               </div>
             ) : null}
             <a href={routeHref(page.parent)} className="group inline-flex items-center text-lg sm:text-xl font-medium text-black hover:text-gray-600 transition-colors">
-              Back to {navItems.find((item) => item.key === page.parent)?.label ?? 'Our Work'}
+              {language === 'fr' ? 'Retour a' : 'Back to'} {language === 'fr' ? copy(navItems.find((item) => item.key === page.parent)?.label ?? 'Our Work', 'fr') : navItems.find((item) => item.key === page.parent)?.label ?? 'Our Work'}
               <ChevronRight className="w-6 h-6 ml-2 text-kiewit-yellow group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -5505,9 +5600,11 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
 
       <section className="bg-gray-50 text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-          <SubPageHeading title="Planning Evidence" dark />
+          <SubPageHeading title={language === 'fr' ? 'Preuves de planification' : 'Planning Evidence'} dark />
           <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-10 md:mb-14">
-            These blocks make the page easier for owners and AI search systems to evaluate: direct facts, comparison criteria, process steps, evidence inputs and boundaries.
+            {language === 'fr'
+              ? 'Ces blocs rendent la page plus facile a evaluer pour les proprietaires et les moteurs de recherche IA: faits directs, criteres de comparaison, etapes, preuves a preparer et limites.'
+              : 'These blocks make the page easier for owners and AI search systems to evaluate: direct facts, comparison criteria, process steps, evidence inputs and boundaries.'}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {visibleGeoEvidenceSections.map((section) => (
@@ -5523,7 +5620,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {projectCards.length > 0 ? (
         <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-            <SubPageHeading title="Projects in This Category" dark />
+            <SubPageHeading title={language === 'fr' ? 'Projets dans cette categorie' : 'Projects in This Category'} dark />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {projectCards.map(({ project, content }) => (
                 <a key={project.key} href={routeHref(project.key)} className="group border border-gray-200 rounded-2xl overflow-hidden hover:border-kiewit-yellow transition-colors bg-gray-50">
@@ -5532,13 +5629,13 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
                   </div>
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <ProjectStatusBadge status={project.status} label={projectStatusLabels[project.status]} />
+                      <ProjectStatusBadge status={project.status} label={language === 'fr' ? getDisplayDetailPage(project.key, content, 'fr').projectMeta?.statusLabel ?? projectStatusLabels[project.status] : projectStatusLabels[project.status]} />
                       <span className="text-[11px] text-gray-500 font-medium">{project.locationLabel}</span>
                     </div>
                     <h3 className="text-base font-semibold text-black leading-snug mb-2 group-hover:text-kiewit-yellow transition-colors">
                       {content.title}
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{project.headline}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{language === 'fr' ? getLocalizedSeoPage(project.key, 'fr').description : project.headline}</p>
                   </div>
                 </a>
               ))}
@@ -5550,7 +5647,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {page.steps?.length ? (
         <section className="bg-white text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-            <SubPageHeading title="Planning Sequence" dark />
+            <SubPageHeading title={language === 'fr' ? 'Sequence de planification' : 'Planning Sequence'} dark />
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               {page.steps.map((step, index) => (
                 <article key={step} className="border border-gray-200 rounded-lg p-5 bg-gray-50">
@@ -5566,7 +5663,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {page.faqs?.length ? (
         <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
-            <SubPageHeading title="Frequently Asked Questions" dark />
+            <SubPageHeading title={language === 'fr' ? 'Questions frequentes' : 'Frequently Asked Questions'} dark />
             <div className="divide-y divide-gray-200 border-y border-gray-200">
               {page.faqs.map((faq) => (
                 <article key={faq.question} className="py-7">
@@ -5582,7 +5679,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {page.officialResources?.length ? (
         <section className="bg-gray-50 text-black py-12 md:py-16 px-5 sm:px-8 md:px-24 border-t border-gray-200">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-            <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-5">Official Reference</p>
+            <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-400 mb-5">{language === 'fr' ? 'Reference officielle' : 'Official Reference'}</p>
             <div className="flex flex-wrap gap-3">
               {page.officialResources.map((res) => (
                 <a key={res.url} href={res.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-800 hover:border-kiewit-yellow hover:bg-white transition-colors">
@@ -5598,7 +5695,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       {page.relatedLinks?.length ? (
         <section className="bg-white text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
-            <SubPageHeading title="Related Vitalite Pages" dark />
+            <SubPageHeading title={language === 'fr' ? 'Pages Vitalite connexes' : 'Related Vitalite Pages'} dark />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {page.relatedLinks.map((link) => (
                 <a key={link.key} href={routeHref(link.key)} className="border border-gray-200 rounded-lg p-5 font-semibold hover:border-kiewit-yellow hover:bg-gray-50 transition-colors">
@@ -6187,13 +6284,13 @@ const HomePage = () => (
   </>
 );
 
-const renderPage = (activePage: PageKey) => {
+const renderPage = (activePage: PageKey, language: Language) => {
   if (activePage === 'locations-hub' || activePage === 'communities-hub') {
     return <SeoHubPage pageKey={activePage} />;
   }
 
   if (Object.prototype.hasOwnProperty.call(allDetailPages, activePage)) {
-    return <DetailPage pageKey={activePage} />;
+    return <DetailPage pageKey={activePage} language={language} />;
   }
 
   switch (activePage) {
@@ -6225,10 +6322,7 @@ const renderPage = (activePage: PageKey) => {
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageKey>(() => resolvePage());
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window === 'undefined') return 'en';
-    return window.localStorage.getItem('vitalite-language') === 'fr' ? 'fr' : 'en';
-  });
+  const [language, setLanguage] = useState<Language>(() => resolveLanguage());
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleLanguageChange = (nextLanguage: Language) => {
@@ -6239,6 +6333,10 @@ export default function App() {
         language: nextLanguage,
       });
     }
+    const nextHref = routeHref(activePage, nextLanguage);
+    if (typeof window !== 'undefined' && `${window.location.pathname}${window.location.search}${window.location.hash}` !== nextHref) {
+      window.history.pushState(null, '', nextHref);
+    }
     setLanguage(nextLanguage);
   };
 
@@ -6248,7 +6346,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    const syncPage = () => setActivePage(resolvePage());
+    const syncPage = () => {
+      setActivePage(resolvePage());
+      setLanguage(resolveLanguage());
+    };
     window.addEventListener('hashchange', syncPage);
     window.addEventListener('popstate', syncPage);
     syncPage();
@@ -6335,6 +6436,7 @@ export default function App() {
       event.preventDefault();
       window.history.pushState(null, '', `${url.pathname}${url.search}${url.hash}`);
       setActivePage(pageKey);
+      setLanguage(getLanguageFromUrl(url));
     };
 
     document.addEventListener('click', handleInternalRouteClick);
@@ -6346,11 +6448,11 @@ export default function App() {
   }, [activePage]);
 
   useEffect(() => {
-    applySeo(activePage);
-  }, [activePage]);
+    applySeo(activePage, language);
+  }, [activePage, language]);
 
   useEffect(() => {
-    document.documentElement.lang = language === 'fr' ? 'fr-CA' : 'en';
+    document.documentElement.lang = language === 'fr' ? FR_CA : EN_CA;
     window.localStorage.setItem('vitalite-language', language);
     window.setTimeout(() => translateVisibleText(language), 0);
   }, [activePage, language, searchOpen]);
@@ -6359,7 +6461,7 @@ export default function App() {
     <div className={`font-sans antialiased text-white bg-kiewit-dark ${shouldShowMobileContactBar(activePage) ? 'pb-[72px] sm:pb-0' : ''}`}>
       <Navbar activePage={activePage} language={language} onLanguageChange={handleLanguageChange} onSearchOpen={handleSearchOpen} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} pageKey={activePage} />
-      {renderPage(activePage)}
+      {renderPage(activePage, language)}
       <MobileContactBar activePage={activePage} />
       <Footer language={language} />
     </div>

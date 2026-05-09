@@ -10,6 +10,38 @@ const projectsData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'pro
 const baseHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
 const today = process.env.VITALITE_BUILD_DATE || formatBuildDate(new Date());
 const pages = [...seoData.pages, ...buildGeneratedPages()];
+const frenchTitleByKey = {
+  home: 'Entrepreneur conception-construction GTA | Vitalite Construction',
+  services: 'Services conception-construction Toronto et GTA | Vitalite',
+  'why-vitalite': 'Pourquoi Vitalite | Partenaire construction GTA',
+  'our-work': 'Projets Vitalite | Maisons et renovations GTA',
+  blog: 'Guides renovation et construction Toronto | Blogue Vitalite',
+  'contact-us': 'Contactez Vitalite | Evaluation de projet GTA',
+  'locations-hub': 'Secteurs de service conception-construction GTA | Vitalite',
+  'communities-hub': 'Pages de construction par quartier Toronto et GTA | Vitalite',
+  faq: 'FAQ conception-construction GTA | Vitalite Construction',
+  'ai-gta-design-build-guide': 'Guide conception-construction GTA lisible par IA | Vitalite',
+  'tools-hub': 'Calculateurs de construction GTA | Outils Vitalite',
+  'tool-addition-cost': 'Calculateur cout agrandissement maison GTA | Vitalite',
+  'tool-laneway-cost': 'Calculateur cout maison de ruelle et garden suite Toronto | Vitalite',
+  'tool-teardown-decision': 'Outil demolition-reconstruction ou renovation GTA | Vitalite',
+  'tool-permit-timeline': 'Estimateur delai permis de construction GTA | Vitalite',
+};
+
+const frenchDescriptionByKey = {
+  home: 'Entrepreneur conception-construction GTA pour maisons sur mesure, multiplex, agrandissements, garden suites et ICI: faisabilite, plans, permis, budgets, construction et cloture.',
+  services: 'Services conception-construction Toronto et GTA: maisons sur mesure, multiplex, agrandissements, garden suites, plans de permis, gestion de projet et construction ICI.',
+  'why-vitalite': 'Pourquoi les proprietaires GTA choisissent Vitalite: faisabilite, plans prets pour permis, budget, gestion de construction, inspections et cloture sous une meme equipe.',
+  'our-work': 'Categories de projets Vitalite dans le GTA: maisons sur mesure, multiplex, garden suites, agrandissements, ICI, condos, maisons anciennes, townhouses et interieurs complets.',
+  blog: 'Guides Toronto et GTA avec reponses directes sur couts, permis, delais, conception-construction, garden suites, multiplex et preparation de projet.',
+  'contact-us': 'Contactez Vitalite pour une evaluation de projet dans le GTA. Partagez adresse, portee, plans, statut de permis, budget et delai vise.',
+};
+
+const frenchKeywordByKey = {
+  home: 'entrepreneur conception-construction GTA',
+  services: 'services conception-construction Toronto',
+  'contact-us': 'consultation conception-construction GTA',
+};
 
 const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page]));
 const geoEvidencePageKeys = new Set([
@@ -80,26 +112,30 @@ const galleryStylePlanningFaqs = [
   },
 ];
 
-for (const page of pages) {
-  const html = injectSeo(baseHtml, page);
-  const routePath = normalizeRoutePath(page.path);
-  if (routePath === '/') {
-    await fs.writeFile(path.join(distDir, 'index.html'), html);
-  } else {
-    const targetDir = path.join(distDir, ...routePath.split('/').filter(Boolean));
-    await fs.mkdir(targetDir, { recursive: true });
-    await fs.writeFile(path.join(targetDir, 'index.html'), html);
+for (const sourcePage of pages) {
+  for (const language of ['en', 'fr']) {
+    const html = injectSeo(baseHtml, sourcePage, language);
+    const routePath = normalizeRoutePath(canonicalPathFor(sourcePage.path, language));
+    if (routePath === '/') {
+      await fs.writeFile(path.join(distDir, 'index.html'), html);
+    } else {
+      const targetDir = path.join(distDir, ...routePath.split('/').filter(Boolean));
+      await fs.mkdir(targetDir, { recursive: true });
+      await fs.writeFile(path.join(targetDir, 'index.html'), html);
+    }
   }
 }
 
-await fs.writeFile(path.join(distDir, '404.html'), injectSeo(baseHtml, pageByPath.get('/')));
+await fs.writeFile(path.join(distDir, '404.html'), injectSeo(baseHtml, pageByPath.get('/'), 'en'));
 await fs.writeFile(path.join(distDir, 'sitemap.xml'), buildSitemap());
 await fs.writeFile(path.join(distDir, 'robots.txt'), `User-agent: *\nAllow: /\nLLM: ${seoData.siteUrl}/llms.txt\nSitemap: ${seoData.siteUrl}/sitemap.xml\n`);
 await fs.writeFile(path.join(distDir, 'llms.txt'), buildLlmsTxt());
 
-function injectSeo(html, page) {
-  const canonical = canonicalFor(page);
+function injectSeo(html, sourcePage, language = 'en') {
+  const page = localizeBuildPage(sourcePage, language);
+  const canonical = canonicalFor(sourcePage, language);
   const image = `${seoData.siteUrl}${seoData.defaultImage}`;
+  const locale = language === 'fr' ? 'fr-CA' : 'en-CA';
   const managedHead = [
     '<!-- Vitalite SEO -->',
     "<script>document.documentElement.classList.add('vitalite-js');</script>",
@@ -114,36 +150,46 @@ function injectSeo(html, page) {
     `<meta property="og:description" content="${escapeHtml(page.description)}" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:image" content="${image}" />`,
+    `<meta property="og:locale" content="${language === 'fr' ? 'fr_CA' : 'en_CA'}" />`,
+    `<meta property="og:locale:alternate" content="${language === 'fr' ? 'en_CA' : 'fr_CA'}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escapeHtml(page.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(page.description)}" />`,
     `<meta name="twitter:image" content="${image}" />`,
-    `<script type="application/ld+json" data-vitalite-jsonld="true">${JSON.stringify(buildJsonLd(page, canonical, image))}</script>`,
+    `<link rel="alternate" hreflang="en-CA" href="${canonicalFor(sourcePage, 'en')}" />`,
+    `<link rel="alternate" hreflang="fr-CA" href="${canonicalFor(sourcePage, 'fr')}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${canonicalFor(sourcePage, 'en')}" />`,
+    `<script type="application/ld+json" data-vitalite-jsonld="true">${JSON.stringify(buildJsonLd(page, canonical, image, language))}</script>`,
     '<!-- /Vitalite SEO -->',
   ].join('\n    ');
 
   return html
+    .replace(/<html lang="[^"]*">/, `<html lang="${locale}">`)
     .replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(page.title)}</title>`)
     .replace(/\n\s*<meta name="description" content="[^"]*" \/>/g, '')
     .replace(/\n\s*<!-- Vitalite SEO -->[\s\S]*?<!-- \/Vitalite SEO -->/g, '')
-    .replace('<div id="root"></div>', `<div id="root"></div>${buildPrerenderedRoot(page)}`)
+    .replace('<div id="root"></div>', `<div id="root"></div>${buildPrerenderedRoot(page, language)}`)
     .replace('</head>', `    ${managedHead}\n  </head>`);
 }
 
-function buildPrerenderedRoot(page) {
-  const sections = [...buildStaticSections(page), ...buildGeoEvidenceSections(page)];
+function buildPrerenderedRoot(page, language = 'en') {
+  const sections = language === 'fr' ? buildFrenchStaticSections(page) : [...buildStaticSections(page), ...buildGeoEvidenceSections(page)];
   const relatedLinks = getStaticRelatedLinks(page);
-  const faqs = buildPageFaq(page);
-  const steps = buildHowToSteps(page);
-  const answer = buildStaticAnswer(page);
+  const faqs = language === 'fr' ? buildFrenchFaqs(page) : buildPageFaq(page);
+  const steps = language === 'fr' ? buildFrenchSteps() : buildHowToSteps(page);
+  const answer = language === 'fr' ? buildFrenchAnswer(page) : buildStaticAnswer(page);
   const category =
-    page.kind === 'project' ? projectsData.categoryLabels[page._project?.category] ?? 'Our Work'
-    : page.kind === 'service' || page.kind === 'serviceCollection' ? 'Design-Build Service'
-    : page.kind === 'contact' ? 'Contact' : 'Planning Guide';
+    language === 'fr'
+      ? page.kind === 'project' ? 'Preuve de projet'
+      : page.kind === 'service' || page.kind === 'serviceCollection' ? 'Service conception-construction'
+      : page.kind === 'contact' ? 'Contact' : 'Guide de planification'
+      : page.kind === 'project' ? projectsData.categoryLabels[page._project?.category] ?? 'Our Work'
+      : page.kind === 'service' || page.kind === 'serviceCollection' ? 'Design-Build Service'
+      : page.kind === 'contact' ? 'Contact' : 'Planning Guide';
   const answerHtml = answer
-    ? `<section><h2>Short Answer</h2><p>${escapeHtml(answer)}</p></section>`
+    ? `<section><h2>${language === 'fr' ? 'Reponse courte' : 'Short Answer'}</h2><p>${escapeHtml(answer)}</p></section>`
     : '';
   const sectionHtml = sections
     .map(
@@ -152,17 +198,17 @@ function buildPrerenderedRoot(page) {
     )
     .join('');
   const linkHtml = relatedLinks.length
-    ? `<section><h2>Related Vitalite Pages</h2><ul>${relatedLinks
-        .map((link) => `<li><a href="${canonicalFor(link.page)}">${escapeHtml(link.label)}</a></li>`)
+    ? `<section><h2>${language === 'fr' ? 'Pages Vitalite connexes' : 'Related Vitalite Pages'}</h2><ul>${relatedLinks
+        .map((link) => `<li><a href="${canonicalFor(link.page, language)}">${escapeHtml(language === 'fr' ? localizeBuildPage(link.page, 'fr').title.split('|')[0].trim() : link.label)}</a></li>`)
         .join('')}</ul></section>`
     : '';
   const faqHtml = faqs.length
-    ? `<section><h2>Frequently Asked Questions</h2>${faqs
+    ? `<section><h2>${language === 'fr' ? 'Questions frequentes' : 'Frequently Asked Questions'}</h2>${faqs
         .map((faq) => `<article><h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p></article>`)
         .join('')}</section>`
     : '';
   const stepsHtml = steps.length
-    ? `<section><h2>Planning Sequence</h2><ol>${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>`
+    ? `<section><h2>${language === 'fr' ? 'Sequence de planification' : 'Planning Sequence'}</h2><ol>${steps.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></section>`
     : '';
 
   return `<main class="seo-prerender" data-prerendered="true" style="font-family: Arial, sans-serif; max-width: 1120px; margin: 0 auto; padding: 96px 24px; line-height: 1.6;">
@@ -1048,17 +1094,32 @@ function buildLlmsTxt() {
     '## Core Pages',
     ...priorityPages.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
+    '## Pages principales en francais',
+    ...priorityPages.map((page) => llmsLine(page, 'fr')),
+    '',
     '## Service Pages',
     ...services.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
+    '',
+    '## Pages de services en francais',
+    ...services.map((page) => llmsLine(page, 'fr')),
     '',
     '## Planning Guides',
     ...guides.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
+    '## Guides de planification en francais',
+    ...guides.slice(0, 24).map((page) => llmsLine(page, 'fr')),
+    '',
     '## Toronto and GTA Service Area Pages',
     ...serviceAreas.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
+    '## Secteurs Toronto et GTA en francais',
+    ...serviceAreas.map((page) => llmsLine(page, 'fr')),
+    '',
     '## Project Proof',
     ...projectProof.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
+    '',
+    '## Preuves de projets en francais',
+    ...projectProof.map((page) => llmsLine(page, 'fr')),
     '',
     '## Official Planning References',
     '- City of Toronto building permits: https://www.toronto.ca/services-payments/building-construction/apply-for-a-building-permit/',
@@ -1072,7 +1133,204 @@ function buildLlmsTxt() {
   ].join('\n');
 }
 
-function buildJsonLd(page, canonical, image) {
+function llmsLine(page, language = 'en') {
+  const localized = localizeBuildPage(page, language);
+  return `- [${localized.title}](${canonicalFor(page, language)}): ${localized.description}`;
+}
+
+function localizeBuildPage(page, language = 'en') {
+  if (language !== 'fr') return page;
+  return {
+    ...page,
+    title: getFrenchTitle(page),
+    description: getFrenchDescription(page),
+    primaryKeyword: getFrenchKeyword(page),
+  };
+}
+
+function getFrenchTitle(page) {
+  if (frenchTitleByKey[page.key]) return frenchTitleByKey[page.key];
+  const head = page.title.split('|')[0].trim();
+  const generated = translateGeneratedTitle(head);
+  if (generated) return `${generated} | Vitalite`;
+  if (page.key.startsWith('project-')) return `Projet Vitalite: ${translateTopic(head)} | Vitalite`;
+  if (page.key.startsWith('guide-') || page.key.startsWith('blog-')) return `${translateTopic(head)} | Guide Vitalite`;
+  if (page.key.startsWith('work-')) return `${translateTopic(head)} | Projets Vitalite`;
+  return `${translateTopic(head)} | Vitalite`;
+}
+
+function getFrenchDescription(page) {
+  if (frenchDescriptionByKey[page.key]) return frenchDescriptionByKey[page.key];
+  const topic = getFrenchTitle(page).split('|')[0].trim();
+  const local = extractLocalName(page);
+  if (page.key.startsWith('project-')) {
+    return `${topic}: preuve de projet Vitalite avec contexte local, portee, permis, coordination de chantier, inspections et lecons de planification pour proprietaires GTA.`;
+  }
+  if (page.key.startsWith('location-') || page.key.startsWith('community-')) {
+    return `${topic}${local ? ` a ${local}` : ' dans le Grand Toronto'}: faisabilite, zonage, plans, permis, ingenierie, budget, chantier, inspections et cloture coordonnes par Vitalite.`;
+  }
+  if (page.kind === 'article' || page.key.startsWith('guide-') || page.key.startsWith('blog-')) {
+    return `${topic}: guide en francais pour proprietaires GTA sur couts, permis, delais, conception-construction, risques, documents a preparer et prochaines etapes.`;
+  }
+  if (page.kind === 'contact') {
+    return 'Contactez Vitalite pour une evaluation de projet dans le GTA. Partagez adresse, portee, plans, statut de permis, budget et delai vise.';
+  }
+  return `${topic}: Vitalite coordonne faisabilite, conception, plans, permis, ingenierie, budget, construction, inspections et cloture pour projets residentiels et ICI dans le GTA.`;
+}
+
+function getFrenchKeyword(page) {
+  if (frenchKeywordByKey[page.key]) return frenchKeywordByKey[page.key];
+  return getFrenchTitle(page).split('|')[0].trim().toLowerCase().replace(/^projet vitalite:\s*/, '');
+}
+
+function buildFrenchAnswer(page) {
+  const topic = page.title.split('|')[0].trim();
+  if (page.kind === 'project') {
+    return `${topic} montre comment Vitalite relie portee, approbations, budget, trades, inspections et cloture dans un dossier de projet concret.`;
+  }
+  return `${topic} fonctionne le mieux quand les proprietaires confirment d abord l adresse, les contraintes, les plans, les permis, les intrants d ingenierie, les hypotheses de budget et la sequence de chantier.`;
+}
+
+function buildFrenchStaticSections(page) {
+  const topic = page.title.split('|')[0].trim();
+  return [
+    {
+      heading: 'Ce qui change la recommandation',
+      text: `${topic} depend de l adresse, du zonage, des conditions existantes, de la structure, des arbres, du drainage, du niveau de finition, des intrants de consultants, du chemin de permis et des contraintes d acces au chantier.`,
+    },
+    {
+      heading: 'Criteres de comparaison',
+      text: 'Comparez les options par responsabilite, timing et preuves. Une voie conception seulement clarifie les plans, mais le proprietaire doit encore relier prix, permis, ingenierie et chantier. Une voie conception-construction convient quand tout doit rester sous une meme responsabilite.',
+    },
+    {
+      heading: 'Preuves a preparer',
+      text: 'Preparez adresse, survey, dimensions du lot, photos, plans existants, objectif du projet, budget indicatif, delai vise, statut de permis, commentaires municipaux, contraintes d acces, arbres, drainage et enjeux structuraux ou mecaniques connus.',
+    },
+    {
+      heading: 'Sequence de planification',
+      text: 'Commencez par l adresse et l objectif, puis verifiez zonage, structure, services, acces, arbres, drainage et exigences municipales. Definissez ensuite les plans, consultants, allocations, exclusions, approvisionnement, trades, inspections, PDI et cloture.',
+    },
+    {
+      heading: 'Limites et caveats',
+      text: 'Cette page explique les plages et criteres courants, mais elle ne remplace pas une verification propre a l adresse. Les budgets changent si les dessins sont incomplets, les conditions cachees, les finitions indefinies, l ingenierie non cadree ou les commentaires municipaux importants.',
+    },
+    {
+      heading: 'Comment Vitalite utilise ces informations',
+      text: 'Vitalite relie faisabilite, conception, permis, budget, approvisionnement, chantier, inspections et cloture afin de reduire les ruptures de responsabilite entre consultants, trades et proprietaires.',
+    },
+  ];
+}
+
+function buildFrenchSteps() {
+  return [
+    'Confirmer l adresse, les objectifs et les contraintes',
+    'Verifier zonage, structure, arbres, acces et approbations',
+    'Preparer plans, consultants, budget et exclusions',
+    'Coordonner permis, approvisionnement, trades et calendrier',
+    'Gerer chantier, inspections, PDI, cloture et suivi',
+  ];
+}
+
+function buildFrenchFaqs(page) {
+  const topic = page.title.split('|')[0].trim();
+  return [
+    {
+      question: `Quand faut-il commencer ${topic.toLowerCase()}?`,
+      answer: 'Le meilleur moment est avant de figer les plans ou le prix, surtout si le projet touche au zonage, aux permis, a la structure, aux arbres, a l ingenierie ou a plusieurs corps de metier.',
+    },
+    {
+      question: 'Quels documents dois-je preparer?',
+      answer: 'Preparez adresse, releve ou survey, photos, plans existants si disponibles, objectif du projet, budget indicatif, delai souhaite, statut de permis et toute contrainte connue.',
+    },
+    {
+      question: 'Pourquoi ne pas demander seulement un prix rapide?',
+      answer: 'Un prix rapide peut ignorer les exclusions, les permis, les conditions cachees, les allocations, les commentaires municipaux et la sequence des inspections. Vitalite cherche d abord a reduire ces inconnues.',
+    },
+  ];
+}
+
+function translateGeneratedTitle(head) {
+  const patterns = [
+    [/^Custom Home Builder (.+)$/i, (m) => `Constructeur de maisons sur mesure a ${m[1]}`],
+    [/^Garden Suite Builder (.+)$/i, (m) => `Constructeur de garden suites a ${m[1]}`],
+    [/^Multiplex Contractor (.+)$/i, (m) => `Entrepreneur multiplex a ${m[1]}`],
+    [/^Home Additions Contractor (.+)$/i, (m) => `Entrepreneur en agrandissements a ${m[1]}`],
+    [/^Luxury Home Renovation (.+)$/i, (m) => `Renovation de luxe a ${m[1]}`],
+    [/^Permit Drawings (.+)$/i, (m) => `Plans de permis a ${m[1]}`],
+  ];
+  for (const [pattern, build] of patterns) {
+    const match = head.match(pattern);
+    if (match) return build(match);
+  }
+  return '';
+}
+
+function extractLocalName(page) {
+  const head = page.title.split('|')[0].trim();
+  return head.match(/^(?:Custom Home Builder|Garden Suite Builder|Multiplex Contractor|Home Additions Contractor|Luxury Home Renovation|Permit Drawings)\s+(.+)$/i)?.[1]?.trim() ?? '';
+}
+
+function translateTopic(text) {
+  let translated = text.replace(/\s*\|\s*Vitalite(?: Construction(?: Corp\.)?)?/gi, '').trim();
+  const replacements = [
+    [/\bGreater Toronto Area\b/gi, 'Grand Toronto'],
+    [/\bDesign-Build\b/gi, 'Conception-construction'],
+    [/\bCustom Home Builder\b/gi, 'Constructeur de maisons sur mesure'],
+    [/\bCustom Home Design & Build\b/gi, 'Maisons sur mesure conception-construction'],
+    [/\bCustom Homes\b/gi, 'Maisons sur mesure'],
+    [/\bGarden Suite Builder\b/gi, 'Constructeur de garden suites'],
+    [/\bGarden Suites\b/gi, 'Garden suites'],
+    [/\bLaneway Houses\b/gi, 'Maisons de ruelle'],
+    [/\bMultiplex Contractor\b/gi, 'Entrepreneur multiplex'],
+    [/\bMultiplex Construction\b/gi, 'Construction multiplex'],
+    [/\bMulti-Unit\b/gi, 'Multi-logements'],
+    [/\bHome Additions Contractor\b/gi, 'Entrepreneur en agrandissements'],
+    [/\bHome Addition\b/gi, 'Agrandissement de maison'],
+    [/\bHome Additions\b/gi, 'Agrandissements de maison'],
+    [/\bMajor Renovations\b/gi, 'Renovations majeures'],
+    [/\bLuxury Home Renovation\b/gi, 'Renovation de luxe'],
+    [/\bPermit Drawings\b/gi, 'Plans de permis'],
+    [/\bPermits\b/gi, 'Permis'],
+    [/\bEngineering\b/gi, 'Ingenierie'],
+    [/\bConstruction Management\b/gi, 'Gestion de construction'],
+    [/\bProject Management\b/gi, 'Gestion de projet'],
+    [/\bService Areas\b/gi, 'Secteurs de service'],
+    [/\bNeighbourhood Construction Pages\b/gi, 'Pages de construction par quartier'],
+    [/\bRenovation Cost Per Square Foot\b/gi, 'Cout de renovation par pied carre'],
+    [/\bCost Calculator\b/gi, 'Calculateur de cout'],
+    [/\bPermit Timeline Estimator\b/gi, 'Estimateur de delai de permis'],
+    [/\bTeardown vs Renovation Tool\b/gi, 'Outil demolition-reconstruction ou renovation'],
+    [/\bArchitectural Services\b/gi, 'Services architecturaux'],
+    [/\bInterior Design\b/gi, 'Design interieur'],
+    [/\b3D Rendering\b/gi, 'Rendu 3D'],
+    [/\bMaterial Selection & Procurement\b/gi, 'Selection et approvisionnement des materiaux'],
+    [/\bBuilding & Board Approvals\b/gi, 'Approbations municipales et de copropriete'],
+    [/\bConstruction & Site Management\b/gi, 'Gestion de chantier'],
+    [/\bApartment Renovations\b/gi, 'Renovations d appartements'],
+    [/\bTownhouse Renovations\b/gi, 'Renovations de maisons en rangee'],
+    [/\bCondo Renovations\b/gi, 'Renovations de condos'],
+    [/\bOlder & Heritage Home Renovations\b/gi, 'Renovations de maisons anciennes et patrimoniales'],
+    [/\bLoft & Open-Concept Renovations\b/gi, 'Renovations de lofts et espaces ouverts'],
+    [/\bFull-Gut Renovations\b/gi, 'Renovations completes'],
+    [/\bICI Construction\b/gi, 'Construction ICI'],
+    [/\bIndustrial, Commercial & Institutional\b/gi, 'Industriel, commercial et institutionnel'],
+    [/\bBuilder\b/gi, 'Constructeur'],
+    [/\bContractor\b/gi, 'Entrepreneur'],
+    [/\bProjects\b/gi, 'Projets'],
+    [/\bGuide\b/gi, 'Guide'],
+    [/\bCost\b/gi, 'Cout'],
+  ];
+  for (const [pattern, replacement] of replacements) {
+    translated = translated.replace(pattern, replacement);
+  }
+  return translated.replace(/\s+/g, ' ').trim();
+}
+
+function buildJsonLd(page, canonical, image, language = 'en') {
+  const locale = language === 'fr' ? 'fr-CA' : 'en-CA';
+  const businessDescription = language === 'fr'
+    ? 'Vitalite Construction Corp. est une entreprise conception-construction, entrepreneur general et gestionnaire de construction dans le Grand Toronto. Elle coordonne faisabilite, plans de permis, ingenierie, budget, construction, inspections et cloture.'
+    : seoData.business.description;
   const organizationId = `${seoData.siteUrl}/#organization`;
   const localBusinessId = `${seoData.siteUrl}/#localbusiness`;
   const webPageType = page.kind === 'contact' ? ['WebPage', 'ContactPage'] : 'WebPage';
@@ -1083,7 +1341,7 @@ function buildJsonLd(page, canonical, image) {
       url: seoData.siteUrl,
       name: seoData.siteName,
       publisher: { '@id': organizationId },
-      inLanguage: 'en-CA',
+      inLanguage: locale,
     },
     {
       '@type': 'Organization',
@@ -1091,7 +1349,7 @@ function buildJsonLd(page, canonical, image) {
       name: seoData.business.name,
       url: seoData.siteUrl,
       logo: image,
-      description: seoData.business.description,
+      description: businessDescription,
       sameAs: seoData.business.sameAs,
       knowsAbout: [
         'GTA design-build construction',
@@ -1111,7 +1369,7 @@ function buildJsonLd(page, canonical, image) {
       name: seoData.business.name,
       url: seoData.siteUrl,
       image,
-      description: seoData.business.description,
+      description: businessDescription,
       telephone: seoData.business.telephone,
       email: seoData.business.email,
       sameAs: seoData.business.sameAs,
@@ -1144,7 +1402,7 @@ function buildJsonLd(page, canonical, image) {
       description: page.description,
       isPartOf: { '@id': `${seoData.siteUrl}/#website` },
       about: { '@id': localBusinessId },
-      inLanguage: 'en-CA',
+      inLanguage: locale,
       datePublished: today,
       dateModified: today,
       keywords: [
@@ -1165,7 +1423,7 @@ function buildJsonLd(page, canonical, image) {
     {
       '@type': 'BreadcrumbList',
       '@id': `${canonical}#breadcrumb`,
-      itemListElement: buildBreadcrumbs(page).map((item, index) => ({
+      itemListElement: buildBreadcrumbs(page, language).map((item, index) => ({
         '@type': 'ListItem',
         position: index + 1,
         name: item.name,
@@ -1248,7 +1506,7 @@ function buildJsonLd(page, canonical, image) {
     });
   }
 
-  const howToSteps = buildHowToSteps(page);
+  const howToSteps = language === 'fr' ? buildFrenchSteps() : buildHowToSteps(page);
   if (howToSteps.length) {
     graph.push({
       '@type': 'HowTo',
@@ -1265,7 +1523,7 @@ function buildJsonLd(page, canonical, image) {
     });
   }
 
-  const faq = buildPageFaq(page);
+  const faq = language === 'fr' ? buildFrenchFaqs(page) : buildPageFaq(page);
   if (faq.length) {
     graph.push({
       '@type': 'FAQPage',
@@ -1287,44 +1545,52 @@ function buildJsonLd(page, canonical, image) {
   };
 }
 
-function buildBreadcrumbs(page) {
-  const items = [{ name: 'Home', url: `${seoData.siteUrl}/` }];
+function buildBreadcrumbs(page, language = 'en') {
+  const items = [{ name: language === 'fr' ? 'Accueil' : 'Home', url: canonicalFor(pageByPath.get('/') ?? pages[0], language) }];
   const parts = page.path.split('/').filter(Boolean);
   if (!parts.length) return items;
 
   const parentLabels = {
-    services: 'Services',
-    'why-vitalite': 'Why Vitalite',
-    'our-work': 'Our Work',
-    blog: 'Blog',
-    'contact-us': 'Contact Us',
-    locations: 'GTA Service Areas',
-    communities: 'Neighbourhood Service Areas',
-    ai: 'AI Construction Guide',
+    services: language === 'fr' ? 'Services' : 'Services',
+    'why-vitalite': language === 'fr' ? 'Pourquoi Vitalite' : 'Why Vitalite',
+    'our-work': language === 'fr' ? 'Projets' : 'Our Work',
+    blog: language === 'fr' ? 'Blogue' : 'Blog',
+    'contact-us': language === 'fr' ? 'Contactez-nous' : 'Contact Us',
+    locations: language === 'fr' ? 'Secteurs de service GTA' : 'GTA Service Areas',
+    communities: language === 'fr' ? 'Secteurs par quartier' : 'Neighbourhood Service Areas',
+    ai: language === 'fr' ? 'Guide construction IA' : 'AI Construction Guide',
     faq: 'FAQ',
   };
   const parentPage = pageByPath.get(`/${parts[0]}`);
   if (parentPage) {
-    items.push({ name: parentLabels[parts[0]] ?? parentPage.title, url: canonicalFor(parentPage) });
+    items.push({ name: parentLabels[parts[0]] ?? localizeBuildPage(parentPage, language).title, url: canonicalFor(parentPage, language) });
   }
   if (parts.length > 1) {
-    items.push({ name: page.title.split('|')[0].trim(), url: canonicalFor(page) });
+    items.push({ name: page.title.split('|')[0].trim(), url: canonicalFor(page, language) });
   }
   return items;
 }
 
 function buildSitemap() {
   const urls = pages
-    .map((page) => {
+    .flatMap((page) => {
       const priority = page.key === 'home' ? '1.0'
         : page.kind === 'service' ? '0.9'
         : page.kind === 'project' ? '0.8'
         : '0.7';
       const changefreq = page.kind === 'article' || page.kind === 'project' ? 'monthly' : 'weekly';
-      return `  <url>\n    <loc>${canonicalFor(page)}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      return ['en', 'fr'].map((language) => `  <url>
+    <loc>${canonicalFor(page, language)}</loc>
+    <xhtml:link rel="alternate" hreflang="en-CA" href="${canonicalFor(page, 'en')}" />
+    <xhtml:link rel="alternate" hreflang="fr-CA" href="${canonicalFor(page, 'fr')}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${canonicalFor(page, 'en')}" />
+    <lastmod>${today}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`);
     })
     .join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 }
 
 function buildProjectPermitRoute(project) {
@@ -2000,8 +2266,8 @@ function buildHowToSteps(page) {
   return ['Define project goals and constraints', 'Review zoning, drawings and approvals', 'Set budget direction and scope priorities', 'Coordinate trades, procurement and schedule', 'Manage construction, inspections and closeout'];
 }
 
-function canonicalFor(page) {
-  return `${seoData.siteUrl}${canonicalPathFor(page.path)}`;
+function canonicalFor(page, language = 'en') {
+  return `${seoData.siteUrl}${canonicalPathFor(page.path, language)}`;
 }
 
 function normalizeRoutePath(value) {
@@ -2009,9 +2275,11 @@ function normalizeRoutePath(value) {
   return `/${value.replace(/^\/+|\/+$/g, '')}`;
 }
 
-function canonicalPathFor(value) {
+function canonicalPathFor(value, language = 'en') {
   const normalized = normalizeRoutePath(value);
-  return normalized === '/' ? '/' : `${normalized}/`;
+  const canonical = normalized === '/' ? '/' : `${normalized}/`;
+  if (language === 'fr') return canonical === '/' ? '/fr/' : `/fr${canonical}`;
+  return canonical;
 }
 
 function escapeHtml(value) {
