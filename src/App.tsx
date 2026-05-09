@@ -25,6 +25,13 @@ import {
   type LeadInquiryType,
 } from './leadQualification';
 import {
+  trackContactMethodClick,
+  trackCtaClick,
+  trackEvent,
+  trackLeadFormEvent,
+  trackSiteSearchEvent,
+} from './analytics';
+import {
   applySeo,
   getPageKeyFromLocation,
   getPageKeyFromUrl,
@@ -3378,10 +3385,12 @@ const SearchOverlay = ({
   open,
   onClose,
   language,
+  pageKey,
 }: {
   open: boolean;
   onClose: () => void;
   language: Language;
+  pageKey?: string;
 }) => {
   const [query, setQuery] = useState('');
   const quickSearches = ['Custom homes', 'Garden suites', 'Multiplex', 'Permits', 'Markham', 'Additions'];
@@ -3462,7 +3471,14 @@ const SearchOverlay = ({
                 <button
                   key={item}
                   type="button"
-                  onClick={() => setQuery(item)}
+                  onClick={() => {
+                    setQuery(item);
+                    trackSiteSearchEvent('site_search_quick_selected', {
+                      page_key: pageKey,
+                      search_type: 'quick',
+                      quick_search: item.toLowerCase().replace(/\s+/g, '_'),
+                    });
+                  }}
                   className="border border-white/20 px-4 py-2 text-sm font-semibold hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
                 >
                   {copy(item, language)}
@@ -3478,7 +3494,16 @@ const SearchOverlay = ({
                 <a
                   key={item.key}
                   href={item.href}
-                  onClick={onClose}
+                  onClick={() => {
+                    trackSiteSearchEvent('site_search_result_clicked', {
+                      page_key: pageKey,
+                      search_type: normalizedQuery ? 'manual' : 'default',
+                      query_length: normalizedQuery ? normalizedQuery.length : undefined,
+                      results_count: results.length,
+                      result_key: item.key,
+                    });
+                    onClose();
+                  }}
                   className="group border border-white/12 bg-white/5 p-5 sm:p-6 hover:bg-white hover:text-black transition-colors"
                 >
                   <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-kiewit-yellow mb-3">
@@ -5840,8 +5865,27 @@ const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: C
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
+    const inquiryType = getFormString(data, 'inquiry_type');
+    const formMeta = {
+      source,
+      variant,
+      inquiry_type: inquiryType || 'unknown',
+    };
+
+    trackLeadFormEvent('lead_form_attempted', formMeta);
+
+    if (getFormString(data, '_gotcha')) {
+      setStatus('idle');
+      setFilterMessage('Your message could not be submitted. Please call us if this is an active project inquiry.');
+      trackLeadFormEvent('lead_form_blocked', {
+        ...formMeta,
+        block_reason: 'honeypot',
+      });
+      return;
+    }
+
     const disqualification = getLeadDisqualification({
-      inquiryType: getFormString(data, 'inquiry_type'),
+      inquiryType,
       message: getFormString(data, 'message'),
       projectType: getFormString(data, 'project_type'),
       name: getFormString(data, 'name'),
@@ -5851,6 +5895,10 @@ const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: C
     if (disqualification) {
       setStatus('idle');
       setFilterMessage(disqualification.message);
+      trackLeadFormEvent('lead_form_blocked', {
+        ...formMeta,
+        block_reason: disqualification.reason,
+      });
       return;
     }
 
@@ -5869,12 +5917,15 @@ const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: C
       if (res.ok) {
         setStatus('success');
         form.reset();
+        trackLeadFormEvent('lead_form_submitted', formMeta);
         onSuccess?.();
       } else {
         setStatus('error');
+        trackLeadFormEvent('lead_form_error', formMeta);
       }
     } catch {
       setStatus('error');
+      trackLeadFormEvent('lead_form_error', formMeta);
     }
   };
 
@@ -5896,6 +5947,12 @@ const ContactForm = ({ variant = 'full', source = 'contact-page', onSuccess }: C
 
   return (
     <form onSubmit={handleSubmit} className={isCompact ? 'space-y-4' : 'bg-kiewit-dark text-white rounded-2xl p-6 sm:p-8 md:p-10 space-y-5'}>
+      <div className="hidden" aria-hidden="true">
+        <label>
+          Company website
+          <input name="_gotcha" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
       <div>
         <label className={labelClass}>Name</label>
         <input name="name" required className={fieldClass} placeholder="Your name" />
@@ -6049,6 +6106,7 @@ const MobileContactBar = ({ activePage }: { activePage: PageKey }) => {
       <div className="grid grid-cols-2 gap-3">
         <a
           href={`tel:${CONTACT_PHONE_TEL}`}
+          data-analytics-location="mobile-contact-bar"
           className="inline-flex items-center justify-center gap-2 bg-kiewit-yellow text-black font-bold rounded-lg py-3"
         >
           <PhoneCall className="w-4 h-4" />
@@ -6056,6 +6114,8 @@ const MobileContactBar = ({ activePage }: { activePage: PageKey }) => {
         </a>
         <a
           href={routeHref('contact-us')}
+          data-analytics-id="mobile_project_form"
+          data-analytics-location="mobile-contact-bar"
           className="inline-flex items-center justify-center gap-2 border border-white/25 text-white font-bold rounded-lg py-3 hover:border-kiewit-yellow hover:text-kiewit-yellow transition-colors"
         >
           Project Form
@@ -6172,6 +6232,22 @@ export default function App() {
   });
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const handleLanguageChange = (nextLanguage: Language) => {
+    if (nextLanguage !== language) {
+      trackEvent('language_changed', {
+        page_key: activePage,
+        previous_language: language,
+        language: nextLanguage,
+      });
+    }
+    setLanguage(nextLanguage);
+  };
+
+  const handleSearchOpen = () => {
+    trackSiteSearchEvent('site_search_opened', { page_key: activePage });
+    setSearchOpen(true);
+  };
+
   useEffect(() => {
     const syncPage = () => setActivePage(resolvePage());
     window.addEventListener('hashchange', syncPage);
@@ -6182,6 +6258,64 @@ export default function App() {
       window.removeEventListener('popstate', syncPage);
     };
   }, []);
+
+  useEffect(() => {
+    const handleAnalyticsClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest<HTMLAnchorElement>('a[href]');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href') ?? '';
+      const location = anchor.dataset.analyticsLocation ?? activePage;
+
+      if (href.startsWith('tel:')) {
+        trackContactMethodClick({ method: 'phone', location, page_key: activePage });
+        return;
+      }
+
+      if (href.startsWith('mailto:')) {
+        trackContactMethodClick({ method: 'email', location, page_key: activePage });
+        return;
+      }
+
+      const ctaId = anchor.dataset.analyticsId;
+      if (ctaId) {
+        trackCtaClick({
+          cta_id: ctaId,
+          location,
+          destination: href,
+          page_key: activePage,
+        });
+        return;
+      }
+
+      try {
+        const url = new URL(anchor.href);
+        const host = url.hostname.toLowerCase();
+        const socialNetwork = host.includes('facebook')
+          ? 'facebook'
+          : host.includes('instagram')
+          ? 'instagram'
+          : host.includes('linkedin')
+          ? 'linkedin'
+          : '';
+
+        if (socialNetwork) {
+          trackContactMethodClick({
+            method: 'social',
+            location,
+            page_key: activePage,
+            social_network: socialNetwork,
+          });
+        }
+      } catch {
+        // Ignore malformed hrefs for analytics only.
+      }
+    };
+
+    document.addEventListener('click', handleAnalyticsClick);
+    return () => document.removeEventListener('click', handleAnalyticsClick);
+  }, [activePage]);
 
   useEffect(() => {
     const handleInternalRouteClick = (event: MouseEvent) => {
@@ -6224,8 +6358,8 @@ export default function App() {
 
   return (
     <div className={`font-sans antialiased text-white bg-kiewit-dark ${shouldShowMobileContactBar(activePage) ? 'pb-[72px] sm:pb-0' : ''}`}>
-      <Navbar activePage={activePage} language={language} onLanguageChange={setLanguage} onSearchOpen={() => setSearchOpen(true)} />
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} />
+      <Navbar activePage={activePage} language={language} onLanguageChange={handleLanguageChange} onSearchOpen={handleSearchOpen} />
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} language={language} pageKey={activePage} />
       {renderPage(activePage)}
       <MobileContactBar activePage={activePage} />
       <Footer language={language} />

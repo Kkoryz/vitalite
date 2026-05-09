@@ -15,6 +15,6 @@ View your app in AI Studio: https://ai.studio/apps/0835d05b-2bd7-42ab-b9c1-89a9d
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Optional: set `VITE_GA_MEASUREMENT_ID` in [.env.local](.env.local) to enable GA4 tracking.
 3. Run the app:
    `npm run dev`

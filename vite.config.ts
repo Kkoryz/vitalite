@@ -31,7 +31,6 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
     ],
     define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       __VITALITE_BUILD_DATE__: JSON.stringify(buildDate),
     },
     resolve: {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import { getRouteHref } from './seo';
+import { trackToolEvent } from './analytics';
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
@@ -26,11 +27,13 @@ const ToolHero = ({
   title,
   subtitle,
   image,
+  toolId,
 }: {
   eyebrow: string;
   title: string;
   subtitle: string;
   image: string;
+  toolId?: string;
 }) => (
   <div className="relative h-[62vh] min-h-[500px] bg-kiewit-dark overflow-hidden">
     <img
@@ -52,6 +55,14 @@ const ToolHero = ({
         <p className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 font-light text-gray-200">{subtitle}</p>
         <a
           href={getRouteHref('contact-us')}
+          onClick={() => {
+            if (toolId) {
+              trackToolEvent('tool_cta_clicked', {
+                tool_id: toolId,
+                destination: getRouteHref('contact-us'),
+              });
+            }
+          }}
           className="group inline-flex items-center text-lg sm:text-xl font-medium hover:text-gray-300 transition-colors"
         >
           Get an accurate quote
@@ -78,11 +89,15 @@ const OptionGroup = ({
   options,
   value,
   onChange,
+  toolId,
+  control,
 }: {
   label: string;
   options: Array<{ label: string; value: string }>;
   value: string;
   onChange: (v: string) => void;
+  toolId?: string;
+  control?: string;
 }) => (
   <div className="mb-7">
     <div className="text-sm font-bold tracking-[0.12em] uppercase text-gray-500 mb-3">{label}</div>
@@ -91,7 +106,16 @@ const OptionGroup = ({
         <button
           key={opt.value}
           type="button"
-          onClick={() => onChange(opt.value)}
+          onClick={() => {
+            onChange(opt.value);
+            if (toolId && control) {
+              trackToolEvent('tool_input_changed', {
+                tool_id: toolId,
+                control,
+                value: opt.value,
+              });
+            }
+          }}
           className={`px-4 py-2.5 rounded-lg text-sm font-semibold border transition-colors ${
             value === opt.value
               ? 'bg-kiewit-dark text-white border-kiewit-yellow'
@@ -113,6 +137,8 @@ const SliderInput = ({
   step,
   fmtFn,
   onChange,
+  toolId,
+  control,
 }: {
   label: string;
   value: number;
@@ -121,6 +147,8 @@ const SliderInput = ({
   step: number;
   fmtFn: (v: number) => string;
   onChange: (v: number) => void;
+  toolId?: string;
+  control?: string;
 }) => (
   <div className="mb-7">
     <div className="flex justify-between items-baseline mb-3">
@@ -134,6 +162,16 @@ const SliderInput = ({
       step={step}
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
+      onPointerUp={() => {
+        if (toolId && control) {
+          trackToolEvent('tool_input_changed', { tool_id: toolId, control, value });
+        }
+      }}
+      onBlur={() => {
+        if (toolId && control) {
+          trackToolEvent('tool_input_changed', { tool_id: toolId, control, value });
+        }
+      }}
       className="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-kiewit-yellow [&::-webkit-slider-thumb]:cursor-pointer"
     />
     <div className="flex justify-between text-xs text-gray-400 mt-1.5">
@@ -169,7 +207,7 @@ const CostResult = ({ low, mid, high }: { low: number; mid: number; high: number
   </div>
 );
 
-const ToolCta = ({ message }: { message: string }) => (
+const ToolCta = ({ message, toolId }: { message: string; toolId?: string }) => (
   <section className="bg-kiewit-dark py-16 md:py-20 px-5 sm:px-8 md:px-24 text-center">
     <motion.div
       initial="hidden"
@@ -181,6 +219,14 @@ const ToolCta = ({ message }: { message: string }) => (
       <p className="text-lg sm:text-xl text-gray-300 mb-8">{message}</p>
       <a
         href={getRouteHref('contact-us')}
+        onClick={() => {
+          if (toolId) {
+            trackToolEvent('tool_cta_clicked', {
+              tool_id: toolId,
+              destination: getRouteHref('contact-us'),
+            });
+          }
+        }}
         className="inline-flex items-center bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase px-8 py-4 rounded-lg hover:bg-white transition-colors"
       >
         Start a project review
@@ -307,6 +353,7 @@ const additionLocationMult: Record<string, number> = {
 };
 
 export const AdditionCostCalculator = () => {
+  const toolId = 'addition_cost';
   const [addType, setAddType] = useState('main-floor');
   const [sqft, setSqft] = useState(500);
   const [finish, setFinish] = useState('premium');
@@ -323,6 +370,7 @@ export const AdditionCostCalculator = () => {
         title="Home Addition Cost Estimator"
         subtitle="Get a planning-level cost range for a GTA home addition before committing to drawings or contractor pricing."
         image={v('home-addition')}
+        toolId={toolId}
       />
       <ToolGeoEvidence
         answer="The home addition estimator is a planning tool for early feasibility. It helps owners compare addition type, size, finish level and GTA location before drawings, structural review and permit comments turn the range into project-specific pricing."
@@ -357,6 +405,8 @@ export const AdditionCostCalculator = () => {
                 options={additionTypeOptions}
                 value={addType}
                 onChange={setAddType}
+                toolId={toolId}
+                control="addition_type"
               />
               <SliderInput
                 label="Addition Size"
@@ -366,13 +416,17 @@ export const AdditionCostCalculator = () => {
                 step={50}
                 fmtFn={(n) => `${n.toLocaleString('en-CA')} sqft`}
                 onChange={setSqft}
+                toolId={toolId}
+                control="square_footage"
               />
-              <OptionGroup label="Finish Level" options={finishOptions} value={finish} onChange={setFinish} />
+              <OptionGroup label="Finish Level" options={finishOptions} value={finish} onChange={setFinish} toolId={toolId} control="finish_level" />
               <OptionGroup
                 label="Location"
                 options={additionLocationOptions}
                 value={location}
                 onChange={setLocation}
+                toolId={toolId}
+                control="location"
               />
             </div>
 
@@ -418,7 +472,7 @@ export const AdditionCostCalculator = () => {
           },
         ]}
       />
-      <ToolCta message="This estimate is useful for feasibility planning. Contact Vitalite to discuss your property, confirm zoning and get a project-specific cost review." />
+      <ToolCta toolId={toolId} message="This estimate is useful for feasibility planning. Contact Vitalite to discuss your property, confirm zoning and get a project-specific cost review." />
     </>
   );
 };
@@ -439,6 +493,7 @@ const suiteBaseRates: Record<string, number> = { laneway: 390, garden: 355 };
 const storeyPremium: Record<string, number> = { one: 0, two: 22 };
 
 export const LanewayCostCalculator = () => {
+  const toolId = 'laneway_garden_suite_cost';
   const [suiteType, setSuiteType] = useState('laneway');
   const [sqft, setSqft] = useState(650);
   const [storeys, setStoreys] = useState('two');
@@ -455,6 +510,7 @@ export const LanewayCostCalculator = () => {
         title="Laneway Suite & Garden Suite Cost Calculator"
         subtitle="Estimate what it costs to build a detached laneway house or garden suite in Toronto and the GTA."
         image={v('garden-suite')}
+        toolId={toolId}
       />
       <ToolGeoEvidence
         answer="The laneway and garden suite calculator estimates a detached secondary dwelling cost range, but feasibility starts with the lot. Access, rear-yard depth, servicing, fire route requirements, tree protection and permit review decide whether the suite is buildable before finish choices matter."
@@ -489,6 +545,8 @@ export const LanewayCostCalculator = () => {
                 options={suiteTypeOptions}
                 value={suiteType}
                 onChange={setSuiteType}
+                toolId={toolId}
+                control="suite_type"
               />
               <SliderInput
                 label="Gross Floor Area"
@@ -498,14 +556,18 @@ export const LanewayCostCalculator = () => {
                 step={50}
                 fmtFn={(n) => `${n} sqft`}
                 onChange={setSqft}
+                toolId={toolId}
+                control="square_footage"
               />
               <OptionGroup
                 label="Number of Storeys"
                 options={storeyOptions}
                 value={storeys}
                 onChange={setStoreys}
+                toolId={toolId}
+                control="storeys"
               />
-              <OptionGroup label="Finish Level" options={finishOptions} value={finish} onChange={setFinish} />
+              <OptionGroup label="Finish Level" options={finishOptions} value={finish} onChange={setFinish} toolId={toolId} control="finish_level" />
             </div>
 
             <div className="sticky top-28 space-y-6">
@@ -550,7 +612,7 @@ export const LanewayCostCalculator = () => {
           },
         ]}
       />
-      <ToolCta message="Confirm lot feasibility before committing to drawings. Vitalite reviews lane access, lot depth, tree conditions and utility connections at the first site visit." />
+      <ToolCta toolId={toolId} message="Confirm lot feasibility before committing to drawings. Vitalite reviews lane access, lot depth, tree conditions and utility connections at the first site visit." />
     </>
   );
 };
@@ -682,6 +744,7 @@ function getTeardownResult(answers: Record<string, number>): TeardownResult {
 }
 
 export const TeardownDecisionTool = () => {
+  const toolId = 'teardown_decision';
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -692,7 +755,14 @@ export const TeardownDecisionTool = () => {
   const allAnswered = teardownQuestions.every((q) => answers[q.id] !== undefined);
   const result = allAnswered ? getTeardownResult(answers) : null;
 
-  const handleAnswer = (value: number) => setAnswers((prev) => ({ ...prev, [current.id]: value }));
+  const handleAnswer = (value: number) => {
+    setAnswers((prev) => ({ ...prev, [current.id]: value }));
+    trackToolEvent('tool_input_changed', {
+      tool_id: toolId,
+      control: current.id,
+      value,
+    });
+  };
 
   const handleNext = () => {
     if (step < totalSteps - 1) setStep((s) => s + 1);
@@ -717,6 +787,7 @@ export const TeardownDecisionTool = () => {
         title="Teardown-Rebuild vs. Renovation Decision Tool"
         subtitle="Answer 7 questions about your property to get a recommendation on which path delivers better value."
         image={v('ai-work-older-toronto-homes')}
+        toolId={toolId}
       />
       <ToolGeoEvidence
         answer="The teardown versus renovation tool compares the owner's goal, existing structure, scope size, zoning risk, budget tolerance and long-term value. It is useful before buying a fixer-upper, committing to a deep renovation or assuming a rebuild is automatically better."
@@ -814,6 +885,12 @@ export const TeardownDecisionTool = () => {
               <div className="flex items-center gap-4 flex-wrap">
                 <a
                   href={getRouteHref('contact-us')}
+                  onClick={() =>
+                    trackToolEvent('tool_cta_clicked', {
+                      tool_id: toolId,
+                      destination: getRouteHref('contact-us'),
+                    })
+                  }
                   className="inline-flex items-center bg-kiewit-yellow text-black font-bold tracking-[0.08em] uppercase px-7 py-3.5 rounded-lg hover:bg-kiewit-dark hover:text-white transition-colors gap-2"
                 >
                   Discuss with Vitalite <ChevronRight className="w-4 h-4" />
@@ -847,7 +924,7 @@ export const TeardownDecisionTool = () => {
           },
         ]}
       />
-      <ToolCta message="This tool gives a directional read — the actual answer depends on your lot, existing structure and project goals. Contact Vitalite for a no-obligation site assessment." />
+      <ToolCta toolId={toolId} message="This tool gives a directional read — the actual answer depends on your lot, existing structure and project goals. Contact Vitalite for a no-obligation site assessment." />
     </>
   );
 };
@@ -919,6 +996,7 @@ const constructionWeeks: Record<string, WeekRange> = {
 };
 
 export const PermitTimelineEstimator = () => {
+  const toolId = 'permit_timeline';
   const [projType, setProjType] = useState('custom-home');
   const [permLoc, setPermLoc] = useState('toronto');
 
@@ -945,6 +1023,7 @@ export const PermitTimelineEstimator = () => {
         title="GTA Building Permit Timeline Estimator"
         subtitle="Understand how long design, permit approval and construction will take for your GTA project type."
         image={v('permit-drawings-guide')}
+        toolId={toolId}
       />
       <ToolGeoEvidence
         answer="The permit timeline estimator separates design, permit review and construction so owners can see where time is usually spent. It is strongest for planning schedules before drawings are submitted or a move-in date is promised."
@@ -979,12 +1058,16 @@ export const PermitTimelineEstimator = () => {
                 options={permitProjectTypeOptions}
                 value={projType}
                 onChange={setProjType}
+                toolId={toolId}
+                control="project_type"
               />
               <OptionGroup
                 label="Municipality"
                 options={permitLocationOptions}
                 value={permLoc}
                 onChange={setPermLoc}
+                toolId={toolId}
+                control="municipality"
               />
             </div>
 
@@ -1056,7 +1139,7 @@ export const PermitTimelineEstimator = () => {
           },
         ]}
       />
-      <ToolCta message="Timelines are estimates based on current GTA processing rates. Contact Vitalite to discuss your specific permit path, submission requirements and how to avoid common delay triggers." />
+      <ToolCta toolId={toolId} message="Timelines are estimates based on current GTA processing rates. Contact Vitalite to discuss your specific permit path, submission requirements and how to avoid common delay triggers." />
     </>
   );
 };

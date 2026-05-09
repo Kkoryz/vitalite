@@ -1,10 +1,9 @@
 import seoData from './seo-data.json';
 import seoContexts from './seo-contexts.json';
 import projectsData from './projects-data.json';
+import { trackPageView } from './analytics';
 
 type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact' | 'project';
-
-type GtagFunction = (command: string, eventNameOrId: string | Date, params?: Record<string, unknown>) => void;
 
 export type SeoPage = {
   key: string;
@@ -282,7 +281,7 @@ export const applySeo = (key: string) => {
   setMeta('name', 'twitter:image', image);
   setCanonical(canonical);
   setJsonLd(buildJsonLd(page, canonical, image));
-  trackPageView(page, canonical);
+  trackPageView(page.title, canonical);
 };
 
 export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => {
@@ -1188,18 +1187,6 @@ const setJsonLd = (value: unknown) => {
     document.head.appendChild(script);
   }
   script.textContent = JSON.stringify(value);
-};
-
-const trackPageView = (page: SeoPage, canonical: string) => {
-  const gtag = (window as Window & { gtag?: GtagFunction }).gtag;
-  if (typeof gtag !== 'function') return;
-
-  const pageUrl = new URL(canonical);
-  gtag('event', 'page_view', {
-    page_title: page.title,
-    page_location: canonical,
-    page_path: pageUrl.pathname,
-  });
 };
 
 const setMeta = (attribute: 'name' | 'property', key: string, content: string) => {
