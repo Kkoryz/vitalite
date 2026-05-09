@@ -15,6 +15,24 @@
         color: #fff;
       }
     </style>
+    <script>
+      (() => {
+        const measurementId = '__VITALITE_GA_MEASUREMENT_ID__';
+        if (!/^G-[A-Z0-9]+$/.test(measurementId)) return;
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments);
+        };
+        window.gtag('js', new Date());
+        window.gtag('config', measurementId, { send_page_view: false });
+      })();
+    </script>
     <title>Vitalite Construction Corp. | GTA Design-Build Contractor</title>
   </head>
   <body>

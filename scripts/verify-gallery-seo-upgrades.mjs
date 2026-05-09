@@ -43,6 +43,13 @@ assert(app.includes('buildProjectPermitRoute') && app.includes('buildProjectOutc
 assert(seo.includes('buildProjectPermitRoute') && seo.includes('buildProjectOutcome'), 'Project FAQ/schema must include permit route and outcome helpers.');
 assert(postbuild.includes('buildProjectPermitRoute') && postbuild.includes('buildProjectOutcome'), 'Static SEO output must include permit route and outcome helpers.');
 
+assert(app.includes('buildVisibleGeoEvidenceSections'), 'Detail pages must generate visible GEO evidence sections.');
+for (const heading of ['Key Facts', 'Comparison Framework', 'Evidence To Prepare', 'Caveats And Boundaries']) {
+  assert(app.includes(heading), `Visible detail-page GEO content missing heading: ${heading}`);
+  assert(postbuild.includes(heading), `Static GEO content missing heading: ${heading}`);
+}
+assert(app.includes('According to the GEO citation research pattern'), 'Visible copy must explain the evidence-page rationale without relying only on hidden fallback copy.');
+
 const faqRequirements = [
   'Does Vitalite have a project minimum?',
   'How long do Toronto permit drawings take?',

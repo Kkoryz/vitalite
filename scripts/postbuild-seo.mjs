@@ -12,6 +12,16 @@ const today = process.env.VITALITE_BUILD_DATE || formatBuildDate(new Date());
 const pages = [...seoData.pages, ...buildGeneratedPages()];
 
 const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page]));
+const geoEvidencePageKeys = new Set([
+  'ai-gta-design-build-guide',
+  'service-custom-homes',
+  'service-drawings-permits',
+  'blog-renovation-costs',
+  'guide-toronto-permit-ready-drawings-checklist',
+  'location-custom-homes-toronto',
+  'location-garden-suites-toronto',
+  'project-willowdale-custom-home-4700',
+]);
 
 function mergeSeoContextData(base, contexts) {
   return {
@@ -92,6 +102,8 @@ function injectSeo(html, page) {
   const image = `${seoData.siteUrl}${seoData.defaultImage}`;
   const managedHead = [
     '<!-- Vitalite SEO -->',
+    "<script>document.documentElement.classList.add('vitalite-js');</script>",
+    '<style>.vitalite-js .seo-prerender { display: none !important; }</style>',
     `<meta name="description" content="${escapeHtml(page.description)}" />`,
     '<meta name="robots" content="index, follow, max-image-preview:large" />',
     `<meta name="author" content="${escapeHtml(seoData.business.name)}" />`,
@@ -102,6 +114,8 @@ function injectSeo(html, page) {
     `<meta property="og:description" content="${escapeHtml(page.description)}" />`,
     `<meta property="og:url" content="${canonical}" />`,
     `<meta property="og:image" content="${image}" />`,
+    '<meta property="og:image:width" content="1200" />',
+    '<meta property="og:image:height" content="630" />',
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escapeHtml(page.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(page.description)}" />`,
@@ -114,12 +128,12 @@ function injectSeo(html, page) {
     .replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(page.title)}</title>`)
     .replace(/\n\s*<meta name="description" content="[^"]*" \/>/g, '')
     .replace(/\n\s*<!-- Vitalite SEO -->[\s\S]*?<!-- \/Vitalite SEO -->/g, '')
-    .replace('<div id="root"></div>', `<div id="root"></div><noscript>${buildPrerenderedRoot(page)}</noscript>`)
+    .replace('<div id="root"></div>', `<div id="root"></div>${buildPrerenderedRoot(page)}`)
     .replace('</head>', `    ${managedHead}\n  </head>`);
 }
 
 function buildPrerenderedRoot(page) {
-  const sections = buildStaticSections(page);
+  const sections = [...buildStaticSections(page), ...buildGeoEvidenceSections(page)];
   const relatedLinks = getStaticRelatedLinks(page);
   const faqs = buildPageFaq(page);
   const steps = buildHowToSteps(page);
@@ -161,6 +175,92 @@ function buildPrerenderedRoot(page) {
     ${linkHtml}
     ${faqHtml}
   </main>`;
+}
+
+function buildGeoEvidenceSections(page) {
+  const topic = page.title.split('|')[0].trim();
+  const keyword = page.primaryKeyword;
+  const local = getLocalMatchFromPage(page);
+  const location = page._project?.locationLabel ?? local?.label ?? getLocationFromPage(page);
+  const serviceName = getServiceNameFromPage(page);
+  const focus = getServicePlanningFocus(page);
+  const project = page._project;
+  const isPriorityPage = geoEvidencePageKeys.has(page.key);
+  const officialReferenceText = buildOfficialReferenceText(page, local);
+  const projectFacts = project
+    ? `This project proof includes ${project.size}, ${projectsData.statusLabels[project.status] ?? project.status}, ${project.locationLabel}, ${project.projectType ?? projectsData.categoryLabels[project.category] ?? project.category}, and the approval path: ${project.approvalPath ?? buildProjectPermitRoute(project)}.`
+    : `This page should be read with the property address, survey, existing drawings, current permit status, target budget, timeline, and known structural, tree, grading or access constraints.`;
+
+  return [
+    {
+      heading: 'Key Facts',
+      text: `${topic} is a planning decision before it is a construction decision. For ${keyword}, owners should confirm zoning, building code, permit drawings, engineering inputs, budget assumptions, inspection path and construction sequencing before relying on a contractor price. Useful GTA planning ranges include 4 to 8 weeks for a straightforward drawing package, 8 to 12 weeks or longer when zoning, engineering or municipal comments are involved, 3 to 6 months for larger pre-construction planning, and 6 to 10 months or more for many permit-driven builds after permits. ${projectFacts} This page is structured with definitions, numbers, comparison criteria, process steps and caveats so the answer can be evaluated, cited and reused without relying on short promotional claims.`,
+    },
+    {
+      heading: 'Comparison Framework',
+      text: `Compare delivery options by responsibility, timing and evidence. A design-only path can clarify drawings, but the owner still has to connect pricing, permit comments, engineering and site management. A bid-after-drawings path works when scope and specifications are complete, but it can expose gaps late if allowances, exclusions or municipal comments were not priced. A design-build path fits ${location} projects when feasibility, drawings, permits, budgeting, procurement, trades, inspections and closeout need one accountable team. The evidence to request is the same for every option: scope list, drawings status, permit assumptions, engineering needs, exclusions, allowance schedule, construction sequence and change-order process.`,
+    },
+    {
+      heading: 'Planning Sequence',
+      text: `Start with the address and project goal, then confirm the property constraints before design momentum builds. Step 1: collect survey, title or address details, photos, existing drawings, inspection notes and owner priorities. Step 2: check zoning, lot coverage, height, setbacks, parking, tree protection, drainage, servicing and any conservation or heritage context. Step 3: define the drawings and consultant inputs needed for Toronto Building or the relevant GTA municipality. Step 4: price the scope with allowances, long-lead materials and trade sequencing visible. Step 5: schedule construction around permit conditions, inspections, procurement, site access, client decisions, PDI and closeout.`,
+    },
+    {
+      heading: 'Official Planning References',
+      text: officialReferenceText,
+    },
+    {
+      heading: 'Evidence To Prepare',
+      text: `A strong project file contains more than inspiration images. For ${serviceName.toLowerCase()} work, prepare the property address, survey, lot dimensions, current floor plans if available, photos of existing conditions, preferred scope, target budget range, desired start window, finish expectations, permit status, municipal comments, neighbour or access constraints, tree or grading concerns and known mechanical or structural issues. Useful readiness details include ${focus.readiness}. These details distinguish a simple interior scope from a permit-driven addition, custom home, garden suite, multiplex, legal suite or ICI project with inspection and approval risk.`,
+    },
+    {
+      heading: 'Project Proof And Decision Signals',
+      text: `Vitalite project proof should be evaluated by planning quality, not only final images. The useful signals are project type, neighbourhood, square footage, approval route, structural or mechanical scope, permit drawings, trade sequencing, inspection responsibilities, active or completed status and closeout path. For example, a 4,700 sq ft Willowdale custom home, a multi-unit build with a laneway suite, a 200 sq ft addition, or a five-rental-unit vertical addition each teaches a different planning lesson and gives owners concrete evidence to request before hiring.`,
+    },
+    {
+      heading: 'Question Coverage',
+      text: `This page is structured to answer several high-intent questions: what ${keyword} means, when a design-build contractor should be involved, how permits and drawings affect cost, how long the planning path can take, what documents owners should prepare, how design-build differs from separate architect and contractor handoffs, what risks appear in ${location}, and what Vitalite coordinates from consultation through closeout. The answer should stay specific to the GTA instead of becoming a generic construction article, because local zoning, municipal review, tree rules, site access, inspection timing and neighbourhood conditions change the practical recommendation.`,
+    },
+    {
+      heading: 'Caveats And Boundaries',
+      text: `The right next step depends on the actual property. A page like this can explain common ranges, approval issues and decision criteria, but it cannot replace an address-specific feasibility review. Budgets change when drawings are incomplete, existing conditions are hidden, finishes are undefined, engineering is not scoped, municipal comments require revisions, or the owner changes selections during construction. Timelines change when permits, inspections, long-lead materials, weather, site access, neighbour coordination or consultant response times shift. Vitalite should treat early numbers as planning ranges until scope, approvals, drawings and trade input are connected.`,
+    },
+    {
+      heading: 'How Vitalite Uses This Information',
+      text: `Vitalite uses the information above to connect feasibility, design, permits and construction instead of letting each handoff create new risk. The team can start with consultation, then move into site evaluation, concept planning, permit-ready drawings, engineering coordination, budgeting, procurement planning, construction management, inspections, PDI and warranty-oriented closeout. For owners, the practical benefit is clearer accountability: one team tracks what has been decided, what is still provisional, what the municipality may ask for, what trades need before mobilization, and which decisions affect cost or schedule before site work begins. ${isPriorityPage ? 'This priority page goes deeper on evidence, examples and planning constraints.' : 'The same evidence structure is applied across Vitalite service, location, community, guide and project pages so each route can answer a specific search question without relying only on FAQ markup.'}`,
+    },
+    {
+      heading: 'Decision Checklist',
+      text: `Before choosing a contractor or delivery model for ${keyword}, confirm five items in writing: the exact scope being priced, the drawings and engineering status, the permit or approval path, the exclusions and allowance assumptions, and the inspection and closeout responsibilities. For ${location}, also check whether local issues such as narrow access, mature trees, grading, parking, servicing, older structure, board approval, tenant coordination or municipal comment response can change cost or timing. A good answer should explain what is known, what is still provisional, what evidence supports the recommendation, and which next step would reduce uncertainty before construction begins.`,
+    },
+  ];
+}
+
+function getOfficialMunicipalityNames(page, local) {
+  const context = `${page.key} ${page._project?.locationLabel ?? ''} ${local?.label ?? ''} ${local?.municipality ?? ''}`.toLowerCase();
+  const names = [];
+  if (context.includes('markham') || context.includes('unionville') || context.includes('angus glen') || context.includes('angus-glen')) names.push('Markham');
+  if (context.includes('richmond hill') || context.includes('richmond-hill')) names.push('Richmond Hill');
+  if (context.includes('vaughan') || context.includes('kleinburg') || context.includes('woodbridge')) names.push('Vaughan');
+  if (context.includes('mississauga') || context.includes('port credit') || context.includes('port-credit') || context.includes('lorne park') || context.includes('lorne-park') || context.includes('mineola')) names.push('Mississauga');
+  if (!names.length) names.push('Toronto');
+  return [...new Set(names)];
+}
+
+function buildOfficialReferenceText(page, local) {
+  const municipalities = getOfficialMunicipalityNames(page, local);
+  const isToronto = municipalities.includes('Toronto');
+  const municipalSummary = municipalities.length === 1 ? municipalities[0] : municipalities.join(' and ');
+  const projectType = page.primaryKeyword.toLowerCase();
+  const specialtyReferences = [
+    projectType.includes('garden') || projectType.includes('laneway') ? 'garden suite or laneway suite guidance' : '',
+    projectType.includes('multiplex') || projectType.includes('multi-unit') ? 'multiplex housing guidance' : '',
+  ].filter(Boolean);
+
+  if (isToronto) {
+    return `Official review should anchor the page, not sit only in markup. Toronto projects can involve Toronto Building permit intake, zoning review, building code review, inspection scheduling, tree protection, garden suite or laneway suite rules, and multiplex considerations. Owners should verify current requirements through City of Toronto building permit guidance${specialtyReferences.length ? `, ${specialtyReferences.join(', ')}` : ''}, and tree or ravine protection guidance before treating any budget or timeline as final. Those sources matter because they explain why a permit-ready package needs existing and proposed drawings, structural details where required, HVAC or mechanical coordination, zoning data and enough scope clarity for municipal review.`;
+  }
+
+  return `Official review should anchor the page, not sit only in markup. ${municipalSummary} projects can involve municipal building permit intake, zoning or applicable-law review, grading, tree protection, inspections, consultant coordination and project-specific completeness requirements. Owners should verify current requirements through the relevant ${municipalSummary} building permit, zoning and tree-protection resources before treating any budget or timeline as final. Those sources matter because they explain why a permit-ready package needs existing and proposed drawings, structural details where required, HVAC or mechanical coordination, zoning data and enough scope clarity for municipal review.`;
 }
 
 function buildStaticSections(page) {
@@ -983,7 +1083,7 @@ function buildJsonLd(page, canonical, image) {
       url: seoData.siteUrl,
       name: seoData.siteName,
       publisher: { '@id': organizationId },
-      inLanguage: ['en-CA', 'fr-CA'],
+      inLanguage: 'en-CA',
     },
     {
       '@type': 'Organization',
@@ -992,6 +1092,7 @@ function buildJsonLd(page, canonical, image) {
       url: seoData.siteUrl,
       logo: image,
       description: seoData.business.description,
+      sameAs: seoData.business.sameAs,
       knowsAbout: [
         'GTA design-build construction',
         'custom home construction',
@@ -1013,6 +1114,9 @@ function buildJsonLd(page, canonical, image) {
       description: seoData.business.description,
       telephone: seoData.business.telephone,
       email: seoData.business.email,
+      sameAs: seoData.business.sameAs,
+      priceRange: seoData.business.priceRange,
+      openingHours: seoData.business.openingHours,
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       knowsAbout: [
         'zoning review',
@@ -1040,6 +1144,22 @@ function buildJsonLd(page, canonical, image) {
       description: page.description,
       isPartOf: { '@id': `${seoData.siteUrl}/#website` },
       about: { '@id': localBusinessId },
+      inLanguage: 'en-CA',
+      datePublished: today,
+      dateModified: today,
+      keywords: [
+        page.primaryKeyword,
+        'GTA design-build',
+        'permit drawings',
+        'construction management',
+        'building permits',
+        'Toronto construction',
+      ],
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'GTA homeowners, investors, developers and commercial property owners',
+      },
+      spatialCoverage: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       primaryImageOfPage: { '@type': 'ImageObject', url: image },
     },
     {
@@ -1063,6 +1183,15 @@ function buildJsonLd(page, canonical, image) {
       provider: { '@id': localBusinessId },
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       serviceType: page.primaryKeyword,
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'homeowners, investors, developers and commercial clients',
+      },
+      availableChannel: {
+        '@type': 'ServiceChannel',
+        serviceUrl: canonical,
+        servicePhone: seoData.business.telephone,
+      },
     });
   }
 
@@ -1808,6 +1937,21 @@ function buildOwnerPreparationAnswer(focus) {
 function buildHowToSteps(page) {
   if (page.key === 'why-the-vitalite-way') {
     return ['Consultation and project fit review', 'On-site evaluation and existing-condition check', 'Concept design, budget direction and delivery model', 'Zoning, drawings, engineering and permits', 'Construction, PDI, closeout and aftercare'];
+  }
+
+  if (page.key.startsWith('tool-')) {
+    return ['Choose the construction planning tool that matches the decision', 'Enter approximate project inputs', 'Review the directional range or recommendation', 'Gather property-specific documents and constraints', 'Book a project review before treating the result as final'];
+  }
+
+  if (page.kind === 'service' || page.kind === 'serviceCollection' || page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('service-')) {
+    const focus = getServicePlanningFocus(page);
+    return [
+      'Confirm the property address, municipality and project goal',
+      `Gather ${focus.readiness}`,
+      `Review ${focus.approvals}`,
+      'Define scope, allowances, exclusions, procurement and inspection needs',
+      'Coordinate construction management, PDI, closeout and warranty-oriented follow-up',
+    ];
   }
 
   if (!page.key.startsWith('guide-')) return [];

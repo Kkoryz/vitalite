@@ -1,16 +1,51 @@
 {
   "siteName": "Vitalite Construction Corp.",
   "siteUrl": "https://kkoryz.github.io/vitalite",
-  "defaultImage": "/logo-transparent.png",
+  "defaultImage": "/vitalite-og-image.png",
   "business": {
     "name": "Vitalite Construction Corp.",
-    "description": "Vitalite Construction Corp. is a GTA-based design-build, general contracting, and construction management company connecting feasibility, drawings, permits, budgets, construction and closeout for residential and ICI projects.",
+    "description": "Vitalite Construction Corp. is a Greater Toronto Area design-build, general contracting and construction management company coordinating feasibility, permit drawings, engineering inputs, budget planning, construction, inspections and closeout for residential and ICI projects.",
     "telephone": "+16477180972",
     "email": "Vitaliteconstruction@gmail.com",
     "streetAddress": "Suite 235, 7181 Woodbine Ave",
     "addressLocality": "Markham",
     "postalCode": "L3R 1A3",
-    "areaServed": ["Greater Toronto Area", "Toronto", "North York", "Markham", "Richmond Hill", "Vaughan", "Mississauga", "Scarborough", "Etobicoke", "Rosedale", "Forest Hill", "Lawrence Park", "Leaside", "The Annex", "High Park", "Willowdale", "Bayview Village", "York Mills", "The Kingsway", "Unionville", "Angus Glen", "Thornhill", "Kleinburg", "Woodbridge", "Port Credit", "Lorne Park", "Mineola"],
+    "priceRange": "$$$",
+    "openingHours": "Mo-Fr 08:00-18:00",
+    "sameAs": [
+      "https://www.facebook.com/vitaliteconstruction",
+      "https://www.instagram.com/vitalite_construction",
+      "https://www.linkedin.com/company/vitalite-construction"
+    ],
+    "areaServed": [
+      "Greater Toronto Area",
+      "Toronto",
+      "North York",
+      "Markham",
+      "Richmond Hill",
+      "Vaughan",
+      "Mississauga",
+      "Scarborough",
+      "Etobicoke",
+      "Rosedale",
+      "Forest Hill",
+      "Lawrence Park",
+      "Leaside",
+      "The Annex",
+      "High Park",
+      "Willowdale",
+      "Bayview Village",
+      "York Mills",
+      "The Kingsway",
+      "Unionville",
+      "Angus Glen",
+      "Thornhill",
+      "Kleinburg",
+      "Woodbridge",
+      "Port Credit",
+      "Lorne Park",
+      "Mineola"
+    ],
     "locality": "Greater Toronto Area",
     "region": "ON",
     "country": "CA"
@@ -20,15 +55,15 @@
       "key": "home",
       "path": "/",
       "title": "GTA Design-Build Contractor | Vitalite Construction",
-      "description": "GTA design-build contractor connecting feasibility, drawings, permits, budgets, construction and closeout for custom homes, multiplex, additions and ICI.",
+      "description": "GTA design-build contractor for custom homes, multiplexes, additions, garden suites and ICI: feasibility, drawings, permits, budgets, construction and closeout.",
       "kind": "home",
       "primaryKeyword": "GTA design-build contractor"
     },
     {
       "key": "services",
       "path": "/services",
-      "title": "Design-Build Services in Toronto & GTA | Vitalite",
-      "description": "Vitalite GTA design-build services — custom homes, multiplex, garden suites, additions, permit drawings, engineering, construction management and ICI.",
+      "title": "Design-Build Services Toronto & GTA | Vitalite",
+      "description": "Toronto and GTA design-build services for custom homes, multiplexes, additions, garden suites, permit drawings, project management and ICI construction.",
       "kind": "serviceCollection",
       "primaryKeyword": "design-build services Toronto"
     },
@@ -36,15 +71,15 @@
       "key": "why-vitalite",
       "path": "/why-vitalite",
       "title": "Why Vitalite | GTA Design-Build Construction Partner",
-      "description": "Learn why GTA owners choose Vitalite for connected feasibility review, drawings, permits, budget planning, construction management, inspections and closeout.",
+      "description": "Why GTA owners choose Vitalite: feasibility review, permit-ready drawings, budget planning, construction management, inspections and closeout under one team.",
       "kind": "about",
       "primaryKeyword": "GTA design-build construction partner"
     },
     {
       "key": "our-work",
       "path": "/our-work",
-      "title": "Our Work | Custom Homes, Multiplex & Additions in GTA",
-      "description": "Vitalite project categories — GTA custom homes, multiplex, garden suites, laneway houses, additions, full interiors, condo renovations and ICI.",
+      "title": "Vitalite Project Work | GTA Custom Homes & Renovations",
+      "description": "Vitalite project categories across the GTA: custom homes, multiplexes, garden suites, additions, ICI, condos, older homes, townhouses and full interiors.",
       "kind": "collection",
       "primaryKeyword": "GTA construction projects"
     },
@@ -52,15 +87,15 @@
       "key": "blog",
       "path": "/blog",
       "title": "Toronto Renovation & Building Guides | Vitalite Blog",
-      "description": "GTA building guides — renovation costs, timelines, permits, proposals, design-build delivery, garden suites, multiplex and planning readiness.",
+      "description": "Toronto and GTA building guides with direct answers on costs, permits, timelines, design-build delivery, garden suites, multiplexes and planning readiness.",
       "kind": "blog",
       "primaryKeyword": "Toronto renovation guides"
     },
     {
       "key": "contact-us",
       "path": "/contact-us",
-      "title": "Contact Vitalite | GTA Design-Build Consultation",
-      "description": "Contact Vitalite for a GTA design-build project review — property goals, drawings, permits, budget direction, construction management and delivery path.",
+      "title": "Contact Vitalite | GTA Design-Build Project Review",
+      "description": "Contact Vitalite for a GTA project review. Share property location, scope, drawings, permit status, budget direction and timeline for the next planning step.",
       "kind": "contact",
       "primaryKeyword": "GTA design-build consultation"
     },
@@ -68,7 +103,7 @@
       "key": "locations-hub",
       "path": "/locations",
       "title": "GTA Design-Build Service Areas | Vitalite",
-      "description": "Browse Vitalite design-build service area pages for Toronto, North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough, and Etobicoke.",
+      "description": "Browse Vitalite service-area pages for Toronto, North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough and Etobicoke project planning.",
       "kind": "serviceCollection",
       "primaryKeyword": "GTA design-build service areas"
     },
@@ -76,7 +111,7 @@
       "key": "communities-hub",
       "path": "/communities",
       "title": "Toronto & GTA Neighbourhood Construction Pages | Vitalite",
-      "description": "Vitalite neighbourhood pages — custom homes, luxury renovations, garden suites, multiplex and permit drawings across Toronto and GTA communities.",
+      "description": "Neighbourhood construction pages for custom homes, luxury renovations, garden suites, multiplexes and permit drawings across Toronto and GTA communities.",
       "kind": "serviceCollection",
       "primaryKeyword": "Toronto neighbourhood construction pages"
     },
@@ -84,55 +119,55 @@
       "key": "faq",
       "path": "/faq",
       "title": "GTA Design-Build FAQ | Vitalite Construction",
-      "description": "Answers to common GTA design-build questions on consultation, drawings, permits, construction management, custom homes, garden suites and multiplex.",
+      "description": "Answers about Vitalite design-build services, project fit, permits, drawings, costs, timelines, GTA service areas and construction management responsibilities.",
       "kind": "article",
       "primaryKeyword": "GTA design-build FAQ"
     },
     {
       "key": "ai-gta-design-build-guide",
       "path": "/ai/gta-design-build-construction-guide",
-      "title": "GTA Design-Build Construction Guide | Vitalite",
-      "description": "An AI-readable guide to Vitalite's GTA design-build, permit, construction management, custom home, multiplex, addition, garden suite and ICI services.",
+      "title": "AI-Readable GTA Design-Build Guide | Vitalite",
+      "description": "A structured Vitalite guide for AI search and owners: services, project types, service areas, delivery model, permits, budgets and evidence-based planning.",
       "kind": "article",
       "primaryKeyword": "GTA design-build construction guide"
     },
     {
       "key": "tools-hub",
       "path": "/tools",
-      "title": "GTA Construction Calculators | Free Planning Tools | Vitalite",
-      "description": "Free GTA construction cost calculators and planning tools — home addition costs, laneway suite costs, permit timelines and teardown-rebuild guidance.",
+      "title": "GTA Construction Calculators | Vitalite Tools",
+      "description": "Free GTA construction tools for addition cost, laneway and garden suite cost, teardown decisions and permit timeline planning before drawings or pricing.",
       "kind": "serviceCollection",
       "primaryKeyword": "GTA construction cost calculator"
     },
     {
       "key": "tool-addition-cost",
       "path": "/tools/home-addition-cost-calculator-gta",
-      "title": "GTA Home Addition Cost Calculator | Estimate Your Addition | Vitalite",
-      "description": "Estimate the cost of a home addition in Toronto, North York, Markham or Mississauga. Interactive calculator by addition type, size, finish level and location.",
+      "title": "Home Addition Cost Calculator GTA | Vitalite",
+      "description": "Estimate GTA home addition cost by type, size, finish level and location, then review zoning, structure, drawings, permits and site-specific pricing needs.",
       "kind": "article",
       "primaryKeyword": "home addition cost calculator GTA"
     },
     {
       "key": "tool-laneway-cost",
       "path": "/tools/laneway-suite-cost-calculator-toronto",
-      "title": "Laneway Suite & Garden Suite Cost Calculator Toronto | Vitalite",
-      "description": "Estimate the cost of a Toronto laneway house or garden suite by type, size, storeys and finish level. Free planning tool for GTA homeowners.",
+      "title": "Laneway & Garden Suite Cost Calculator Toronto | Vitalite",
+      "description": "Estimate Toronto laneway house and garden suite costs, including size, storeys, finishes, servicing, access, permits and feasibility planning.",
       "kind": "article",
       "primaryKeyword": "laneway suite cost calculator Toronto"
     },
     {
       "key": "tool-teardown-decision",
       "path": "/tools/teardown-rebuild-vs-renovation-toronto",
-      "title": "Teardown-Rebuild vs. Renovation Toronto | Decision Tool | Vitalite",
-      "description": "Answer 7 questions about your GTA property and get a recommendation on whether teardown-rebuild or renovation delivers better value.",
+      "title": "Teardown vs Renovation Tool GTA | Vitalite",
+      "description": "Compare teardown-rebuild and major renovation fit using structure, zoning, budget, scope, land value and long-term property goals before design fees.",
       "kind": "article",
       "primaryKeyword": "teardown rebuild vs renovation Toronto"
     },
     {
       "key": "tool-permit-timeline",
       "path": "/tools/building-permit-timeline-estimator-gta",
-      "title": "GTA Building Permit Timeline Estimator | Toronto Permits | Vitalite",
-      "description": "Estimate GTA building permit timelines phase-by-phase for custom homes, additions, garden suites, multiplex and renovations by municipality.",
+      "title": "GTA Building Permit Timeline Estimator | Vitalite",
+      "description": "Estimate design, permit review and construction timelines for GTA custom homes, additions, garden suites, multiplexes and major renovations.",
       "kind": "article",
       "primaryKeyword": "Toronto building permit timeline"
     },
@@ -466,46 +501,190 @@
     }
   ],
   "locations": [
-    { "slug": "toronto", "name": "Toronto" },
-    { "slug": "north-york", "name": "North York" },
-    { "slug": "markham", "name": "Markham" },
-    { "slug": "richmond-hill", "name": "Richmond Hill" },
-    { "slug": "vaughan", "name": "Vaughan" },
-    { "slug": "mississauga", "name": "Mississauga" },
-    { "slug": "scarborough", "name": "Scarborough" },
-    { "slug": "etobicoke", "name": "Etobicoke" }
+    {
+      "slug": "toronto",
+      "name": "Toronto"
+    },
+    {
+      "slug": "north-york",
+      "name": "North York"
+    },
+    {
+      "slug": "markham",
+      "name": "Markham"
+    },
+    {
+      "slug": "richmond-hill",
+      "name": "Richmond Hill"
+    },
+    {
+      "slug": "vaughan",
+      "name": "Vaughan"
+    },
+    {
+      "slug": "mississauga",
+      "name": "Mississauga"
+    },
+    {
+      "slug": "scarborough",
+      "name": "Scarborough"
+    },
+    {
+      "slug": "etobicoke",
+      "name": "Etobicoke"
+    }
   ],
   "communityLocations": [
-    { "slug": "rosedale", "name": "Rosedale", "municipality": "Toronto" },
-    { "slug": "forest-hill", "name": "Forest Hill", "municipality": "Toronto" },
-    { "slug": "lawrence-park", "name": "Lawrence Park", "municipality": "Toronto" },
-    { "slug": "leaside", "name": "Leaside", "municipality": "Toronto" },
-    { "slug": "the-annex", "name": "The Annex", "municipality": "Toronto" },
-    { "slug": "high-park", "name": "High Park", "municipality": "Toronto" },
-    { "slug": "bloor-west-village", "name": "Bloor West Village", "municipality": "Toronto" },
-    { "slug": "roncesvalles", "name": "Roncesvalles", "municipality": "Toronto" },
-    { "slug": "riverdale", "name": "Riverdale", "municipality": "Toronto" },
-    { "slug": "leslieville", "name": "Leslieville", "municipality": "Toronto" },
-    { "slug": "the-beaches", "name": "The Beaches", "municipality": "Toronto" },
-    { "slug": "east-york", "name": "East York", "municipality": "Toronto" },
-    { "slug": "willowdale", "name": "Willowdale", "municipality": "North York" },
-    { "slug": "bayview-village", "name": "Bayview Village", "municipality": "North York" },
-    { "slug": "york-mills", "name": "York Mills", "municipality": "North York" },
-    { "slug": "hoggs-hollow", "name": "Hogg's Hollow", "municipality": "North York" },
-    { "slug": "lytton-park", "name": "Lytton Park", "municipality": "Toronto" },
-    { "slug": "davisville-village", "name": "Davisville Village", "municipality": "Toronto" },
-    { "slug": "summerhill", "name": "Summerhill", "municipality": "Toronto" },
-    { "slug": "moore-park", "name": "Moore Park", "municipality": "Toronto" },
-    { "slug": "the-kingsway", "name": "The Kingsway", "municipality": "Etobicoke" },
-    { "slug": "mimico", "name": "Mimico", "municipality": "Etobicoke" },
-    { "slug": "unionville", "name": "Unionville", "municipality": "Markham" },
-    { "slug": "angus-glen", "name": "Angus Glen", "municipality": "Markham" },
-    { "slug": "thornhill", "name": "Thornhill", "municipality": "Markham / Vaughan" },
-    { "slug": "kleinburg", "name": "Kleinburg", "municipality": "Vaughan" },
-    { "slug": "woodbridge", "name": "Woodbridge", "municipality": "Vaughan" },
-    { "slug": "port-credit", "name": "Port Credit", "municipality": "Mississauga" },
-    { "slug": "lorne-park", "name": "Lorne Park", "municipality": "Mississauga" },
-    { "slug": "mineola", "name": "Mineola", "municipality": "Mississauga" }
+    {
+      "slug": "rosedale",
+      "name": "Rosedale",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "forest-hill",
+      "name": "Forest Hill",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "lawrence-park",
+      "name": "Lawrence Park",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "leaside",
+      "name": "Leaside",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "the-annex",
+      "name": "The Annex",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "high-park",
+      "name": "High Park",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "bloor-west-village",
+      "name": "Bloor West Village",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "roncesvalles",
+      "name": "Roncesvalles",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "riverdale",
+      "name": "Riverdale",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "leslieville",
+      "name": "Leslieville",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "the-beaches",
+      "name": "The Beaches",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "east-york",
+      "name": "East York",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "willowdale",
+      "name": "Willowdale",
+      "municipality": "North York"
+    },
+    {
+      "slug": "bayview-village",
+      "name": "Bayview Village",
+      "municipality": "North York"
+    },
+    {
+      "slug": "york-mills",
+      "name": "York Mills",
+      "municipality": "North York"
+    },
+    {
+      "slug": "hoggs-hollow",
+      "name": "Hogg's Hollow",
+      "municipality": "North York"
+    },
+    {
+      "slug": "lytton-park",
+      "name": "Lytton Park",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "davisville-village",
+      "name": "Davisville Village",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "summerhill",
+      "name": "Summerhill",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "moore-park",
+      "name": "Moore Park",
+      "municipality": "Toronto"
+    },
+    {
+      "slug": "the-kingsway",
+      "name": "The Kingsway",
+      "municipality": "Etobicoke"
+    },
+    {
+      "slug": "mimico",
+      "name": "Mimico",
+      "municipality": "Etobicoke"
+    },
+    {
+      "slug": "unionville",
+      "name": "Unionville",
+      "municipality": "Markham"
+    },
+    {
+      "slug": "angus-glen",
+      "name": "Angus Glen",
+      "municipality": "Markham"
+    },
+    {
+      "slug": "thornhill",
+      "name": "Thornhill",
+      "municipality": "Markham / Vaughan"
+    },
+    {
+      "slug": "kleinburg",
+      "name": "Kleinburg",
+      "municipality": "Vaughan"
+    },
+    {
+      "slug": "woodbridge",
+      "name": "Woodbridge",
+      "municipality": "Vaughan"
+    },
+    {
+      "slug": "port-credit",
+      "name": "Port Credit",
+      "municipality": "Mississauga"
+    },
+    {
+      "slug": "lorne-park",
+      "name": "Lorne Park",
+      "municipality": "Mississauga"
+    },
+    {
+      "slug": "mineola",
+      "name": "Mineola",
+      "municipality": "Mississauga"
+    }
   ],
   "locationContexts": {
     "toronto": {
@@ -2056,32 +2235,32 @@
       "keyPrefix": "location-custom-homes",
       "pathPrefix": "custom-home-builder",
       "serviceName": "Custom Home Builder",
-      "titlePattern": "Custom Home Builder {location} | Vitalite",
-      "descriptionPattern": "Design-build custom home planning and construction in {location} — concept design, drawings, permits, budgets, site management and warranty support.",
+      "titlePattern": "Custom Home Builder {location} | Design-Build & Permits",
+      "descriptionPattern": "Custom home design-build in {location}: feasibility, zoning, drawings, permits, budget planning, site management, inspections and closeout.",
       "primaryKeywordPattern": "custom home builder {location}"
     },
     {
       "keyPrefix": "location-garden-suites",
       "pathPrefix": "garden-suite-builder",
       "serviceName": "Garden Suite Builder",
-      "titlePattern": "Garden Suite Builder {location} | Laneway & ADU",
-      "descriptionPattern": "Garden suite, laneway suite and ADU design-build in {location} — feasibility, drawings, permits, engineering and construction management.",
+      "titlePattern": "Garden Suite Builder {location} | Laneway & ADU Planning",
+      "descriptionPattern": "Garden suite and laneway suite design-build in {location}: lot feasibility, servicing, access, drawings, permits, engineering and construction.",
       "primaryKeywordPattern": "garden suite builder {location}"
     },
     {
       "keyPrefix": "location-multiplex",
       "pathPrefix": "multiplex-contractor",
       "serviceName": "Multiplex Contractor",
-      "titlePattern": "Multiplex Contractor {location} | Multi-Unit Homes",
-      "descriptionPattern": "Multiplex and multi-unit residential planning in {location} — zoning review, permit coordination, engineering, budgeting and managed site delivery.",
+      "titlePattern": "Multiplex Contractor {location} | Multi-Unit Planning",
+      "descriptionPattern": "Multiplex contractor in {location}: unit strategy, zoning review, fire separation, egress, permits, budget planning and managed construction.",
       "primaryKeywordPattern": "multiplex contractor {location}"
     },
     {
       "keyPrefix": "location-home-additions",
       "pathPrefix": "home-additions-contractor",
       "serviceName": "Home Additions Contractor",
-      "titlePattern": "Home Additions Contractor {location} | Vitalite",
-      "descriptionPattern": "Home addition and major renovation support in {location} — permit drawings, structural coordination, construction management and closeout.",
+      "titlePattern": "Home Additions Contractor {location} | Permits & Build",
+      "descriptionPattern": "Home additions contractor in {location}: zoning, structural review, permit drawings, budget planning, trade sequencing, inspections and closeout.",
       "primaryKeywordPattern": "home additions contractor {location}"
     }
   ],
@@ -2091,23 +2270,23 @@
       "pathPrefix": "custom-home-builder",
       "serviceName": "Custom Home Builder",
       "titlePattern": "Custom Home Builder {community} | {municipality} Design-Build",
-      "descriptionPattern": "Custom home design-build for {community} in {municipality} — feasibility, drawings, permits, budgeting and construction management.",
+      "descriptionPattern": "Custom home design-build for {community} in {municipality}: feasibility, zoning, drawings, permits, budget planning and construction management.",
       "primaryKeywordPattern": "custom home builder {community}"
     },
     {
       "keyPrefix": "community-luxury-renovations",
       "pathPrefix": "luxury-home-renovation",
       "serviceName": "Luxury Home Renovation",
-      "titlePattern": "Luxury Home Renovation {community} | Vitalite",
-      "descriptionPattern": "Luxury home renovation planning in {community} — design, engineering, approvals, procurement, site management and quality control.",
+      "titlePattern": "Luxury Home Renovation {community} | Permits & Build",
+      "descriptionPattern": "Luxury home renovation planning in {community}: existing-condition review, permits, engineering, procurement, site management and closeout.",
       "primaryKeywordPattern": "luxury home renovation {community}"
     },
     {
       "keyPrefix": "community-garden-suites",
       "pathPrefix": "garden-suite-builder",
       "serviceName": "Garden Suite Builder",
-      "titlePattern": "Garden Suite Builder {community} | {municipality} ADU",
-      "descriptionPattern": "Garden suite and secondary dwelling design-build in {community} — feasibility, drawings, permits, servicing and construction management.",
+      "titlePattern": "Garden Suite Builder {community} | {municipality} ADU Planning",
+      "descriptionPattern": "Garden suite builder in {community}: lot feasibility, servicing, access, drawings, permits, tree review and managed construction.",
       "primaryKeywordPattern": "garden suite builder {community}"
     },
     {
@@ -2115,15 +2294,15 @@
       "pathPrefix": "multiplex-contractor",
       "serviceName": "Multiplex Contractor",
       "titlePattern": "Multiplex Contractor {community} | Multi-Unit Planning",
-      "descriptionPattern": "Multiplex and multi-unit residential planning in {community} — zoning, permits, engineering, budgeting and construction delivery.",
+      "descriptionPattern": "Multiplex contractor in {community}: zoning, unit strategy, fire separation, egress, permits, budget planning and construction delivery.",
       "primaryKeywordPattern": "multiplex contractor {community}"
     },
     {
       "keyPrefix": "community-permit-drawings",
       "pathPrefix": "permit-drawings",
       "serviceName": "Permit Drawings",
-      "titlePattern": "Permit Drawings {community} | Zoning & Building Permit Help",
-      "descriptionPattern": "Permit-ready drawing coordination for {community} — zoning review, architectural drawings, structural, HVAC and permit applications.",
+      "titlePattern": "Permit Drawings {community} | Vitalite",
+      "descriptionPattern": "Permit drawings in {community}: zoning review, existing conditions, architectural plans, structural or HVAC inputs and municipal submission support.",
       "primaryKeywordPattern": "permit drawings {community}"
     }
   ],

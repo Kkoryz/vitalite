@@ -16,9 +16,20 @@ const formatBuildDate = (date: Date) => {
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   const buildDate = process.env.VITALITE_BUILD_DATE || env.VITALITE_BUILD_DATE || formatBuildDate(new Date());
+  const gaMeasurementId = process.env.VITE_GA_MEASUREMENT_ID || env.VITE_GA_MEASUREMENT_ID || '';
+
   return {
     base: process.env.GITHUB_PAGES === 'true' ? '/vitalite/' : '/',
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      {
+        name: 'vitalite-ga-measurement-id',
+        transformIndexHtml(html) {
+          return html.replaceAll('__VITALITE_GA_MEASUREMENT_ID__', gaMeasurementId);
+        },
+      },
+      react(),
+      tailwindcss(),
+    ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
       __VITALITE_BUILD_DATE__: JSON.stringify(buildDate),
@@ -30,7 +41,7 @@ export default defineConfig(({mode}) => {
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify: file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
     build: {

@@ -4,6 +4,8 @@ import projectsData from './projects-data.json';
 
 type SeoPageKind = 'home' | 'serviceCollection' | 'service' | 'about' | 'collection' | 'blog' | 'article' | 'contact' | 'project';
 
+type GtagFunction = (command: string, eventNameOrId: string | Date, params?: Record<string, unknown>) => void;
+
 export type SeoPage = {
   key: string;
   path: string;
@@ -272,12 +274,15 @@ export const applySeo = (key: string) => {
   setMeta('property', 'og:description', page.description);
   setMeta('property', 'og:url', canonical);
   setMeta('property', 'og:image', image);
+  setMeta('property', 'og:image:width', '1200');
+  setMeta('property', 'og:image:height', '630');
   setMeta('name', 'twitter:card', 'summary_large_image');
   setMeta('name', 'twitter:title', page.title);
   setMeta('name', 'twitter:description', page.description);
   setMeta('name', 'twitter:image', image);
   setCanonical(canonical);
   setJsonLd(buildJsonLd(page, canonical, image));
+  trackPageView(page, canonical);
 };
 
 export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => {
@@ -291,7 +296,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       name: seoData.siteName,
       publisher: { '@id': organizationId },
-      inLanguage: ['en-CA', 'fr-CA'],
+      inLanguage: 'en-CA',
     },
     {
       '@type': 'Organization',
@@ -300,6 +305,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       url: seoData.siteUrl,
       logo: image,
       description: seoData.business.description,
+      sameAs: seoData.business.sameAs,
       knowsAbout: [
         'GTA design-build construction',
         'custom home construction',
@@ -321,6 +327,9 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       description: seoData.business.description,
       telephone: seoData.business.telephone,
       email: seoData.business.email,
+      sameAs: seoData.business.sameAs,
+      priceRange: seoData.business.priceRange,
+      openingHours: seoData.business.openingHours,
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       knowsAbout: [
         'zoning review',
@@ -348,6 +357,22 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       description: page.description,
       isPartOf: { '@id': `${seoData.siteUrl}/#website` },
       about: { '@id': localBusinessId },
+      inLanguage: 'en-CA',
+      datePublished: seoPublishedDate,
+      dateModified: seoFreshnessDate,
+      keywords: [
+        page.primaryKeyword,
+        'GTA design-build',
+        'permit drawings',
+        'construction management',
+        'building permits',
+        'Toronto construction',
+      ],
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'GTA homeowners, investors, developers and commercial property owners',
+      },
+      spatialCoverage: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       primaryImageOfPage: { '@type': 'ImageObject', url: image },
     },
     {
@@ -371,6 +396,15 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string) => 
       provider: { '@id': localBusinessId },
       areaServed: seoData.business.areaServed.map((name) => ({ '@type': 'Place', name })),
       serviceType: page.primaryKeyword,
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'homeowners, investors, developers and commercial clients',
+      },
+      availableChannel: {
+        '@type': 'ServiceChannel',
+        serviceUrl: canonical,
+        servicePhone: seoData.business.telephone,
+      },
     });
   }
 
@@ -1037,6 +1071,21 @@ const buildHowToSteps = (page: SeoPage) => {
     return ['Consultation and project fit review', 'On-site evaluation and existing-condition check', 'Concept design, budget direction and delivery model', 'Zoning, drawings, engineering and permits', 'Construction, PDI, closeout and aftercare'];
   }
 
+  if (page.key.startsWith('tool-')) {
+    return ['Choose the construction planning tool that matches the decision', 'Enter approximate project inputs', 'Review the directional range or recommendation', 'Gather property-specific documents and constraints', 'Book a project review before treating the result as final'];
+  }
+
+  if (page.kind === 'service' || page.kind === 'serviceCollection' || page.key.startsWith('location-') || page.key.startsWith('community-') || page.key.startsWith('service-')) {
+    const focus = getServicePlanningFocus(page);
+    return [
+      'Confirm the property address, municipality and project goal',
+      `Gather ${focus.readiness}`,
+      `Review ${focus.approvals}`,
+      'Define scope, allowances, exclusions, procurement and inspection needs',
+      'Coordinate construction management, PDI, closeout and warranty-oriented follow-up',
+    ];
+  }
+
   if (!page.key.startsWith('guide-')) return [];
   const topic = `${page.primaryKeyword} ${page.title}`.toLowerCase();
 
@@ -1139,6 +1188,18 @@ const setJsonLd = (value: unknown) => {
     document.head.appendChild(script);
   }
   script.textContent = JSON.stringify(value);
+};
+
+const trackPageView = (page: SeoPage, canonical: string) => {
+  const gtag = (window as Window & { gtag?: GtagFunction }).gtag;
+  if (typeof gtag !== 'function') return;
+
+  const pageUrl = new URL(canonical);
+  gtag('event', 'page_view', {
+    page_title: page.title,
+    page_location: canonical,
+    page_path: pageUrl.pathname,
+  });
 };
 
 const setMeta = (attribute: 'name' | 'property', key: string, content: string) => {

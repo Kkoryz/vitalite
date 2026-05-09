@@ -694,7 +694,7 @@ const Navbar = ({
       {/* Logo Area */}
       <a href={routeHref('home')} className="w-52 md:w-[380px] flex items-center justify-center shrink-0 overflow-hidden">
         <img
-          src={publicAsset('logo-transparent.png?v=20260430-1340')}
+          src={publicAsset('vitalite-logo.svg?v=20260430-1340')}
           alt="Vitalite Construction"
           className="w-[185px] md:w-[345px] h-auto max-h-[68px] lg:max-h-[84px] object-contain"
         />
@@ -874,13 +874,22 @@ const Navbar = ({
   );
 };
 
+type HeroSlide = {
+  category: string;
+  title: string;
+  desc: string;
+  link: string;
+  displayDurationMs: number;
+  image: string;
+  video?: string;
+};
+
 const heroSlides = [
   {
     category: 'GTA DESIGN-BUILD',
     title: 'Design, Permits and Construction Under One GTA Team',
     desc: 'Vitalite helps owners move from feasibility review to permit-ready drawings, construction management, inspections and warranty-oriented closeout without splitting the project across disconnected teams.',
     link: 'Explore design-build services',
-    video: publicAsset('vitalite-hero-design-build.mp4'),
     displayDurationMs: 16000,
     image: visuals.homeHeroDesignBuild,
   },
@@ -900,7 +909,7 @@ const heroSlides = [
     displayDurationMs: 6500,
     image: visuals.homeHeroMultiUnit,
   },
-];
+] as HeroSlide[];
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -1640,11 +1649,39 @@ const blogPageCards: ImageCard[] = [
   },
 ];
 
+type OfficialResource = { label: string; url: string; note?: string };
+
 const torontoOfficialLinks = {
   buildingPermits: { label: 'Building Permits — City of Toronto', url: 'https://www.toronto.ca/services-payments/building-construction/apply-for-a-building-permit/', note: 'Official permit application portal' },
   gardenSuites: { label: 'Garden Suites — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/garden-suites/', note: 'Zoning rules, eligibility and application guidance' },
   lanewaySuites: { label: 'Laneway Suites — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/laneway-suites/', note: 'By-law requirements, fire access and servicing rules' },
   multiplex: { label: 'Multiplex Considerations — City of Toronto', url: 'https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/multiplexes/', note: 'As-of-right permissions and design considerations' },
+  treeProtection: { label: 'Tree & Ravine Protection — City of Toronto', url: 'https://www.toronto.ca/services-payments/building-construction/tree-ravine-protection-permits/tree-protection/', note: 'Protected tree and ravine permit guidance' },
+};
+
+const municipalityOfficialLinks: Record<string, OfficialResource[]> = {
+  toronto: [torontoOfficialLinks.buildingPermits, torontoOfficialLinks.treeProtection],
+  markham: [
+    { label: 'Building Permit Process — City of Markham', url: 'https://www.markham.ca/economic-development-business/building-permits/building-permit-process', note: 'Permit process, ePLAN, zoning and applicable law checks' },
+    { label: 'Zoning & Development By-laws — City of Markham', url: 'https://www.markham.ca/economic-development-business/planning-development-services/zoning-and-development-law-information', note: 'Comprehensive zoning by-law and development by-law information' },
+    { label: 'Tree Permit Application — City of Markham', url: 'https://www.markham.ca/neighbourhood-services/trees/tree-permit-application', note: 'Private tree permit requirements for protected trees' },
+  ],
+  'richmond-hill': [
+    { label: 'Building Permits — City of Richmond Hill', url: 'https://www.richmondhill.ca/en/online-services/Building-Permits.aspx', note: 'Permit applications, fees and review requirements' },
+    { label: 'Zone Richmond Hill — City of Richmond Hill', url: 'https://www.richmondhill.ca/en/zone-richmond-hill.aspx', note: 'Comprehensive zoning by-law and additional residential unit context' },
+    { label: 'Trees on Private Property — City of Richmond Hill', url: 'https://www.richmondhill.ca/en/learn-more/Tree-Cutting-Permit.aspx', note: 'Tree preservation and removal permit requirements' },
+  ],
+  vaughan: [
+    { label: 'Building Permits — City of Vaughan', url: 'https://www.vaughan.ca/residential/building-and-construction/building-permits', note: 'Building permit applications and applicable law checks' },
+    { label: 'Residential Building Permits — City of Vaughan', url: 'https://www.vaughan.ca/residential/building-and-construction/building-permits/permit-applications/residential-building-permits', note: 'Residential permits for homes, additions and alterations' },
+    { label: 'Tree Removal Permits — City of Vaughan', url: 'https://www.vaughan.ca/residential/parks-and-trees/forestry-operations/tree-removal-permits-and-protection', note: 'Tree removal and protection requirements' },
+  ],
+  mississauga: [
+    { label: 'Building & Renovating — City of Mississauga', url: 'https://www.mississauga.ca/services-and-programs/building-and-renovating/', note: 'Building permits, property information and development services' },
+    { label: 'When A Building Permit Is Required — City of Mississauga', url: 'https://www.mississauga.ca/services-and-programs/building-and-renovating/building-permits/when-a-building-permit-is-required/', note: 'Project types that require permits' },
+    { label: 'Zoning By-law — City of Mississauga', url: 'https://www.mississauga.ca/services-and-programs/building-and-renovating/zoning-information/zoning-by-law/', note: 'Interactive zoning by-law and property zoning guidance' },
+    { label: 'Tree Permits — City of Mississauga', url: 'https://www.mississauga.ca/services-and-programs/forestry-and-environment/trees/request-to-injure-or-remove-trees/', note: 'Public and private tree permit guidance' },
+  ],
 };
 
 const detailPages: Record<DetailPageKey, DetailPageContent> = {
@@ -3539,18 +3576,39 @@ function getServicePlanningFocus(page: SeoPage): ServicePlanningFocus {
   };
 }
 
-function getOfficialResources(pageKey: string): Array<{ label: string; url: string; note?: string }> {
+function getOfficialMunicipalitySlugs(pageKey: string, local?: LocalSeoMatch): string[] {
+  const context = `${pageKey} ${local?.label ?? ''} ${local?.municipality ?? ''}`.toLowerCase();
+  const slugs: string[] = [];
+  if (context.includes('markham') || context.includes('unionville') || context.includes('angus-glen')) slugs.push('markham');
+  if (context.includes('richmond-hill') || context.includes('richmond hill')) slugs.push('richmond-hill');
+  if (context.includes('vaughan') || context.includes('kleinburg') || context.includes('woodbridge')) slugs.push('vaughan');
+  if (context.includes('mississauga') || context.includes('port-credit') || context.includes('port credit') || context.includes('lorne-park') || context.includes('lorne park') || context.includes('mineola')) slugs.push('mississauga');
+  if (!slugs.length) slugs.push('toronto');
+  return [...new Set(slugs)];
+}
+
+function uniqueOfficialResources(resources: OfficialResource[]): OfficialResource[] {
+  const seen = new Set<string>();
+  return resources.filter((resource) => {
+    if (seen.has(resource.url)) return false;
+    seen.add(resource.url);
+    return true;
+  });
+}
+
+function getOfficialResources(pageKey: string, local?: LocalSeoMatch): OfficialResource[] {
   const k = pageKey.toLowerCase();
+  const resources = getOfficialMunicipalitySlugs(pageKey, local).flatMap((slug) => municipalityOfficialLinks[slug] ?? []);
   if (k.includes('garden-suite') || k.includes('garden_suite') || k.includes('laneway')) {
-    return [torontoOfficialLinks.gardenSuites, torontoOfficialLinks.lanewaySuites, torontoOfficialLinks.buildingPermits];
+    resources.push(torontoOfficialLinks.gardenSuites, torontoOfficialLinks.lanewaySuites);
   }
   if (k.includes('multiplex')) {
-    return [torontoOfficialLinks.multiplex, torontoOfficialLinks.buildingPermits];
+    resources.push(torontoOfficialLinks.multiplex);
   }
   if (k.includes('permit') || k.includes('drawing')) {
-    return [torontoOfficialLinks.buildingPermits];
+    resources.push(torontoOfficialLinks.buildingPermits);
   }
-  return [];
+  return uniqueOfficialResources(resources).slice(0, 6);
 }
 
 function getServiceKey(pageKey: string): string {
@@ -4517,6 +4575,46 @@ function getGuideProfile(page: SeoPage) {
   };
 }
 
+function buildVisibleGeoEvidenceSections(pageKey: string, page: DetailPageContent) {
+  const focus = getServicePlanningFocus({
+    key: pageKey,
+    path: '',
+    title: page.title,
+    description: page.subtitle,
+    kind: 'service',
+    primaryKeyword: page.title,
+  });
+  const projectFacts = page.isProject && page.projectMeta
+    ? `This project record includes ${page.projectMeta.location}, ${page.projectMeta.size}, ${page.projectMeta.projectType}, ${page.projectMeta.statusLabel}, ${page.projectMeta.permitRoute} Scope includes ${page.projectMeta.scope.join(', ')}.`
+    : `This page should be evaluated with the property address, survey, existing drawings, current permit status, target budget, timeline and known structural, access, tree, grading or inspection constraints.`;
+  const proofSignals = page.isProject && page.projectMeta
+    ? `Project proof signals include approval path, permit route, scope, size, status, outcome and closeout responsibilities.`
+    : `Proof signals include service area clarity, permit or approval context, planning steps, related Vitalite pages, project examples and official resources where applicable.`;
+
+  return [
+    {
+      heading: 'Key Facts',
+      text: `${page.title} is a planning decision before it is a construction decision. According to the GEO citation research pattern, visible pages should explain the evidence behind an answer instead of relying only on hidden fallback copy or FAQ markup. Owners should confirm zoning, building code, drawings, engineering inputs, budget assumptions, inspection path and trade sequencing before treating a contractor price as final. ${projectFacts} This page is written as an evidence page: direct answer first, then facts, decision criteria, process steps and caveats that can be checked against the property.`,
+    },
+    {
+      heading: 'Comparison Framework',
+      text: `Compare options by responsibility, timing and evidence. A design-only path can clarify drawings, but the owner still has to connect pricing, permit comments, engineering and site management. A bid-after-drawings path can work when scope is complete, but gaps appear late if allowances or exclusions were not priced. A design-build path fits when feasibility, drawings, permits, budget, procurement, trades, inspections and closeout need one accountable team.`,
+    },
+    {
+      heading: 'Planning Sequence',
+      text: `Start with the address and project goal, then collect survey information, photos, existing drawings and owner priorities. Review zoning, lot conditions, structure, servicing, access, trees, drainage and any board or municipal requirements. Define the drawing and consultant inputs, price the scope with allowances and exclusions visible, then schedule procurement, trades, inspections, PDI and closeout around the approved work.`,
+    },
+    {
+      heading: 'Evidence To Prepare',
+      text: `Prepare ${focus.readiness}. Useful supporting evidence includes photos, inspection notes, municipal comments, budget direction, finish expectations, preferred start window, access limits and known mechanical or structural issues. ${proofSignals} These details help distinguish a simple interior scope from a permit-driven custom home, addition, garden suite, multiplex, legal suite, renovation or ICI project.`,
+    },
+    {
+      heading: 'Caveats And Boundaries',
+      text: `The right next step depends on the actual property. Early pages can explain common ranges, approval issues and decision criteria, but they cannot replace address-specific feasibility review. Budgets change when drawings are incomplete, existing conditions are hidden, finishes are undefined, engineering is not scoped, municipal comments require revisions or selections change during construction. Treat early numbers as planning ranges until scope, approvals, drawings and trade input are connected.`,
+    },
+  ];
+}
+
 function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
   const isServiceArea = page.key.startsWith('location-') || page.key.startsWith('community-');
   const isCommunity = page.key.startsWith('community-');
@@ -4579,7 +4677,7 @@ function createGeneratedLandingPage(page: SeoPage): DetailPageContent {
     answer: isServiceArea ? buildServiceAreaAnswer(page, local, serviceName) : guideProfile?.answer,
     steps: guideProfile?.steps,
     faqs: buildPageFaq(page),
-    officialResources: getOfficialResources(page.key),
+    officialResources: getOfficialResources(page.key, local),
     relatedLinks: getGeneratedRelatedLinks(page),
   };
 }
@@ -4933,6 +5031,192 @@ const TextCardGrid = ({ cards, dark = false }: { cards: TextCard[]; dark?: boole
   </div>
 );
 
+type MainGeoEvidenceProfile = {
+  eyebrow: string;
+  answer: string;
+  facts: string[];
+  comparison: string;
+  steps: string[];
+  caveat: string;
+};
+
+const mainGeoEvidenceProfiles: Record<'home' | MainPageKey, MainGeoEvidenceProfile> = {
+  home: {
+    eyebrow: 'GTA design-build contractor answer',
+    answer:
+      'Vitalite Construction Corp. is a GTA design-build contractor and construction management company that coordinates feasibility review, drawings, permits, engineering inputs, budget planning, site management, inspections and closeout for residential and ICI projects.',
+    facts: [
+      'Core project types include custom homes, multiplex housing, garden suites, laneway houses, home additions, permit drawings, major renovations and ICI construction.',
+      'The company serves Toronto and the Greater Toronto Area from its Markham office, with service-area pages for Toronto, North York, Markham, Richmond Hill, Vaughan, Mississauga, Scarborough and Etobicoke.',
+      'Useful first-review inputs include the address, survey or drawings if available, current permit status, project goal, target budget direction and timeline.',
+    ],
+    comparison:
+      'Compared with a design-only or bid-after-drawings path, design-build is strongest when budget, permit comments, engineering, procurement, trade sequencing and inspections need to shape decisions before construction begins.',
+    steps: [
+      'Confirm project fit, address and owner goals',
+      'Review zoning, lot conditions, structure and approval path',
+      'Coordinate concept design, drawings, engineering and budget direction',
+      'Prepare permits, procurement plan, trade sequence and inspection path',
+      'Manage construction, PDI, closeout and warranty-oriented follow-up',
+    ],
+    caveat:
+      'Early cost and timeline guidance is directional until drawings, hidden existing conditions, finish level, consultant inputs and municipal comments are connected to a defined scope.',
+  },
+  services: {
+    eyebrow: 'Design-build service answer',
+    answer:
+      'Vitalite services combine design-build planning, general contracting and construction management for GTA owners who need drawings, approvals, budgets and construction delivery connected under one accountable team.',
+    facts: [
+      'Service coverage includes architectural coordination, interior planning, renderings, material selection, board approvals, site management, custom homes, multiplexes, garden suites, additions, permit drawings, project management and ICI.',
+      'Most permit-driven projects need zoning review, building code review, structural or HVAC coordination, municipal comments and inspection planning before site work starts.',
+      'The service pages are organized by both project type and local service area so owners can compare scope, approvals and readiness requirements.',
+    ],
+    comparison:
+      'Use standalone design when you only need drawings, use a traditional contractor when drawings and scope are complete, and use design-build when feasibility, approvals, budget, procurement and site execution need to move together.',
+    steps: [
+      'Identify the project type and current stage',
+      'Gather survey, drawings, photos and budget direction',
+      'Review local zoning, code, engineering and permit requirements',
+      'Define scope, allowances, exclusions and procurement timing',
+      'Move into construction management, inspections and closeout',
+    ],
+    caveat:
+      'A service page can explain the planning path, but the exact scope depends on the property, municipality, existing conditions, finish level and whether approvals are already in progress.',
+  },
+  'why-vitalite': {
+    eyebrow: 'Why Vitalite answer',
+    answer:
+      'Owners choose Vitalite when a GTA construction project needs one team to connect feasibility, drawings, permits, budgets, trades, inspections and closeout instead of leaving the owner to manage disconnected handoffs.',
+    facts: [
+      'Vitalite is positioned for permit-sensitive projects where design decisions affect construction cost, schedule and approval risk.',
+      'The process separates early feasibility, concept design, permit coordination, construction planning, active site management and final closeout.',
+      'Owner control points include scope definition, allowance visibility, budget direction, material selections, permit comments, change decisions and inspection readiness.',
+    ],
+    comparison:
+      'A fragmented model can work on simple scopes, but larger GTA projects often expose gaps between designer, engineer, contractor and trades. Vitalite reduces that coordination burden by managing those dependencies earlier.',
+    steps: [
+      'Consultation and project-fit review',
+      'Existing-condition and site review',
+      'Concept, budget and delivery model selection',
+      'Zoning, drawings, engineering and permit coordination',
+      'Construction management, PDI and closeout support',
+    ],
+    caveat:
+      'Design-build does not remove municipal review, hidden-condition risk or owner decision timelines. It makes those risks visible earlier so they can be priced, sequenced and assigned.',
+  },
+  'our-work': {
+    eyebrow: 'Project evidence answer',
+    answer:
+      'Vitalite project pages show the planning evidence behind GTA custom homes, multiplexes, garden suites, additions, ICI spaces, condos, older homes, townhouses and full interiors, not only finished images.',
+    facts: [
+      'Case-study facts include location, size, project type, status, approval path, permit route, scope and outcome where available.',
+      'Categories are organized by owner intent: build new, add density, expand an existing property, modernize interiors or deliver a practical commercial/ICI space.',
+      'A useful project example explains constraints, approvals, structural or mechanical scope, trade sequencing and closeout responsibilities.',
+    ],
+    comparison:
+      'A photo gallery helps with style, but an evidence-rich project page helps owners and AI systems understand what was actually coordinated: approvals, drawings, scope, trades, inspections and handover.',
+    steps: [
+      'Choose the closest project category',
+      'Review location, size, approval path and status',
+      'Compare the visible scope to your own property constraints',
+      'Check related service pages and local pages',
+      'Contact Vitalite with address, drawings and target scope',
+    ],
+    caveat:
+      'A project example is not a fixed quote. Similar homes can differ materially because of structure, site access, municipal comments, hidden conditions, finishes and procurement choices.',
+  },
+  blog: {
+    eyebrow: 'GTA construction guide answer',
+    answer:
+      'The Vitalite blog is a GTA construction planning library for owners comparing costs, permits, timelines, design-build delivery, garden suites, multiplexes, additions and pre-construction readiness before hiring a contractor.',
+    facts: [
+      'The strongest guides answer a specific question first, then add cost drivers, permit inputs, decision criteria, process steps and caveats.',
+      'Long-tail pages cover topics such as Toronto garden suite cost, laneway permits, multiplex conversion cost, home addition permits, second-storey additions, legal basement suites and permit-ready drawings.',
+      'Blog pages link back to service, location, community and contact pages so readers can move from research to address-specific review.',
+    ],
+    comparison:
+      'A short opinion article is weaker than a structured guide for GEO. Vitalite guides are written as explainers with definitions, numbers, comparisons, how-to sequences and local constraints.',
+    steps: [
+      'Start with the guide that matches the decision',
+      'Identify likely permit, zoning and budget drivers',
+      'Collect the property-specific documents the guide names',
+      'Compare delivery model and scope options',
+      'Book a project review before relying on generic ranges',
+    ],
+    caveat:
+      'Guides support research and planning, but they do not replace municipal review, engineering input or a property-specific construction estimate.',
+  },
+  'contact-us': {
+    eyebrow: 'Project intake answer',
+    answer:
+      'Contact Vitalite when you have a GTA property, project type and current stage to review. The first response is used to clarify whether the next step is feasibility review, drawings, permit coordination, budgeting or construction planning.',
+    facts: [
+      'Qualified inquiries should include the property city or address, project type, drawings or permit status, target budget direction, timeline and known zoning or structural concerns.',
+      'Vitalite reviews custom homes, rebuilds, multiplexes, garden suites, laneway houses, additions, major renovations, permit drawings, construction management and ICI work.',
+      'The office is in Markham and the service area includes Toronto and the Greater Toronto Area.',
+    ],
+    comparison:
+      'A generic quote request often misses scope assumptions. A useful intake gives enough context to decide whether the project needs feasibility, drawings, permitting, construction management or a full design-build path.',
+    steps: [
+      'Send address or municipality and project type',
+      'Share current drawings, permits, photos or survey if available',
+      'Explain the target scope, budget direction and timeline',
+      'Flag known issues such as trees, grading, structure, access or board approval',
+      'Review the next planning step with Vitalite',
+    ],
+    caveat:
+      'Vitalite does not treat early intake as a final construction quote. Pricing becomes reliable only after scope, drawings, approvals, site constraints, finishes and trade input are clear.',
+  },
+};
+
+const MainGeoEvidenceSection = ({ pageKey }: { pageKey: 'home' | MainPageKey }) => {
+  const profile = mainGeoEvidenceProfiles[pageKey];
+
+  return (
+    <section className="bg-gray-50 text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+        <div className="max-w-4xl mb-10 md:mb-14">
+          <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-4">{profile.eyebrow}</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-6">Citation-Ready Planning Summary</h2>
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{profile.answer}</p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-5">
+          <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-7">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4">Key Facts</h3>
+            <ul className="space-y-3 text-base text-gray-700 leading-relaxed">
+              {profile.facts.map((fact) => (
+                <li key={fact} className="flex gap-3">
+                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-kiewit-yellow" />
+                  <span>{fact}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+          <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-7">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4">Comparison Criteria</h3>
+            <p className="text-base text-gray-700 leading-relaxed">{profile.comparison}</p>
+          </article>
+          <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-7">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4">Planning Sequence</h3>
+            <ol className="space-y-3 text-base text-gray-700 leading-relaxed">
+              {profile.steps.map((step, index) => (
+                <li key={step} className="flex gap-3">
+                  <span className="font-bold text-kiewit-yellow">{String(index + 1).padStart(2, '0')}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </article>
+          <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-7">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4">Caveat</h3>
+            <p className="text-base text-gray-700 leading-relaxed">{profile.caveat}</p>
+          </article>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
 const MainPageFaq = ({ faqs, dark = false }: { faqs: Array<{ question: string; answer: string }>; dark?: boolean }) => {
   if (!faqs.length) return null;
 
@@ -5047,6 +5331,7 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
       return project && content ? { project, content } : null;
     })
     .filter((x): x is { project: ProjectEntry; content: DetailPageContent } => x !== null);
+  const visibleGeoEvidenceSections = buildVisibleGeoEvidenceSections(pageKey, page);
 
   return (
     <>
@@ -5170,6 +5455,23 @@ const DetailPage = ({ pageKey }: { pageKey: string }) => {
           </motion.div>
         </section>
       ) : null}
+
+      <section className="bg-gray-50 text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-7xl mx-auto">
+          <SubPageHeading title="Planning Evidence" dark />
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-light max-w-4xl mb-10 md:mb-14">
+            These blocks make the page easier for owners and AI search systems to evaluate: direct facts, comparison criteria, process steps, evidence inputs and boundaries.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {visibleGeoEvidenceSections.map((section) => (
+              <article key={section.heading} className="border border-gray-200 bg-white rounded-lg p-6 sm:p-7">
+                <h2 className="text-xl sm:text-2xl font-semibold text-black mb-4">{section.heading}</h2>
+                <p className="text-base text-gray-700 leading-relaxed">{section.text}</p>
+              </article>
+            ))}
+          </div>
+        </motion.div>
+      </section>
 
       {projectCards.length > 0 ? (
         <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
@@ -5339,6 +5641,7 @@ const ServicesPage = () => (
         <CardGrid cards={communitySeoCards} />
       </motion.div>
     </section>
+    <MainGeoEvidenceSection pageKey="services" />
     <MainPageFaq faqs={servicesFaqs} dark />
   </>
 );
@@ -5390,6 +5693,7 @@ const WhyVitalitePage = () => (
         <TextCardGrid cards={whyControlCards} />
       </motion.div>
     </section>
+    <MainGeoEvidenceSection pageKey="why-vitalite" />
     <MainPageFaq faqs={whyVitaliteFaqs} dark />
   </>
 );
@@ -5431,6 +5735,7 @@ const OurWorkPage = () => (
         <TextCardGrid cards={workEvidenceCards} />
       </motion.div>
     </section>
+    <MainGeoEvidenceSection pageKey="our-work" />
     <MainPageFaq faqs={ourWorkFaqs} dark />
   </>
 );
@@ -5472,6 +5777,7 @@ const BlogPage = () => (
         <CardGrid cards={longTailSeoCards} />
       </motion.div>
     </section>
+    <MainGeoEvidenceSection pageKey="blog" />
     <MainPageFaq faqs={blogFaqs} dark />
   </>
 );
@@ -5695,6 +6001,7 @@ const ContactPage = () => (
         </div>
       </motion.div>
     </section>
+    <MainGeoEvidenceSection pageKey="contact-us" />
     <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInVariants} className="max-w-5xl mx-auto">
         <SubPageHeading title="Contact FAQ" dark />
@@ -5790,6 +6097,7 @@ const HomePage = () => (
   <>
     <Hero />
     <IntegratedSolutions />
+    <MainGeoEvidenceSection pageKey="home" />
     <Stats />
     <Expertise />
     <Markets />

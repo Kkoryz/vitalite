@@ -214,6 +214,64 @@ const ToolFaq = ({ items }: { items: Array<{ q: string; a: string }> }) => (
 
 // ─── Calculator 1: Home Addition Cost Estimator ───────────────────────────────
 
+const ToolGeoEvidence = ({
+  answer,
+  facts,
+  steps,
+  caveat,
+}: {
+  answer: string;
+  facts: string[];
+  steps: string[];
+  caveat: string;
+}) => (
+  <section className="bg-gray-50 text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeIn}
+      className="max-w-6xl mx-auto"
+    >
+      <div className="max-w-4xl mb-10">
+        <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-4">
+          Planning evidence
+        </div>
+        <h2 className="text-3xl sm:text-4xl font-medium tracking-tight mb-5">How to use this tool</h2>
+        <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{answer}</p>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <article className="border border-gray-200 bg-white rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">Key Facts</h3>
+          <ul className="space-y-3 text-base text-gray-700 leading-relaxed">
+            {facts.map((fact) => (
+              <li key={fact} className="flex gap-3">
+                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-kiewit-yellow" />
+                <span>{fact}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+        <article className="border border-gray-200 bg-white rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">Planning Steps</h3>
+          <ol className="space-y-3 text-base text-gray-700 leading-relaxed">
+            {steps.map((step, index) => (
+              <li key={step} className="flex gap-3">
+                <span className="font-bold text-kiewit-yellow">{String(index + 1).padStart(2, '0')}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </article>
+        <article className="border border-gray-200 bg-white rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">Boundary</h3>
+          <p className="text-base text-gray-700 leading-relaxed">{caveat}</p>
+        </article>
+      </div>
+    </motion.div>
+  </section>
+);
+
 const additionTypeOptions: Array<{ label: string; value: string }> = [
   { label: 'Main floor extension', value: 'main-floor' },
   { label: 'Second-storey addition', value: 'second-storey' },
@@ -265,6 +323,22 @@ export const AdditionCostCalculator = () => {
         title="Home Addition Cost Estimator"
         subtitle="Get a planning-level cost range for a GTA home addition before committing to drawings or contractor pricing."
         image={v('home-addition')}
+      />
+      <ToolGeoEvidence
+        answer="The home addition estimator is a planning tool for early feasibility. It helps owners compare addition type, size, finish level and GTA location before drawings, structural review and permit comments turn the range into project-specific pricing."
+        facts={[
+          'Addition cost is affected by foundation work, structural tie-ins, roofline matching, mechanical extensions, permit drawings and finish level.',
+          'A second-storey addition usually carries more structural risk than a main-floor extension because the existing foundation and walls must be reviewed first.',
+          'The estimate is most useful when paired with a survey, photos, current floor plans and a clear description of the rooms being added.',
+        ]}
+        steps={[
+          'Choose the closest addition type',
+          'Set the approximate new square footage',
+          'Select finish level and GTA location',
+          'Use the range for feasibility, not a fixed quote',
+          'Confirm zoning, structure, drawings and permit path with Vitalite',
+        ]}
+        caveat="The calculator cannot see hidden structure, soil conditions, drainage, utility capacity, municipal comments or finish selections. Treat the result as a planning range until the property is reviewed."
       />
 
       <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
@@ -381,6 +455,22 @@ export const LanewayCostCalculator = () => {
         title="Laneway Suite & Garden Suite Cost Calculator"
         subtitle="Estimate what it costs to build a detached laneway house or garden suite in Toronto and the GTA."
         image={v('garden-suite')}
+      />
+      <ToolGeoEvidence
+        answer="The laneway and garden suite calculator estimates a detached secondary dwelling cost range, but feasibility starts with the lot. Access, rear-yard depth, servicing, fire route requirements, tree protection and permit review decide whether the suite is buildable before finish choices matter."
+        facts={[
+          'Laneway houses require public lane access; garden suites rely on rear-yard feasibility and a compliant access route.',
+          'Typical cost drivers include structure, utilities, servicing trench length, grading, exterior envelope, finishes and construction access.',
+          'Toronto lots should be screened for setbacks, tree protection, TRCA or ravine overlays and servicing capacity before design fees are committed.',
+        ]}
+        steps={[
+          'Confirm lane or rear-yard access',
+          'Estimate suite size and storey count',
+          'Review servicing, trees, grading and setbacks',
+          'Use the calculator range for rental and financing planning',
+          'Complete a property-specific feasibility review',
+        ]}
+        caveat="A low calculator range can still fail if the lot cannot meet access, servicing, tree or setback conditions. The first decision is feasibility, not finishes."
       />
 
       <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
@@ -628,6 +718,22 @@ export const TeardownDecisionTool = () => {
         subtitle="Answer 7 questions about your property to get a recommendation on which path delivers better value."
         image={v('ai-work-older-toronto-homes')}
       />
+      <ToolGeoEvidence
+        answer="The teardown versus renovation tool compares the owner's goal, existing structure, scope size, zoning risk, budget tolerance and long-term value. It is useful before buying a fixer-upper, committing to a deep renovation or assuming a rebuild is automatically better."
+        facts={[
+          'Renovation can preserve character and reduce demolition scope, but hidden structure, low basements, old wiring and system replacement can erase the savings.',
+          'Teardown-rebuild can deliver cleaner design control, but it resets the project under current zoning, tree, grading and permit rules.',
+          'The right decision usually depends on land value, existing-condition risk, approval path, target layout and how long the owner plans to hold the property.',
+        ]}
+        steps={[
+          'Answer the seven property questions',
+          'Review whether the result points to renovate, rebuild or assess further',
+          'Check zoning, heritage, trees and existing structure',
+          'Compare design goals against budget and carrying cost',
+          'Book a site review before committing to demolition or drawings',
+        ]}
+        caveat="The tool gives a directional read. A final recommendation needs site review, zoning checks, structural assessment, budget modelling and owner priorities."
+      />
 
       <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
         <motion.div
@@ -840,6 +946,22 @@ export const PermitTimelineEstimator = () => {
         subtitle="Understand how long design, permit approval and construction will take for your GTA project type."
         image={v('permit-drawings-guide')}
       />
+      <ToolGeoEvidence
+        answer="The permit timeline estimator separates design, permit review and construction so owners can see where time is usually spent. It is strongest for planning schedules before drawings are submitted or a move-in date is promised."
+        facts={[
+          'Permit timing changes by project type, municipality, drawing completeness, zoning compliance, conservation overlays and municipal comment cycles.',
+          'Custom homes, additions, garden suites, multiplexes and major renovations have different design and review paths.',
+          'A complete submission can reduce revision cycles, but municipal review, Committee of Adjustment, TRCA or heritage steps still add time when they apply.',
+        ]}
+        steps={[
+          'Select project type and municipality',
+          'Review the design, permit and construction phases separately',
+          'Identify likely approval blockers before submission',
+          'Build owner decisions and long-lead procurement into the schedule',
+          'Use Vitalite to coordinate drawings, comments, inspections and closeout',
+        ]}
+        caveat="Timeline estimates are not approval guarantees. Incomplete drawings, municipal comments, variances, conservation review and hidden site issues can extend the schedule."
+      />
 
       <section className="bg-white text-black py-20 md:py-28 px-5 sm:px-8 md:px-24">
         <motion.div
@@ -1009,6 +1131,23 @@ export const ToolsHub = () => (
         </div>
       </div>
     </div>
+
+    <ToolGeoEvidence
+      answer="The Vitalite tools hub collects construction calculators for early GTA project planning. Each tool gives a directional range or decision framework before owners commit to drawings, permits, financing assumptions or contractor pricing."
+      facts={[
+        'Tools cover addition cost, laneway and garden suite cost, teardown versus renovation decisions and building permit timelines.',
+        'Each result depends on property-specific inputs such as zoning, structure, servicing, access, finishes, municipal comments and trade availability.',
+        'The tools are designed to make the first consultation more precise, not to replace a feasibility review or construction quote.',
+      ]}
+      steps={[
+        'Choose the tool that matches the decision',
+        'Enter approximate project inputs',
+        'Review cost, timeline or recommendation output',
+        'Gather property-specific evidence',
+        'Book a Vitalite review before treating the result as final',
+      ]}
+      caveat="Calculator results are planning ranges. Reliable pricing and scheduling require address-specific review, drawings, consultant inputs, permit path and construction sequencing."
+    />
 
     <section className="bg-white text-black py-20 md:py-32 px-5 sm:px-8 md:px-24">
       <motion.div
