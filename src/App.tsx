@@ -881,8 +881,25 @@ type HeroSlide = {
   link: string;
   displayDurationMs: number;
   image: string;
-  video?: string;
+  videoSources?: {
+    src: string;
+    type: string;
+    media?: string;
+  }[];
 };
+
+const homeHeroVideoSources: HeroSlide['videoSources'] = [
+  {
+    src: publicAsset('vitalite-hero-design-build.webm'),
+    type: 'video/webm',
+    media: '(prefers-reduced-motion: no-preference)',
+  },
+  {
+    src: publicAsset('vitalite-hero-design-build.mp4'),
+    type: 'video/mp4',
+    media: '(prefers-reduced-motion: no-preference)',
+  },
+];
 
 const heroSlides = [
   {
@@ -892,6 +909,7 @@ const heroSlides = [
     link: 'Explore design-build services',
     displayDurationMs: 16000,
     image: visuals.homeHeroDesignBuild,
+    videoSources: homeHeroVideoSources,
   },
   {
     category: 'CUSTOM HOMES',
@@ -916,6 +934,8 @@ const Hero = () => {
   const [isPaused, setIsPaused] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const currentHeroSlide = heroSlides[currentSlide];
+  const currentHeroVideoSources = currentHeroSlide.videoSources ?? [];
+  const hasHeroVideo = currentHeroVideoSources.length > 0;
 
   useEffect(() => {
     if (isPaused) return;
@@ -927,7 +947,7 @@ const Hero = () => {
 
   useEffect(() => {
     const video = heroVideoRef.current;
-    if (!video || !currentHeroSlide.video) return undefined;
+    if (!video || !hasHeroVideo) return undefined;
 
     video.muted = true;
     video.defaultMuted = true;
@@ -955,7 +975,7 @@ const Hero = () => {
 
     video.addEventListener('canplay', playVideo, { once: true });
     return () => video.removeEventListener('canplay', playVideo);
-  }, [currentHeroSlide.video, currentSlide, isPaused]);
+  }, [currentSlide, hasHeroVideo, isPaused]);
 
   return (
     <div className="relative h-[100svh] min-h-[600px] w-full overflow-hidden bg-black">
@@ -968,10 +988,9 @@ const Hero = () => {
           transition={{ duration: 1.2, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
-          {currentHeroSlide.video ? (
+          {hasHeroVideo ? (
             <video
               ref={heroVideoRef}
-              src={currentHeroSlide.video}
               poster={currentHeroSlide.image}
               className="w-full h-full object-cover"
               autoPlay
@@ -986,7 +1005,11 @@ const Hero = () => {
                 event.currentTarget.volume = 0;
               }}
               aria-label="Vitalite design-build project video"
-            />
+            >
+              {currentHeroVideoSources.map((source) => (
+                <source key={source.src} src={source.src} type={source.type} media={source.media} />
+              ))}
+            </video>
           ) : (
             <img src={currentHeroSlide.image} alt="Vitalite project" className="w-full h-full object-cover" />
           )}
