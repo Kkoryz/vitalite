@@ -110,7 +110,7 @@
     {
       "key": "communities-hub",
       "path": "/communities",
-      "title": "Toronto & GTA Neighbourhood Construction Pages | Vitalite",
+      "title": "GTA Neighbourhood Construction Pages | Vitalite",
       "description": "Neighbourhood construction pages for custom homes, luxury renovations, garden suites, multiplexes and permit drawings across Toronto and GTA communities.",
       "kind": "serviceCollection",
       "primaryKeyword": "Toronto neighbourhood construction pages"
@@ -150,7 +150,7 @@
     {
       "key": "tool-laneway-cost",
       "path": "/tools/laneway-suite-cost-calculator-toronto",
-      "title": "Laneway & Garden Suite Cost Calculator Toronto | Vitalite",
+      "title": "Laneway Suite Cost Calculator Toronto | Vitalite",
       "description": "Estimate Toronto laneway house and garden suite costs, including size, storeys, finishes, servicing, access, permits and feasibility planning.",
       "kind": "article",
       "primaryKeyword": "laneway suite cost calculator Toronto"
@@ -236,6 +236,14 @@
       "primaryKeyword": "multiplex construction Toronto"
     },
     {
+      "key": "service-fourplex-builder",
+      "path": "/services/fourplex-builder-toronto",
+      "title": "Fourplex Builder Toronto | Vitalite",
+      "description": "Toronto fourplex builder for as-of-right projects: feasibility, unit strategy, fire separation, egress, permits, budget planning and construction.",
+      "kind": "service",
+      "primaryKeyword": "fourplex builder Toronto"
+    },
+    {
       "key": "service-garden-suites",
       "path": "/services/garden-suites-laneway-houses-toronto",
       "title": "Garden Suites & Laneway Houses Toronto | Vitalite",
@@ -270,7 +278,7 @@
     {
       "key": "service-ici-construction",
       "path": "/services/ici-construction-gta",
-      "title": "ICI Construction GTA | Industrial, Commercial & Institutional",
+      "title": "ICI Construction GTA | Commercial & Industrial",
       "description": "Design-build and construction management for GTA warehouses, offices, retail spaces, light industrial buildings, and institutional facilities.",
       "kind": "service",
       "primaryKeyword": "ICI construction GTA"
@@ -2235,7 +2243,7 @@
       "keyPrefix": "location-custom-homes",
       "pathPrefix": "custom-home-builder",
       "serviceName": "Custom Home Builder",
-      "titlePattern": "Custom Home Builder {location} | Design-Build & Permits",
+      "titlePattern": "Custom Home Builder {location} | Vitalite",
       "descriptionPattern": "Custom home design-build in {location}: feasibility, zoning, drawings, permits, budget planning, site management, inspections and closeout.",
       "primaryKeywordPattern": "custom home builder {location}"
     },
@@ -2243,7 +2251,7 @@
       "keyPrefix": "location-garden-suites",
       "pathPrefix": "garden-suite-builder",
       "serviceName": "Garden Suite Builder",
-      "titlePattern": "Garden Suite Builder {location} | Laneway & ADU Planning",
+      "titlePattern": "Garden Suite Builder {location} | Vitalite",
       "descriptionPattern": "Garden suite and laneway suite design-build in {location}: lot feasibility, servicing, access, drawings, permits, engineering and construction.",
       "primaryKeywordPattern": "garden suite builder {location}"
     },

@@ -300,14 +300,14 @@ function normalizePath(path: string) {
 }
 
 const frenchTitleByKey: Record<string, string> = {
-  home: 'Entrepreneur conception-construction GTA | Vitalite Construction',
-  services: 'Services conception-construction Toronto et GTA | Vitalite',
+  home: 'Conception-construction GTA | Vitalite',
+  services: 'Services conception-construction GTA | Vitalite',
   'why-vitalite': 'Pourquoi Vitalite | Partenaire construction GTA',
   'our-work': 'Projets Vitalite | Maisons et renovations GTA',
   blog: 'Guides renovation et construction Toronto | Blogue Vitalite',
   'contact-us': 'Contactez Vitalite | Evaluation de projet GTA',
-  'locations-hub': 'Secteurs de service conception-construction GTA | Vitalite',
-  'communities-hub': 'Pages de construction par quartier Toronto et GTA | Vitalite',
+  'locations-hub': 'Secteurs de service GTA | Vitalite',
+  'communities-hub': 'Quartiers construction GTA | Vitalite',
   faq: 'FAQ conception-construction GTA | Vitalite Construction',
   'ai-gta-design-build-guide': 'Guide conception-construction GTA lisible par IA | Vitalite',
   'tools-hub': 'Calculateurs de construction GTA | Outils Vitalite',
@@ -315,15 +315,27 @@ const frenchTitleByKey: Record<string, string> = {
   'tool-laneway-cost': 'Calculateur cout maison de ruelle et garden suite Toronto | Vitalite',
   'tool-teardown-decision': 'Outil demolition-reconstruction ou renovation GTA | Vitalite',
   'tool-permit-timeline': 'Estimateur delai permis de construction GTA | Vitalite',
+  'service-custom-homes': 'Maisons sur mesure Toronto | Vitalite',
+  'service-garden-suites': 'Garden suites Toronto | Vitalite',
+  'service-home-additions': 'Agrandissements Toronto | Vitalite',
+  'service-drawings-permits': 'Plans et permis Toronto | Vitalite',
+  'service-project-management': 'Gestion de construction GTA | Vitalite',
 };
 
 const frenchDescriptionByKey: Record<string, string> = {
-  home: 'Entrepreneur conception-construction GTA pour maisons sur mesure, multiplex, agrandissements, garden suites et ICI: faisabilite, plans, permis, budgets, construction et cloture.',
-  services: 'Services conception-construction Toronto et GTA: maisons sur mesure, multiplex, agrandissements, garden suites, plans de permis, gestion de projet et construction ICI.',
+  home: 'Vitalite coordonne maisons sur mesure, multiplex, agrandissements, garden suites et projets ICI dans le GTA, des plans aux permis et au chantier.',
+  services: 'Services GTA pour maisons sur mesure, garden suites, multiplex, agrandissements, plans de permis, gestion de construction et projets ICI.',
   'why-vitalite': 'Pourquoi les proprietaires GTA choisissent Vitalite: faisabilite, plans prets pour permis, budget, gestion de construction, inspections et cloture sous une meme equipe.',
   'our-work': 'Categories de projets Vitalite dans le GTA: maisons sur mesure, multiplex, garden suites, agrandissements, ICI, condos, maisons anciennes, townhouses et interieurs complets.',
   blog: 'Guides Toronto et GTA avec reponses directes sur couts, permis, delais, conception-construction, garden suites, multiplex et preparation de projet.',
   'contact-us': 'Contactez Vitalite pour une evaluation de projet dans le GTA. Partagez adresse, portee, plans, statut de permis, budget et delai vise.',
+  'locations-hub': 'Secteurs GTA servis par Vitalite pour conception, plans, permis, budget, construction, inspections et cloture de projets residentiels et ICI.',
+  'communities-hub': 'Pages par quartier pour maisons sur mesure, renovations, garden suites, multiplex et plans de permis dans Toronto et le GTA.',
+  'service-custom-homes': 'Maisons sur mesure a Toronto: faisabilite, conception, plans, permis, ingenierie, budget, chantier et cloture avec Vitalite.',
+  'service-garden-suites': 'Garden suites et maisons de ruelle a Toronto: faisabilite du lot, plans, permis, services, budget, construction et inspections.',
+  'service-home-additions': 'Agrandissements a Toronto: zonage, structure, plans, permis, ingenierie, budget, trades, inspections et cloture avec Vitalite.',
+  'service-drawings-permits': 'Plans et permis a Toronto: zonage, dessins, structure, HVAC, ingenierie, soumission municipale et soutien jusqu aux commentaires.',
+  'service-project-management': 'Gestion de construction GTA: budget, calendrier, trades, inspections, qualite, communication et cloture pour projets residentiels et ICI.',
 };
 
 const frenchKeywordByKey: Record<string, string> = {

@@ -10,15 +10,101 @@ const projectsData = JSON.parse(await fs.readFile(path.join(rootDir, 'src', 'pro
 const baseHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
 const today = process.env.VITALITE_BUILD_DATE || formatBuildDate(new Date());
 const pages = [...seoData.pages, ...buildGeneratedPages()];
+const basePageKeys = new Set((seoData.pages ?? []).map((page) => page.key));
+const priorityGeneratedPageKeys = new Set([
+  'location-custom-homes-toronto',
+  'location-custom-homes-north-york',
+  'location-custom-homes-markham',
+  'location-custom-homes-richmond-hill',
+  'location-custom-homes-vaughan',
+  'location-custom-homes-mississauga',
+  'location-garden-suites-toronto',
+  'location-garden-suites-north-york',
+  'location-garden-suites-etobicoke',
+  'location-garden-suites-scarborough',
+  'location-home-additions-toronto',
+  'location-home-additions-north-york',
+  'location-home-additions-markham',
+  'location-home-additions-mississauga',
+  'location-multiplex-toronto',
+  'location-multiplex-north-york',
+  'location-multiplex-markham',
+  'location-multiplex-scarborough',
+  'guide-garden-suite-cost-toronto',
+  'guide-laneway-house-permit-toronto',
+  'guide-multiplex-conversion-cost-toronto',
+  'guide-home-addition-permit-toronto',
+  'guide-second-storey-addition-toronto',
+  'guide-basement-walkout-permit-toronto',
+  'guide-legal-basement-suite-toronto',
+  'guide-custom-home-build-cost-gta',
+  'guide-design-build-construction-manager-toronto',
+  'guide-toronto-permit-drawings',
+  'guide-toronto-permit-ready-drawings-checklist',
+  'project-willowdale-custom-home-4700',
+  'project-willowdale-expansion-5200',
+  'project-avondale-custom-home-3200',
+  'project-lansdowne-toronto-multiplex-laneway',
+  'project-erindale-mississauga-side-split-addition',
+  'project-downtown-toronto-condo-renovation',
+  'project-gta-warehouse-office-fitout',
+  'project-past-bayview-village-north-york',
+]);
+const tierTwoGeneratedPageKeys = new Set([
+  'community-custom-homes-rosedale',
+  'community-custom-homes-forest-hill',
+  'community-custom-homes-lawrence-park',
+  'community-custom-homes-leaside',
+  'community-custom-homes-the-annex',
+  'community-custom-homes-willowdale',
+  'community-custom-homes-bayview-village',
+  'community-custom-homes-unionville',
+  'community-custom-homes-angus-glen',
+  'community-custom-homes-port-credit',
+  'community-custom-homes-lorne-park',
+  'community-luxury-renovations-rosedale',
+  'community-luxury-renovations-forest-hill',
+  'community-luxury-renovations-lawrence-park',
+  'community-luxury-renovations-leaside',
+  'community-luxury-renovations-the-annex',
+  'community-luxury-renovations-lorne-park',
+  'community-luxury-renovations-mineola',
+  'community-garden-suites-roncesvalles',
+  'community-garden-suites-leslieville',
+  'community-garden-suites-riverdale',
+  'community-garden-suites-the-beaches',
+  'community-garden-suites-east-york',
+  'community-garden-suites-bloor-west-village',
+  'community-multiplex-willowdale',
+  'community-multiplex-east-york',
+  'community-multiplex-the-annex',
+  'community-multiplex-roncesvalles',
+  'community-permit-drawings-rosedale',
+  'community-permit-drawings-leaside',
+  'community-permit-drawings-willowdale',
+  'community-permit-drawings-the-annex',
+]);
+const frenchIndexablePageKeys = new Set([
+  'home',
+  'services',
+  'locations-hub',
+  'communities-hub',
+  'contact-us',
+  'service-custom-homes',
+  'service-garden-suites',
+  'service-home-additions',
+  'service-drawings-permits',
+  'service-project-management',
+]);
 const frenchTitleByKey = {
-  home: 'Entrepreneur conception-construction GTA | Vitalite Construction',
-  services: 'Services conception-construction Toronto et GTA | Vitalite',
+  home: 'Conception-construction GTA | Vitalite',
+  services: 'Services conception-construction GTA | Vitalite',
   'why-vitalite': 'Pourquoi Vitalite | Partenaire construction GTA',
   'our-work': 'Projets Vitalite | Maisons et renovations GTA',
   blog: 'Guides renovation et construction Toronto | Blogue Vitalite',
   'contact-us': 'Contactez Vitalite | Evaluation de projet GTA',
-  'locations-hub': 'Secteurs de service conception-construction GTA | Vitalite',
-  'communities-hub': 'Pages de construction par quartier Toronto et GTA | Vitalite',
+  'locations-hub': 'Secteurs de service GTA | Vitalite',
+  'communities-hub': 'Quartiers construction GTA | Vitalite',
   faq: 'FAQ conception-construction GTA | Vitalite Construction',
   'ai-gta-design-build-guide': 'Guide conception-construction GTA lisible par IA | Vitalite',
   'tools-hub': 'Calculateurs de construction GTA | Outils Vitalite',
@@ -26,15 +112,27 @@ const frenchTitleByKey = {
   'tool-laneway-cost': 'Calculateur cout maison de ruelle et garden suite Toronto | Vitalite',
   'tool-teardown-decision': 'Outil demolition-reconstruction ou renovation GTA | Vitalite',
   'tool-permit-timeline': 'Estimateur delai permis de construction GTA | Vitalite',
+  'service-custom-homes': 'Maisons sur mesure Toronto | Vitalite',
+  'service-garden-suites': 'Garden suites Toronto | Vitalite',
+  'service-home-additions': 'Agrandissements Toronto | Vitalite',
+  'service-drawings-permits': 'Plans et permis Toronto | Vitalite',
+  'service-project-management': 'Gestion de construction GTA | Vitalite',
 };
 
 const frenchDescriptionByKey = {
-  home: 'Entrepreneur conception-construction GTA pour maisons sur mesure, multiplex, agrandissements, garden suites et ICI: faisabilite, plans, permis, budgets, construction et cloture.',
-  services: 'Services conception-construction Toronto et GTA: maisons sur mesure, multiplex, agrandissements, garden suites, plans de permis, gestion de projet et construction ICI.',
+  home: 'Vitalite coordonne maisons sur mesure, multiplex, agrandissements, garden suites et projets ICI dans le GTA, des plans aux permis et au chantier.',
+  services: 'Services GTA pour maisons sur mesure, garden suites, multiplex, agrandissements, plans de permis, gestion de construction et projets ICI.',
   'why-vitalite': 'Pourquoi les proprietaires GTA choisissent Vitalite: faisabilite, plans prets pour permis, budget, gestion de construction, inspections et cloture sous une meme equipe.',
   'our-work': 'Categories de projets Vitalite dans le GTA: maisons sur mesure, multiplex, garden suites, agrandissements, ICI, condos, maisons anciennes, townhouses et interieurs complets.',
   blog: 'Guides Toronto et GTA avec reponses directes sur couts, permis, delais, conception-construction, garden suites, multiplex et preparation de projet.',
   'contact-us': 'Contactez Vitalite pour une evaluation de projet dans le GTA. Partagez adresse, portee, plans, statut de permis, budget et delai vise.',
+  'locations-hub': 'Secteurs GTA servis par Vitalite pour conception, plans, permis, budget, construction, inspections et cloture de projets residentiels et ICI.',
+  'communities-hub': 'Pages par quartier pour maisons sur mesure, renovations, garden suites, multiplex et plans de permis dans Toronto et le GTA.',
+  'service-custom-homes': 'Maisons sur mesure a Toronto: faisabilite, conception, plans, permis, ingenierie, budget, chantier et cloture avec Vitalite.',
+  'service-garden-suites': 'Garden suites et maisons de ruelle a Toronto: faisabilite du lot, plans, permis, services, budget, construction et inspections.',
+  'service-home-additions': 'Agrandissements a Toronto: zonage, structure, plans, permis, ingenierie, budget, trades, inspections et cloture avec Vitalite.',
+  'service-drawings-permits': 'Plans et permis a Toronto: zonage, dessins, structure, HVAC, ingenierie, soumission municipale et soutien jusqu aux commentaires.',
+  'service-project-management': 'Gestion de construction GTA: budget, calendrier, trades, inspections, qualite, communication et cloture pour projets residentiels et ICI.',
 };
 
 const frenchKeywordByKey = {
@@ -47,6 +145,7 @@ const pageByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), p
 const geoEvidencePageKeys = new Set([
   'ai-gta-design-build-guide',
   'service-custom-homes',
+  'service-fourplex-builder',
   'service-drawings-permits',
   'blog-renovation-costs',
   'guide-toronto-permit-ready-drawings-checklist',
@@ -136,12 +235,13 @@ function injectSeo(html, sourcePage, language = 'en') {
   const canonical = canonicalFor(sourcePage, language);
   const image = `${seoData.siteUrl}${seoData.defaultImage}`;
   const locale = language === 'fr' ? 'fr-CA' : 'en-CA';
+  const robots = getRobotsContent(sourcePage, language);
   const managedHead = [
     '<!-- Vitalite SEO -->',
     "<script>document.documentElement.classList.add('vitalite-js');</script>",
     '<style>.vitalite-js .seo-prerender { display: none !important; }</style>',
     `<meta name="description" content="${escapeHtml(page.description)}" />`,
-    '<meta name="robots" content="index, follow, max-image-preview:large" />',
+    `<meta name="robots" content="${robots}" />`,
     `<meta name="author" content="${escapeHtml(seoData.business.name)}" />`,
     `<link rel="canonical" href="${canonical}" />`,
     `<meta property="og:site_name" content="${escapeHtml(seoData.siteName)}" />`,
@@ -158,9 +258,7 @@ function injectSeo(html, sourcePage, language = 'en') {
     `<meta name="twitter:title" content="${escapeHtml(page.title)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(page.description)}" />`,
     `<meta name="twitter:image" content="${image}" />`,
-    `<link rel="alternate" hreflang="en-CA" href="${canonicalFor(sourcePage, 'en')}" />`,
-    `<link rel="alternate" hreflang="fr-CA" href="${canonicalFor(sourcePage, 'fr')}" />`,
-    `<link rel="alternate" hreflang="x-default" href="${canonicalFor(sourcePage, 'en')}" />`,
+    ...buildHreflangTags(sourcePage, language),
     `<script type="application/ld+json" data-vitalite-jsonld="true">${JSON.stringify(buildJsonLd(page, canonical, image, language))}</script>`,
     '<!-- /Vitalite SEO -->',
   ].join('\n    ');
@@ -324,6 +422,8 @@ function buildStaticSections(page) {
     const sections = [
       { heading: 'Project Case Study Facts', text: facts.join(' ') },
       { heading: 'Project Scope', text: p.scope.join(', ') + '.' },
+      { heading: 'Project Proof Signals', text: buildProjectProofSignals(p) },
+      { heading: 'Owner Evidence Checklist', text: buildProjectEvidenceChecklist(p) },
       { heading: 'Permit Route', text: buildProjectPermitRoute(p) },
       { heading: 'Outcome', text: buildProjectOutcome(p) },
     ];
@@ -983,6 +1083,16 @@ function getStaticRelatedLinks(page) {
       .map((candidate) => ({ label: candidate.title.split('|')[0].trim(), page: candidate }));
   }
 
+  if (page.key.startsWith('service-')) {
+    return uniqueStaticRelatedLinks([
+      ...getServiceSpecificRelatedLinks(page.key),
+      linkByKey('our-work', 'Project proof'),
+      linkByKey('locations-hub', 'GTA service areas'),
+      linkByKey('communities-hub', 'Neighbourhood construction pages'),
+      linkByKey('contact-us', 'Contact Vitalite for a project review'),
+    ]).slice(0, 10);
+  }
+
   if (page.key.startsWith('location-')) {
     const location = (seoData.locations ?? []).find((item) => page.key.endsWith(`-${item.slug}`));
     const sameLocationLinks = pages
@@ -1025,6 +1135,7 @@ function getStaticRelatedLinks(page) {
 
   if (page.key.startsWith('guide-')) {
     return uniqueStaticRelatedLinks([
+      ...getGuideSpecificRelatedLinks(page.key),
       linkByKey('guide-gta-pre-construction-checklist', 'GTA design-build pre-construction checklist'),
       linkByKey('guide-gta-construction-proposals-differ', 'Why GTA construction proposals differ'),
       linkByKey('guide-design-build-vs-general-contractor-gta', 'Design-build vs general contractor GTA'),
@@ -1044,6 +1155,67 @@ function getStaticRelatedLinks(page) {
   ]
     .filter(Boolean)
     .map((candidate) => ({ label: candidate.title.split('|')[0].trim(), page: candidate }));
+}
+
+function getServiceSpecificRelatedLinks(key) {
+  const linksByService = {
+    'service-custom-homes': [
+      linkByKey('project-willowdale-custom-home-4700', 'Willowdale custom home proof'),
+      linkByKey('guide-custom-home-build-cost-gta', 'Custom home cost guide'),
+    ],
+    'service-multiplex': [
+      linkByKey('service-fourplex-builder', 'Fourplex builder Toronto'),
+      linkByKey('project-lansdowne-toronto-multiplex-laneway', 'Lansdowne multiplex proof'),
+      linkByKey('guide-multiplex-conversion-cost-toronto', 'Multiplex conversion cost guide'),
+    ],
+    'service-fourplex-builder': [
+      linkByKey('service-multiplex', 'Multiplex construction'),
+      linkByKey('project-lansdowne-toronto-multiplex-laneway', 'Lansdowne multiplex proof'),
+      linkByKey('guide-multiplex-conversion-cost-toronto', 'Multiplex conversion cost guide'),
+    ],
+    'service-garden-suites': [
+      linkByKey('tool-laneway-cost', 'Laneway suite cost calculator'),
+      linkByKey('project-toronto-laneway-suite-over-garage', 'Toronto laneway suite proof'),
+      linkByKey('guide-garden-suite-cost-toronto', 'Garden suite cost guide'),
+    ],
+    'service-home-additions': [
+      linkByKey('tool-addition-cost', 'Home addition cost calculator'),
+      linkByKey('project-erindale-mississauga-side-split-addition', 'Erindale vertical addition proof'),
+      linkByKey('guide-second-storey-addition-toronto', 'Second storey addition guide'),
+    ],
+    'service-drawings-permits': [
+      linkByKey('tool-permit-timeline', 'Permit timeline estimator'),
+      linkByKey('guide-toronto-permit-ready-drawings-checklist', 'Permit-ready drawings checklist'),
+      linkByKey('guide-toronto-permit-drawings', 'Toronto permit drawings guide'),
+    ],
+    'service-project-management': [
+      linkByKey('guide-gta-construction-management', 'GTA construction management guide'),
+      linkByKey('guide-gta-construction-proposals-differ', 'Why construction proposals differ'),
+    ],
+  };
+  return linksByService[key] ?? [];
+}
+
+function getGuideSpecificRelatedLinks(key) {
+  if (key.includes('garden-suite') || key.includes('laneway')) {
+    return [linkByKey('service-garden-suites', 'Garden suite and laneway service'), linkByKey('tool-laneway-cost', 'Laneway suite cost calculator')];
+  }
+  if (key.includes('multiplex') || key.includes('fourplex')) {
+    return [linkByKey('service-fourplex-builder', 'Fourplex builder Toronto'), linkByKey('service-multiplex', 'Multiplex construction service')];
+  }
+  if (key.includes('addition') || key.includes('basement-walkout')) {
+    return [linkByKey('service-home-additions', 'Home additions service'), linkByKey('tool-addition-cost', 'Home addition cost calculator')];
+  }
+  if (key.includes('permit') || key.includes('drawings')) {
+    return [linkByKey('service-drawings-permits', 'Drawings and permits service'), linkByKey('tool-permit-timeline', 'Permit timeline estimator')];
+  }
+  if (key.includes('custom-home')) {
+    return [linkByKey('service-custom-homes', 'Custom home design-build service'), linkByKey('project-willowdale-custom-home-4700', 'Willowdale custom home proof')];
+  }
+  if (key.includes('construction-management') || key.includes('proposals')) {
+    return [linkByKey('service-project-management', 'Project management service'), linkByKey('why-design-build', 'Why design-build')];
+  }
+  return [];
 }
 
 function linkByKey(key, label) {
@@ -1076,15 +1248,18 @@ function buildLlmsTxt() {
     pageByPath.get('/contact-us'),
   ].filter(Boolean);
 
-  const services = pages.filter((page) => page.key.startsWith('service-')).slice(0, 18);
-  const guides = pages.filter((page) => page.kind === 'article').slice(0, 40);
+  const frenchPriorityPages = priorityPages.filter((page) => isIndexableSeoPage(page, 'fr'));
+  const services = pages.filter((page) => page.key.startsWith('service-') && isIndexableSeoPage(page, 'en')).slice(0, 18);
+  const frenchServices = services.filter((page) => isIndexableSeoPage(page, 'fr'));
+  const guides = pages.filter((page) => page.kind === 'article' && isIndexableSeoPage(page, 'en')).slice(0, 40);
+  const frenchGuides = guides.filter((page) => isIndexableSeoPage(page, 'fr'));
   const serviceAreas = pages
-    .filter((page) => page.key.startsWith('location-') && ['toronto', 'north-york', 'markham', 'richmond-hill', 'vaughan', 'mississauga'].some((slug) => page.key.endsWith(`-${slug}`)))
+    .filter((page) => page.key.startsWith('location-') && isIndexableSeoPage(page, 'en') && ['toronto', 'north-york', 'markham', 'richmond-hill', 'vaughan', 'mississauga'].some((slug) => page.key.endsWith(`-${slug}`)))
     .slice(0, 24);
   const projectProof = (projectsData.projects ?? [])
     .slice(0, 18)
     .map((project) => pages.find((page) => page.key === project.key))
-    .filter(Boolean);
+    .filter((page) => page && isIndexableSeoPage(page, 'en'));
 
   return [
     '# Vitalite Construction Corp.',
@@ -1095,31 +1270,31 @@ function buildLlmsTxt() {
     ...priorityPages.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
     '## Pages principales en francais',
-    ...priorityPages.map((page) => llmsLine(page, 'fr')),
+    ...frenchPriorityPages.map((page) => llmsLine(page, 'fr')),
     '',
     '## Service Pages',
     ...services.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
     '## Pages de services en francais',
-    ...services.map((page) => llmsLine(page, 'fr')),
+    ...frenchServices.map((page) => llmsLine(page, 'fr')),
     '',
     '## Planning Guides',
     ...guides.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
     '## Guides de planification en francais',
-    ...guides.slice(0, 24).map((page) => llmsLine(page, 'fr')),
+    ...frenchGuides.slice(0, 24).map((page) => llmsLine(page, 'fr')),
     '',
     '## Toronto and GTA Service Area Pages',
     ...serviceAreas.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
     '## Secteurs Toronto et GTA en francais',
-    ...serviceAreas.map((page) => llmsLine(page, 'fr')),
+    ...serviceAreas.filter((page) => isIndexableSeoPage(page, 'fr')).map((page) => llmsLine(page, 'fr')),
     '',
     '## Project Proof',
     ...projectProof.map((page) => `- [${page.title}](${canonicalFor(page)}): ${page.description}`),
     '',
     '## Preuves de projets en francais',
-    ...projectProof.map((page) => llmsLine(page, 'fr')),
+    ...projectProof.filter((page) => isIndexableSeoPage(page, 'fr')).map((page) => llmsLine(page, 'fr')),
     '',
     '## Official Planning References',
     '- City of Toronto building permits: https://www.toronto.ca/services-payments/building-construction/apply-for-a-building-permit/',
@@ -1485,6 +1660,7 @@ function buildJsonLd(page, canonical, image, language = 'en') {
       ].filter(Boolean),
       articleBody: [
         ...(p.narrative ?? []),
+        buildProjectProofSignals(p),
         buildProjectPermitRoute(p),
         buildProjectOutcome(p),
       ].join('\n\n'),
@@ -1571,6 +1747,37 @@ function buildBreadcrumbs(page, language = 'en') {
   return items;
 }
 
+function isIndexableSeoPage(page, language = 'en') {
+  if (!page?.key) return false;
+  if (language === 'fr') return frenchIndexablePageKeys.has(page.key);
+  return basePageKeys.has(page.key) || priorityGeneratedPageKeys.has(page.key) || tierTwoGeneratedPageKeys.has(page.key);
+}
+
+function getRobotsContent(page, language = 'en') {
+  return isIndexableSeoPage(page, language)
+    ? 'index, follow, max-image-preview:large'
+    : 'noindex, follow, max-image-preview:large';
+}
+
+function getIndexableLanguages(page) {
+  return ['en', 'fr'].filter((language) => isIndexableSeoPage(page, language));
+}
+
+function buildHreflangTags(page, language = 'en') {
+  if (!isIndexableSeoPage(page, language)) return [];
+
+  const links = getIndexableLanguages(page).map((alternateLanguage) => {
+    const hreflang = alternateLanguage === 'fr' ? 'fr-CA' : 'en-CA';
+    return `<link rel="alternate" hreflang="${hreflang}" href="${canonicalFor(page, alternateLanguage)}" />`;
+  });
+
+  if (isIndexableSeoPage(page, 'en')) {
+    links.push(`<link rel="alternate" hreflang="x-default" href="${canonicalFor(page, 'en')}" />`);
+  }
+
+  return links;
+}
+
 function buildSitemap() {
   const urls = pages
     .flatMap((page) => {
@@ -1579,11 +1786,17 @@ function buildSitemap() {
         : page.kind === 'project' ? '0.8'
         : '0.7';
       const changefreq = page.kind === 'article' || page.kind === 'project' ? 'monthly' : 'weekly';
-      return ['en', 'fr'].map((language) => `  <url>
+      const hreflangLinks = getIndexableLanguages(page).map((alternateLanguage) => {
+        const hreflang = alternateLanguage === 'fr' ? 'fr-CA' : 'en-CA';
+        return `    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${canonicalFor(page, alternateLanguage)}" />`;
+      });
+      if (isIndexableSeoPage(page, 'en')) {
+        hreflangLinks.push(`    <xhtml:link rel="alternate" hreflang="x-default" href="${canonicalFor(page, 'en')}" />`);
+      }
+
+      return getIndexableLanguages(page).map((language) => `  <url>
     <loc>${canonicalFor(page, language)}</loc>
-    <xhtml:link rel="alternate" hreflang="en-CA" href="${canonicalFor(page, 'en')}" />
-    <xhtml:link rel="alternate" hreflang="fr-CA" href="${canonicalFor(page, 'fr')}" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${canonicalFor(page, 'en')}" />
+${hreflangLinks.join('\n')}
     <lastmod>${today}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
@@ -1634,6 +1847,17 @@ function buildProjectOutcome(project) {
   }
 
   return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
+}
+
+function buildProjectProofSignals(project) {
+  const categoryLabel = projectsData.categoryLabels[project.category] ?? project.category;
+  const statusLabel = projectsData.statusLabels[project.status] ?? project.status;
+  const permitRoute = buildProjectPermitRoute(project);
+  return `Project proof signals: ${statusLabel}, ${project.locationLabel}, ${project.size}, ${project.projectType ?? categoryLabel}, scope covering ${(project.scope ?? []).join(', ')}, and approval route: ${project.approvalPath ?? permitRoute}. Owners should compare these facts against their own property before relying on generic budget or timeline claims.`;
+}
+
+function buildProjectEvidenceChecklist(project) {
+  return `Prepare the property address, survey, existing drawings, photos, target scope, budget direction, permit status, timeline and known zoning, tree, grading, access or structural constraints. Then compare those details against ${project.locationLabel}, ${project.size}, ${project.projectType ?? projectsData.categoryLabels[project.category] ?? project.category}, and the scope shown in this Vitalite project proof.`;
 }
 
 function buildGeneratedPages() {

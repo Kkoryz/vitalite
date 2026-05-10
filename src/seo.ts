@@ -70,6 +70,91 @@ const baseUrl = import.meta.env.BASE_URL ?? '/';
 const basePath = baseUrl === '/' ? '' : baseUrl.replace(/\/$/, '');
 const seoPublishedDate = '2026-05-01';
 const seoFreshnessDate = __VITALITE_BUILD_DATE__;
+const priorityGeneratedPageKeys = new Set([
+  'location-custom-homes-toronto',
+  'location-custom-homes-north-york',
+  'location-custom-homes-markham',
+  'location-custom-homes-richmond-hill',
+  'location-custom-homes-vaughan',
+  'location-custom-homes-mississauga',
+  'location-garden-suites-toronto',
+  'location-garden-suites-north-york',
+  'location-garden-suites-etobicoke',
+  'location-garden-suites-scarborough',
+  'location-home-additions-toronto',
+  'location-home-additions-north-york',
+  'location-home-additions-markham',
+  'location-home-additions-mississauga',
+  'location-multiplex-toronto',
+  'location-multiplex-north-york',
+  'location-multiplex-markham',
+  'location-multiplex-scarborough',
+  'guide-garden-suite-cost-toronto',
+  'guide-laneway-house-permit-toronto',
+  'guide-multiplex-conversion-cost-toronto',
+  'guide-home-addition-permit-toronto',
+  'guide-second-storey-addition-toronto',
+  'guide-basement-walkout-permit-toronto',
+  'guide-legal-basement-suite-toronto',
+  'guide-custom-home-build-cost-gta',
+  'guide-design-build-construction-manager-toronto',
+  'guide-toronto-permit-drawings',
+  'guide-toronto-permit-ready-drawings-checklist',
+  'project-willowdale-custom-home-4700',
+  'project-willowdale-expansion-5200',
+  'project-avondale-custom-home-3200',
+  'project-lansdowne-toronto-multiplex-laneway',
+  'project-erindale-mississauga-side-split-addition',
+  'project-downtown-toronto-condo-renovation',
+  'project-gta-warehouse-office-fitout',
+  'project-past-bayview-village-north-york',
+]);
+const tierTwoGeneratedPageKeys = new Set([
+  'community-custom-homes-rosedale',
+  'community-custom-homes-forest-hill',
+  'community-custom-homes-lawrence-park',
+  'community-custom-homes-leaside',
+  'community-custom-homes-the-annex',
+  'community-custom-homes-willowdale',
+  'community-custom-homes-bayview-village',
+  'community-custom-homes-unionville',
+  'community-custom-homes-angus-glen',
+  'community-custom-homes-port-credit',
+  'community-custom-homes-lorne-park',
+  'community-luxury-renovations-rosedale',
+  'community-luxury-renovations-forest-hill',
+  'community-luxury-renovations-lawrence-park',
+  'community-luxury-renovations-leaside',
+  'community-luxury-renovations-the-annex',
+  'community-luxury-renovations-lorne-park',
+  'community-luxury-renovations-mineola',
+  'community-garden-suites-roncesvalles',
+  'community-garden-suites-leslieville',
+  'community-garden-suites-riverdale',
+  'community-garden-suites-the-beaches',
+  'community-garden-suites-east-york',
+  'community-garden-suites-bloor-west-village',
+  'community-multiplex-willowdale',
+  'community-multiplex-east-york',
+  'community-multiplex-the-annex',
+  'community-multiplex-roncesvalles',
+  'community-permit-drawings-rosedale',
+  'community-permit-drawings-leaside',
+  'community-permit-drawings-willowdale',
+  'community-permit-drawings-the-annex',
+]);
+const frenchIndexablePageKeys = new Set([
+  'home',
+  'services',
+  'locations-hub',
+  'communities-hub',
+  'contact-us',
+  'service-custom-homes',
+  'service-garden-suites',
+  'service-home-additions',
+  'service-drawings-permits',
+  'service-project-management',
+]);
 
 type SeoLocation = { slug: string; name: string };
 type SeoCommunity = { slug: string; name: string; municipality: string };
@@ -193,6 +278,18 @@ export const pages = [...(seoData.pages as SeoPage[]), ...generatedLocationPages
 export const pageByKey = new Map(pages.map((page) => [page.key, page]));
 export const pathByKey = new Map(pages.map((page) => [page.key, page.path]));
 const keyByPath = new Map(pages.map((page) => [normalizeRoutePath(page.path), page.key]));
+const basePageKeys = new Set((seoData.pages as SeoPage[]).map((page) => page.key));
+
+export const isIndexableSeoPage = (page: SeoPage | string, language: Language = 'en'): boolean => {
+  const key = typeof page === 'string' ? page : page.key;
+  if (language === 'fr') return frenchIndexablePageKeys.has(key);
+  return basePageKeys.has(key) || priorityGeneratedPageKeys.has(key) || tierTwoGeneratedPageKeys.has(key);
+};
+
+const getRobotsContent = (page: SeoPage, language: Language = 'en') =>
+  isIndexableSeoPage(page, language)
+    ? 'index, follow, max-image-preview:large'
+    : 'noindex, follow, max-image-preview:large';
 
 export const getRouteHref = (key: string, language: Language = 'en'): string => {
   const path = pathByKey.get(key) ?? '/';
@@ -258,6 +355,13 @@ export const buildProjectOutcome = (project: ProjectEntry) => {
   return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
 };
 
+export const buildProjectProofSignals = (project: ProjectEntry) => {
+  const categoryLabel = projectCategoryLabels[project.category] ?? project.category;
+  const statusLabel = projectStatusLabels[project.status] ?? project.status;
+  const permitRoute = buildProjectPermitRoute(project);
+  return `Project proof signals: ${statusLabel}, ${project.locationLabel}, ${project.size}, ${project.projectType ?? categoryLabel}, scope covering ${project.scope.join(', ')}, and approval route: ${project.approvalPath ?? permitRoute}.`;
+};
+
 export const getPageKeyFromUrl = (url: URL): string | null => {
   if (url.hash && url.hash.length > 1) {
     const hashKey = url.hash.slice(1);
@@ -293,7 +397,7 @@ export const applySeo = (key: string, language: Language = 'en') => {
 
   document.title = page.title;
   setMeta('name', 'description', page.description);
-  setMeta('name', 'robots', 'index, follow, max-image-preview:large');
+  setMeta('name', 'robots', getRobotsContent(sourcePage, language));
   setMeta('name', 'author', seoData.business.name);
   setMeta('property', 'og:site_name', seoData.siteName);
   setMeta('property', 'og:type', page.kind === 'article' || page.kind === 'project' ? 'article' : 'website');
@@ -308,7 +412,7 @@ export const applySeo = (key: string, language: Language = 'en') => {
   setMeta('name', 'twitter:description', page.description);
   setMeta('name', 'twitter:image', image);
   setCanonical(canonical);
-  setHreflang(sourcePage);
+  setHreflang(sourcePage, language);
   setJsonLd(buildJsonLd(page, canonical, image, language));
   document.documentElement.lang = locale;
   trackPageView(page.title, canonical);
@@ -473,6 +577,7 @@ export const buildJsonLd = (page: SeoPage, canonical: string, image: string, lan
         ].filter(Boolean),
         articleBody: [
           ...project.narrative,
+          buildProjectProofSignals(project),
           buildProjectPermitRoute(project),
           buildProjectOutcome(project),
         ].join('\n\n'),
@@ -1210,16 +1315,19 @@ const setCanonical = (href: string) => {
   link.href = href;
 };
 
-const setHreflang = (page: SeoPage) => {
-  const alternates = [
-    { hreflang: 'en-CA', href: getCanonicalUrl(page.key, 'en') },
-    { hreflang: 'fr-CA', href: getCanonicalUrl(page.key, 'fr') },
-    { hreflang: 'x-default', href: getCanonicalUrl(page.key, 'en') },
-  ];
-
+const setHreflang = (page: SeoPage, language: Language = 'en') => {
   document
     .querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang], link[data-vitalite-hreflang="true"]')
     .forEach((link) => link.remove());
+
+  if (!isIndexableSeoPage(page, language)) return;
+
+  const alternates = [
+    ...(isIndexableSeoPage(page, 'en') ? [{ hreflang: 'en-CA', href: getCanonicalUrl(page.key, 'en') }] : []),
+    ...(isIndexableSeoPage(page, 'fr') ? [{ hreflang: 'fr-CA', href: getCanonicalUrl(page.key, 'fr') }] : []),
+    ...(isIndexableSeoPage(page, 'en') ? [{ hreflang: 'x-default', href: getCanonicalUrl(page.key, 'en') }] : []),
+  ];
+
   alternates.forEach((alternate) => {
     const link = document.createElement('link');
     link.rel = 'alternate';

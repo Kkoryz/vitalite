@@ -85,6 +85,7 @@ type DetailPageKey =
   | 'service-construction-site-management'
   | 'service-custom-homes'
   | 'service-multiplex'
+  | 'service-fourplex-builder'
   | 'service-garden-suites'
   | 'service-home-additions'
   | 'service-drawings-permits'
@@ -626,6 +627,7 @@ const dropdownMenus: Partial<Record<MainPageKey, DropdownColumn[]>> = {
       links: [
         { label: 'Custom Home Design & Build', href: '#service-custom-homes' },
         { label: 'Multi-Unit & Multiplex Construction', href: '#service-multiplex' },
+        { label: 'Fourplex Builder Toronto', href: '#service-fourplex-builder' },
         { label: 'Garden Suites & Laneway Houses', href: '#service-garden-suites' },
         { label: 'Home Additions & Major Renovations', href: '#service-home-additions' },
         { label: 'Drawings, Permits & Engineering', href: '#service-drawings-permits' },
@@ -1482,6 +1484,13 @@ const servicePageCards: ImageCard[] = [
     href: '#service-multiplex',
   },
   {
+    title: 'Fourplex Builder Toronto',
+    eyebrow: 'As-of-right density',
+    summary: 'Fourplex feasibility, unit strategy, fire separation, egress, permit drawings and rental-ready construction managed under one project path.',
+    image: visuals.serviceMultiplex,
+    href: '#service-fourplex-builder',
+  },
+  {
     title: 'Garden Suites & Laneway Houses',
     eyebrow: 'Secondary suites',
     summary: 'A separate structure on your existing lot — for rental income, a family member, or long-term flexibility — designed and built under one roof.',
@@ -2118,9 +2127,45 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
     officialResources: [torontoOfficialLinks.multiplex, torontoOfficialLinks.buildingPermits],
     relatedLinks: [
       { label: 'Multiplex projects portfolio', key: 'work-multiplex' },
+      { label: 'Fourplex builder Toronto', key: 'service-fourplex-builder' },
       { label: 'Garden suites and laneway houses', key: 'service-garden-suites' },
       { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
       { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+  },
+  'service-fourplex-builder': {
+    parent: 'services',
+    category: 'SERVICES',
+    title: 'Fourplex Builder Toronto',
+    subtitle: 'As-of-right fourplex feasibility, permit drawings and construction for Toronto owners and investors.',
+    image: visuals.serviceMultiplex,
+    intro: 'Toronto fourplex projects are attractive because many residential lots can now support up to four units as of right. The practical test is whether the property can handle unit layout, fire separation, egress, servicing, mechanical systems, sound control, stormwater and rental-grade durability without turning the numbers upside down. Vitalite reviews those conditions before drawings and carries the project through permits, construction and tenant-ready handover.',
+    answer: 'Vitalite helps Toronto owners and investors plan, permit and build fourplex projects with one accountable team for feasibility, unit strategy, code review, permit drawings, trade coordination and inspections.',
+    bullets: ['Fourplex feasibility and yield review', 'Unit mix, egress and fire separation planning', 'Permit drawings and engineering coordination', 'Rental-ready construction and inspections'],
+    sections: [
+      { heading: 'As-Of-Right Does Not Mean Automatic', text: 'Fourplex permission reduces one approval barrier, but the building still needs to satisfy zoning, Ontario Building Code, fire separation, egress, ventilation, plumbing, servicing, grading and inspection requirements. A lot can be legally eligible and still perform poorly if the unit plan, existing structure or service capacity is not tested early.' },
+      { heading: 'What Gets Reviewed First', text: 'Vitalite starts with lot dimensions, current zoning, existing drawings, service location, parking context, potential entry points, basement conditions and target rent assumptions. That early review separates a realistic fourplex path from a drawing exercise that will not price, permit or rent well.' },
+      { heading: 'Permit And Construction Coordination', text: 'The fourplex drawing package must connect architectural layouts with structural openings, fire-rated assemblies, mechanical routing, plumbing stacks, electrical distribution and inspection sequencing. Vitalite coordinates those items before submission so permit comments and trade questions do not fragment the schedule.' },
+      { heading: 'Investor Decision Signals', text: 'Before committing, owners should compare target unit count, expected rents, total construction cost, financing carry, contingency, parking assumptions, suite mix, tenant turnover durability and exit value. Vitalite uses project evidence from multiplex and mixed-use work to ground those decisions in buildable scope.' },
+      { heading: 'Proof To Request', text: 'Ask for comparable multi-unit scope, permit route, current project status, fire separation and egress assumptions, budget exclusions, consultant inputs, insurance and WSIB documentation, inspection responsibilities and closeout process before treating a fourplex proposal as reliable.' },
+    ],
+    steps: ['Collect survey, existing drawings and rent assumptions', 'Confirm zoning, unit count, access and servicing feasibility', 'Develop unit strategy, code path and budget range', 'Prepare architectural, structural and mechanical permit package', 'Submit, respond to municipal comments and procure trades', 'Build through inspections, occupancy and tenant-ready closeout'],
+    faqs: [
+      { question: 'Can every Toronto house become a fourplex?', answer: 'No. Many residential lots have as-of-right permission for up to four units, but feasibility still depends on lot conditions, existing structure, access, servicing, fire separation, egress, parking context and the scope required to create legal units.' },
+      { question: 'Is a fourplex cheaper than building a new multiplex?', answer: 'Not always. A conversion can save structure and envelope cost when the existing building is sound, but hidden conditions, low basements, undersized services or poor egress can make a purpose-built option more predictable. Vitalite compares both paths during feasibility.' },
+      { question: 'What should I prepare for a fourplex consultation?', answer: 'Bring the address, survey if available, current floor plans, photos, target unit count, rent assumptions, budget direction, financing timing and any known permit, structural, drainage, tree or neighbour constraints.' },
+    ],
+    officialResources: [torontoOfficialLinks.multiplex, torontoOfficialLinks.buildingPermits],
+    relatedLinks: [
+      { label: 'Multiplex construction service', key: 'service-multiplex' },
+      { label: 'Multiplex projects portfolio', key: 'work-multiplex' },
+      { label: 'Toronto multiplex conversion cost guide', key: 'guide-multiplex-conversion-cost-toronto' },
+      { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },
+      { label: 'Contact Vitalite', key: 'contact-us' },
+    ],
+    projectKeys: [
+      'project-lansdowne-toronto-multiplex-laneway',
+      'project-bedford-park-mixed-use-rental',
     ],
   },
   'service-garden-suites': {
@@ -2969,6 +3014,172 @@ const detailPages: Record<DetailPageKey, DetailPageContent> = {
   },
 };
 
+const uniqueDetailLinks = (
+  base: Array<{ label: string; key: string }> = [],
+  extra: Array<{ label: string; key: string }> = [],
+) => {
+  const seen = new Set<string>();
+  return [...base, ...extra].filter((link) => {
+    if (seen.has(link.key)) return false;
+    seen.add(link.key);
+    return true;
+  });
+};
+
+const mergeOfficialResources = (
+  base: Array<{ label: string; url: string; note?: string }> = [],
+  extra: Array<{ label: string; url: string; note?: string }> = [],
+) => {
+  const seen = new Set<string>();
+  return [...base, ...extra].filter((resource) => {
+    if (seen.has(resource.url)) return false;
+    seen.add(resource.url);
+    return true;
+  });
+};
+
+const appendDetailEnhancement = (
+  page: DetailPageContent,
+  enhancement?: Partial<DetailPageContent>,
+): DetailPageContent => {
+  if (!enhancement) return page;
+  return {
+    ...page,
+    ...enhancement,
+    bullets: [...page.bullets, ...(enhancement.bullets ?? [])],
+    sections: [...page.sections, ...(enhancement.sections ?? [])],
+    steps: [...(page.steps ?? []), ...(enhancement.steps ?? [])],
+    faqs: [...(page.faqs ?? []), ...(enhancement.faqs ?? [])],
+    relatedLinks: uniqueDetailLinks(page.relatedLinks, enhancement.relatedLinks),
+    officialResources: mergeOfficialResources(page.officialResources, enhancement.officialResources),
+    projectKeys: [...new Set([...(page.projectKeys ?? []), ...(enhancement.projectKeys ?? [])])],
+  };
+};
+
+const serviceBofuEnhancements: Partial<Record<DetailPageKey, Partial<DetailPageContent>>> = {
+  'service-custom-homes': {
+    sections: [
+      { heading: 'Buyer Proof Checklist', text: 'Before hiring a custom home builder, owners should confirm comparable project size, current or completed status, permit route, consultant responsibilities, insurance and WSIB documentation, allowance assumptions, inspection ownership, PDI process and warranty-oriented closeout. Final images are useful, but the stronger proof is whether the builder can explain the decisions behind the approved drawings and construction sequence.' },
+      { heading: 'Best Internal Next Steps', text: 'Custom home owners should move from this service page into the Willowdale and Avondale project examples, then use the custom home cost guide and contact intake to prepare address, survey, target square footage, budget direction, tree or grading concerns and desired occupancy window.' },
+    ],
+    officialResources: [torontoOfficialLinks.buildingPermits, torontoOfficialLinks.treeProtection],
+    relatedLinks: [
+      { label: 'Willowdale custom home proof', key: 'project-willowdale-custom-home-4700' },
+      { label: 'Custom home cost guide', key: 'guide-custom-home-build-cost-gta' },
+      { label: 'Toronto permit-ready drawings checklist', key: 'guide-toronto-permit-ready-drawings-checklist' },
+    ],
+    projectKeys: [
+      'project-willowdale-custom-home-4700',
+      'project-avondale-custom-home-3200',
+      'project-york-toronto-lot-severance-semi',
+      'project-past-bayview-village-north-york',
+    ],
+  },
+  'service-multiplex': {
+    sections: [
+      { heading: 'Fourplex And Multiplex Buying Criteria', text: 'Owners comparing multiplex builders should ask how unit count was tested, whether the path is as-of-right or variance-driven, how fire separation and egress are handled, what servicing upgrades are assumed, how rental-grade finishes are specified and which permit comments or inspections can change the schedule.' },
+      { heading: 'Proof Signals For Investors', text: 'A useful multiplex proposal should reference comparable multi-unit work, show the approval path, define code assumptions, separate construction cost from soft costs and contingency, and identify what could change the pro forma before construction financing is locked.' },
+    ],
+    relatedLinks: [
+      { label: 'Fourplex builder Toronto', key: 'service-fourplex-builder' },
+      { label: 'Toronto multiplex conversion cost guide', key: 'guide-multiplex-conversion-cost-toronto' },
+      { label: 'Lansdowne multiplex case study', key: 'project-lansdowne-toronto-multiplex-laneway' },
+    ],
+    projectKeys: ['project-lansdowne-toronto-multiplex-laneway', 'project-bedford-park-mixed-use-rental'],
+  },
+  'service-garden-suites': {
+    sections: [
+      { heading: 'Lot Feasibility Evidence', text: 'The strongest garden suite evidence is not a rendering. It is a property-specific check of lot depth, rear-yard access, fire route, tree protection, servicing route, grading, privacy and permit drawings. Owners should request that feasibility trail before committing to design fees.' },
+    ],
+    relatedLinks: [
+      { label: 'Laneway suite cost calculator', key: 'tool-laneway-cost' },
+      { label: 'Garden suite cost guide', key: 'guide-garden-suite-cost-toronto' },
+      { label: 'Toronto garden suite project proof', key: 'project-toronto-laneway-suite-over-garage' },
+    ],
+    projectKeys: ['project-toronto-laneway-suite-over-garage', 'project-stouffville-backyard-garden-suite'],
+  },
+  'service-home-additions': {
+    sections: [
+      { heading: 'Addition Proposal Evidence', text: 'A reliable addition proposal should state the existing-condition assumptions, structural review status, foundation or load-path risk, permit path, temporary protection plan, owner living plan, exclusions and change-order process. Without those items, a low square-foot number is not comparable.' },
+    ],
+    relatedLinks: [
+      { label: 'Home addition cost calculator', key: 'tool-addition-cost' },
+      { label: 'Second storey addition guide', key: 'guide-second-storey-addition-toronto' },
+      { label: 'Erindale vertical addition proof', key: 'project-erindale-mississauga-side-split-addition' },
+    ],
+    projectKeys: [
+      'project-preston-lake-stouffville-addition',
+      'project-erindale-mississauga-side-split-addition',
+      'project-willowdale-expansion-5200',
+    ],
+  },
+  'service-drawings-permits': {
+    sections: [
+      { heading: 'Permit Package Evidence', text: 'Owners should ask what is included in the drawing package: existing and proposed plans, zoning data, site plan, elevations, sections, structural notes, HVAC or mechanical references, code matrix, application forms and municipal comment response. A permit-ready package should make completeness visible before submission.' },
+    ],
+    relatedLinks: [
+      { label: 'Toronto permit drawings guide', key: 'guide-toronto-permit-drawings' },
+      { label: 'Permit-ready drawings checklist', key: 'guide-toronto-permit-ready-drawings-checklist' },
+      { label: 'Permit timeline estimator', key: 'tool-permit-timeline' },
+    ],
+    projectKeys: [
+      'project-willowdale-custom-home-4700',
+      'project-lansdowne-toronto-multiplex-laneway',
+      'project-erindale-mississauga-side-split-addition',
+    ],
+  },
+  'service-project-management': {
+    sections: [
+      { heading: 'Management Proof Checklist', text: 'For construction management, owners should request the schedule structure, trade scope format, reporting cadence, budget change process, inspection responsibility, procurement tracking, deficiency process and closeout pathway. The proof is the management system, not a vague promise of supervision.' },
+    ],
+    relatedLinks: [
+      { label: 'GTA construction management guide', key: 'guide-gta-construction-management' },
+      { label: 'Why construction proposals differ', key: 'guide-gta-construction-proposals-differ' },
+      { label: 'Design-build vs general contractor', key: 'guide-design-build-vs-general-contractor-gta' },
+    ],
+    projectKeys: [
+      'project-gta-warehouse-office-fitout',
+      'project-lansdowne-toronto-multiplex-laneway',
+      'project-willowdale-custom-home-4700',
+    ],
+  },
+  'service-ici-construction': {
+    sections: [
+      { heading: 'Commercial Buyer Evidence', text: 'Commercial and institutional buyers should compare operational phasing, insurance documentation, trade safety controls, building communication, inspection sequencing, occupancy impact and closeout records. A credible ICI plan explains how the business keeps operating while construction proceeds.' },
+    ],
+    projectKeys: ['project-gta-warehouse-office-fitout', 'project-toronto-retail-tenant-improvement'],
+  },
+  'service-condo-renovations': {
+    sections: [
+      { heading: 'Board Approval Evidence', text: 'Condo renovation buyers should ask for the board package plan, insurance certificate workflow, elevator booking assumptions, working-hour limits, dust control, plumbing or electrical permit trigger review and neighbour communication process before selecting a contractor.' },
+    ],
+    projectKeys: ['project-downtown-toronto-condo-renovation', 'project-north-york-apartment-suite-renovation'],
+  },
+  'service-townhouse-renovations': {
+    sections: [
+      { heading: 'Shared-Wall And Tight-Lot Evidence', text: 'Townhouse and semi-detached proposals should document party wall assumptions, structural engineering needs, neighbour notice requirements, staging space, waste removal path, permit triggers and how the existing home stays protected during rear additions or basement work.' },
+    ],
+    projectKeys: ['project-toronto-semi-detached-rear-addition', 'project-gta-townhouse-basement-walkout'],
+  },
+  'service-gut-renovations': {
+    sections: [
+      { heading: 'Hidden-Condition Evidence', text: 'Full-gut renovation buyers should request an existing-condition review, demolition assumptions, mechanical replacement scope, hazardous material allowance, contingency structure, inspection path and decision log process. Those details determine whether the project is truly scoped or only broadly estimated.' },
+    ],
+    relatedLinks: [
+      { label: 'Teardown vs renovation tool', key: 'tool-teardown-decision' },
+      { label: 'Pre-construction checklist', key: 'guide-gta-pre-construction-checklist' },
+    ],
+    projectKeys: ['project-gta-full-interior-renovation', 'project-toronto-kitchen-bath-millwork-renovation'],
+  },
+};
+
+const enhancedDetailPages = Object.fromEntries(
+  Object.entries(detailPages).map(([key, page]) => [
+    key,
+    appendDetailEnhancement(page, serviceBofuEnhancements[key as DetailPageKey]),
+  ]),
+) as Record<DetailPageKey, DetailPageContent>;
+
 const staticDetailPages: Record<string, DetailPageContent> = {
   faq: {
     parent: 'contact-us',
@@ -3129,6 +3340,27 @@ function buildProjectOutcome(project: ProjectEntry, categoryLabel: string) {
   return `Representative ${categoryLabel.toLowerCase()} case study showing the scope, approval path and construction decisions owners should evaluate before starting a similar project.`;
 }
 
+const projectServiceLinks: Partial<Record<ProjectCategory, { label: string; key: string }>> = {
+  'custom-homes': { label: 'Custom home design-build service', key: 'service-custom-homes' },
+  multiplex: { label: 'Multiplex and fourplex builder service', key: 'service-multiplex' },
+  additions: { label: 'Home additions service', key: 'service-home-additions' },
+  'garden-suites': { label: 'Garden suite and laneway service', key: 'service-garden-suites' },
+  ici: { label: 'ICI construction service', key: 'service-ici-construction' },
+  condos: { label: 'Condo renovation service', key: 'service-condo-renovations' },
+  lofts: { label: 'Loft renovation service', key: 'service-loft-renovations' },
+  'older-homes': { label: 'Older home renovation service', key: 'service-heritage-renovations' },
+  townhouses: { label: 'Townhouse renovation service', key: 'service-townhouse-renovations' },
+  'full-interiors': { label: 'Full-gut renovation service', key: 'service-gut-renovations' },
+};
+
+function buildProjectProofSignals(project: ProjectEntry, statusLabel: string, categoryLabel: string, permitRoute: string) {
+  return `Proof signals for this ${categoryLabel.toLowerCase()} page include status (${statusLabel}), location (${project.locationLabel}), size (${project.size}), project type (${project.projectType ?? categoryLabel}), scope (${project.scope.join(', ')}), and approval route (${project.approvalPath ?? permitRoute}). Owners comparing a similar project should ask how those facts affect zoning, drawings, engineering, budget, inspections and closeout before relying on a contractor price.`;
+}
+
+function buildProjectEvidenceChecklist(project: ProjectEntry, permitRoute: string, outcome: string) {
+  return `Use this project as a comparison file, not just an image gallery. Prepare the property address, survey, existing drawings, photos, target scope, budget direction, permit status and timeline, then compare those details against this project's size, approval route and scope. The practical takeaway: ${outcome} The route to verify is ${permitRoute}`;
+}
+
 function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
   const categoryParentKey = projectCategoryParents[project.category];
   const categoryLabel = projectCategoryLabels[project.category];
@@ -3136,10 +3368,13 @@ function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
   const title = project.title.replace(/ \| Vitalite$/, '');
   const permitRoute = buildProjectPermitRoute(project);
   const outcome = buildProjectOutcome(project, categoryLabel);
+  const serviceLink = projectServiceLinks[project.category];
 
   const narrativeSections: Array<{ heading: string; text: string }> = [];
   if (project.narrative.length > 1) narrativeSections.push({ heading: 'Project Overview', text: project.narrative[1] });
   if (project.narrative.length > 2) narrativeSections.push({ heading: 'Planning Context', text: project.narrative[2] });
+  narrativeSections.push({ heading: 'Proof Signals', text: buildProjectProofSignals(project, statusLabel, categoryLabel, permitRoute) });
+  narrativeSections.push({ heading: 'Owner Evidence Checklist', text: buildProjectEvidenceChecklist(project, permitRoute, outcome) });
   narrativeSections.push({ heading: 'Permit Route', text: permitRoute });
   narrativeSections.push({ heading: 'Outcome', text: outcome });
 
@@ -3168,10 +3403,12 @@ function createGeneratedProjectPage(project: ProjectEntry): DetailPageContent {
       outcome,
     },
     relatedLinks: [
+      serviceLink,
       { label: categoryLabel, key: categoryParentKey },
+      { label: 'GTA service areas', key: 'locations-hub' },
       { label: 'Our Work', key: 'our-work' },
       { label: 'Contact Vitalite', key: 'contact-us' },
-    ],
+    ].filter(Boolean) as Array<{ label: string; key: string }>,
   };
 }
 
@@ -3180,7 +3417,7 @@ const generatedProjectDetailPages: Record<string, DetailPageContent> = Object.fr
 );
 
 const allDetailPages: Record<string, DetailPageContent> = {
-  ...detailPages,
+  ...enhancedDetailPages,
   ...staticDetailPages,
   ...generatedLandingPages,
   ...generatedProjectDetailPages,
@@ -3228,6 +3465,7 @@ const contactIntakeItems = [
 const contactPriorityLinks = [
   { label: 'Custom home consultation', key: 'service-custom-homes' },
   { label: 'Multiplex project review', key: 'service-multiplex' },
+  { label: 'Fourplex feasibility review', key: 'service-fourplex-builder' },
   { label: 'Garden suite or laneway house', key: 'service-garden-suites' },
   { label: 'Additions and alterations', key: 'service-home-additions' },
   { label: 'Drawings, permits and engineering', key: 'service-drawings-permits' },

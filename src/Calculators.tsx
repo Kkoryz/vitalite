@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Printer } from 'lucide-react';
 import { getRouteHref } from './seo';
 import { trackToolEvent } from './analytics';
 
@@ -318,6 +318,74 @@ const ToolGeoEvidence = ({
   </section>
 );
 
+const ToolCitationAsset = ({
+  title,
+  assumptions,
+  sourceNote,
+  relatedLinks,
+}: {
+  title: string;
+  assumptions: string[];
+  sourceNote: string;
+  relatedLinks: Array<{ label: string; key: string }>;
+}) => (
+  <section className="bg-gray-50 text-black py-16 md:py-24 px-5 sm:px-8 md:px-24">
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeIn}
+      className="max-w-6xl mx-auto"
+    >
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
+        <div className="max-w-3xl">
+          <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-gray-500 mb-4">
+            Citation asset
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-medium tracking-tight mb-4">{title}</h2>
+          <p className="text-base sm:text-lg text-gray-700 leading-relaxed">{sourceNote}</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="inline-flex w-fit items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-black hover:border-kiewit-yellow transition-colors"
+        >
+          <Printer className="h-4 w-4" />
+          Print planning brief
+        </button>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-6">
+        <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-8">
+          <h3 className="text-xl font-semibold mb-5">Assumptions to cite with the result</h3>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-gray-700 leading-relaxed">
+            {assumptions.map((item) => (
+              <li key={item} className="flex gap-3">
+                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-kiewit-yellow" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+        <article className="border border-gray-200 bg-white rounded-lg p-6 sm:p-8">
+          <h3 className="text-xl font-semibold mb-5">Next evidence path</h3>
+          <div className="space-y-3">
+            {relatedLinks.map((link) => (
+              <a
+                key={link.key}
+                href={getRouteHref(link.key)}
+                className="flex items-center justify-between gap-4 border-b border-gray-100 pb-3 text-sm font-semibold text-gray-800 hover:text-kiewit-blue transition-colors"
+              >
+                <span>{link.label}</span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-kiewit-yellow" />
+              </a>
+            ))}
+          </div>
+        </article>
+      </div>
+    </motion.div>
+  </section>
+);
+
 const additionTypeOptions: Array<{ label: string; value: string }> = [
   { label: 'Main floor extension', value: 'main-floor' },
   { label: 'Second-storey addition', value: 'second-storey' },
@@ -455,6 +523,23 @@ export const AdditionCostCalculator = () => {
           </div>
         </motion.div>
       </section>
+
+      <ToolCitationAsset
+        title="Addition Cost Planning Brief"
+        sourceNote="Cite this tool only with the selected addition type, square footage, finish level and GTA location. The range is useful for early feasibility and should be paired with zoning, structural and permit evidence before a budget is treated as final."
+        assumptions={[
+          'The result assumes a permitted residential addition, not cosmetic renovation only.',
+          'Existing foundation and framing have not been inspected by the calculator.',
+          'Drawings, engineering, municipal comments and finish selections can change the range.',
+          'Temporary protection, owner occupancy and site access are not priced automatically.',
+        ]}
+        relatedLinks={[
+          { label: 'Home additions service', key: 'service-home-additions' },
+          { label: 'Home addition permit guide', key: 'guide-home-addition-permit-toronto' },
+          { label: 'Erindale vertical addition proof', key: 'project-erindale-mississauga-side-split-addition' },
+          { label: 'Project review intake', key: 'contact-us' },
+        ]}
+      />
 
       <ToolFaq
         items={[
@@ -595,6 +680,23 @@ export const LanewayCostCalculator = () => {
           </div>
         </motion.div>
       </section>
+
+      <ToolCitationAsset
+        title="Laneway And Garden Suite Planning Brief"
+        sourceNote="Cite this result with lot access, suite type, gross floor area, storey count and finish level. The calculator supports rental and financing planning, but feasibility still depends on the property."
+        assumptions={[
+          'Laneway suites require lane access; garden suites require rear-yard feasibility and compliant access.',
+          'Servicing, grading, tree protection, fire access and utility connections can move the range.',
+          'The result does not confirm TRCA, ravine, heritage or municipal overlay constraints.',
+          'Permit drawings and engineering are required before construction pricing is reliable.',
+        ]}
+        relatedLinks={[
+          { label: 'Garden suite service', key: 'service-garden-suites' },
+          { label: 'Garden suite cost guide', key: 'guide-garden-suite-cost-toronto' },
+          { label: 'Toronto laneway project proof', key: 'project-toronto-laneway-suite-over-garage' },
+          { label: 'Project review intake', key: 'contact-us' },
+        ]}
+      />
 
       <ToolFaq
         items={[
@@ -908,6 +1010,23 @@ export const TeardownDecisionTool = () => {
         </motion.div>
       </section>
 
+      <ToolCitationAsset
+        title="Teardown Versus Renovation Planning Brief"
+        sourceNote="Cite this result as a directional decision framework. It should be paired with a structural walk-through, zoning review, land value context and carrying-cost model before an owner chooses demolition or renovation."
+        assumptions={[
+          'The tool cannot inspect foundation, framing, wiring, plumbing, insulation or hazardous materials.',
+          'A teardown can lose existing non-conforming rights and must be checked against current zoning.',
+          'A renovation can preserve value, but hidden conditions may require full mechanical replacement.',
+          'Financing, interim housing and project duration can change the better-value path.',
+        ]}
+        relatedLinks={[
+          { label: 'Full-gut renovation service', key: 'service-gut-renovations' },
+          { label: 'Custom home design-build service', key: 'service-custom-homes' },
+          { label: 'Fixer-upper guide', key: 'blog-fixer-upper-vs-new' },
+          { label: 'Project review intake', key: 'contact-us' },
+        ]}
+      />
+
       <ToolFaq
         items={[
           {
@@ -1122,6 +1241,23 @@ export const PermitTimelineEstimator = () => {
           </div>
         </motion.div>
       </section>
+
+      <ToolCitationAsset
+        title="Permit Timeline Planning Brief"
+        sourceNote="Cite this result with the selected project type and municipality. The timeline is a planning range that depends on drawing completeness, zoning compliance, municipal comments and construction sequencing."
+        assumptions={[
+          'Design, permit review and construction are separate phases and can overlap only when scope is controlled.',
+          'Committee of Adjustment, heritage, conservation, tree or grading review can add months.',
+          'Incomplete drawings and unresolved engineering comments can reset municipal review cycles.',
+          'Procurement, inspections, weather and owner decisions can change the construction phase.',
+        ]}
+        relatedLinks={[
+          { label: 'Drawings and permits service', key: 'service-drawings-permits' },
+          { label: 'Permit-ready drawings checklist', key: 'guide-toronto-permit-ready-drawings-checklist' },
+          { label: 'Toronto permit drawings guide', key: 'guide-toronto-permit-drawings' },
+          { label: 'Project review intake', key: 'contact-us' },
+        ]}
+      />
 
       <ToolFaq
         items={[
